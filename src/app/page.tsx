@@ -1,65 +1,171 @@
+import { HeroVideo } from "@/components/features/HeroVideo";
+import { BentoGrid, BentoCard } from "@/components/ui/bento-grid";
+import { SectionReveal } from "@/components/ui/section-reveal";
+import { Clock, Fish, MapPin, CalendarDays, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
+import { WeatherBentoCard } from "@/components/features/WeatherBentoCard";
+import { Metadata } from "next";
+
+export const runtime = 'edge';
+
+export const metadata: Metadata = {
+  title: "Zalew Kozłowski | Prywatne Łowisko i Wypoczynek",
+  description: "Odkryj spokój nad Zalewem Kozłowskim. Prywatne łowisko No Kill, piękne karpie, amury i drapieżniki. Idealne miejsce na wędkowanie i wypoczynek blisko Dębicy.",
+};
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <>
+      {/* Hero Section */}
+      <section className="relative h-screen min-h-[600px] w-full items-center justify-center overflow-hidden">
+        <HeroVideo
+          videoSrc="/hero.mp4"
+          mobileVideoSrc="/hero-mobile.mp4"
+          posterSrc="/hero-poster.jpg"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+
+        <SectionReveal className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+          <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-7xl lg:text-8xl drop-shadow-lg">
+            Zalew Kozłowski
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="max-w-2xl text-lg font-light text-neutral-200 md:text-xl drop-shadow-md">
+            Witaj na stronie informacyjnej prywatnego łowiska Zalew Kozłowski!
+            Nasz piękny zbiornik, położony w malowniczej okolicy tuż obok Dębicy,
+            to wyjątkowe miejsce wypoczynku i spotkań z wędką, dom dla karpi, amurów i szczupaków.
           </p>
+
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <Link
+              href="/regulamin"
+              className="rounded-full bg-sunset-orange px-8 py-3 text-lg font-semibold text-pine-green-dark transition-transform hover:scale-105 shadow-lg shadow-orange-500/30"
+            >
+              Zobacz Regulamin
+            </Link>
+            <Link
+              href="/cennik"
+              className="rounded-full border border-white/30 bg-white/10 px-8 py-3 text-lg font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+            >
+              Sprawdź Cennik
+            </Link>
+          </div>
+        </SectionReveal>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/50">
+          <div className="h-10 w-6 rounded-full border-2 border-white/50 p-1">
+            <div className="h-2 w-full rounded-full bg-white/50" />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+      </section>
+
+      {/* Info Section (Bento Grid) */}
+      <section className="bg-sand-beige px-4 py-24 dark:bg-pine-green-dark">
+        <SectionReveal className="mx-auto max-w-7xl">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
+              Najważniejsze Informacje
+            </h2>
+            <p className="mt-4 text-earth-brown dark:text-neutral-400">
+              Wszystko, co musisz wiedzieć zanim zarzucisz wędkę.
+            </p>
+          </div>
+
+          <BentoGrid>
+            <BentoCard
+              name="Godziny Otwarcia"
+              className="md:col-span-2"
+              Icon={Clock}
+              description="Czynne od świtu do zmierzchu. Wędkowanie nocne możliwe po wcześniejszym uzgodnieniu telefonicznym."
+              href="/regulamin"
+              cta="Sprawdź"
+              background={
+                <Image
+                  src="/bento/zachod.webp"
+                  alt="Zachód słońca"
+                  fill
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              }
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            <BentoCard
+              name="No Kill"
+              className="md:col-span-1"
+              Icon={Fish}
+              description="Obowiązuje całkowity zakaz zabierania ryb. Każda złowiona sztuka wraca do wody."
+              href="/regulamin"
+              cta="Zasady"
+              background={
+                <Image
+                  src="/bento/ryba2.webp"
+                  alt="Ryba pod wodą"
+                  fill
+                  className="absolute inset-0 h-full w-full object-cover opacity-50 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              }
+            />
+            <BentoCard
+              name="Dojazd"
+              className="md:col-span-1"
+              Icon={MapPin}
+              description="Łatwy dojazd z Dębicy (ok. 10 min). Parking dostępny tuż przy łowisku."
+              href="/kontakt"
+              cta="Mapa"
+              background={
+                <Image
+                  src="/bento/mapa.webp"
+                  alt="Mapa Dojazdu"
+                  fill
+                  className="absolute inset-0 h-full w-full object-cover opacity-60 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              }
+            />
+            <WeatherBentoCard className="md:col-span-2" />
+          </BentoGrid>
+        </SectionReveal>
+      </section>
+
+      {/* Characteristics Section */}
+      <section className="bg-white px-4 py-24 dark:bg-black/20">
+        <SectionReveal className="mx-auto max-w-7xl grid gap-12 md:grid-cols-2 items-center" delay={0.2}>
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-4xl">
+              Charakterystyka Zalewu
+            </h2>
+            <div className="prose prose-lg text-earth-brown dark:text-neutral-300">
+              <p>
+                Zalew Kozłowski to popularne łowisko prywatne o powierzchni ok. 1 hektara.
+                Średnia głębokość wynosi 1 - 1.5 metra, co zapewnia optymalne warunki dla ryb spokojnego żeru.
+              </p>
+              <p>
+                W zalewie regularnie łowione są piękne okazy. Dominują przede wszystkim:
+                <strong className="text-pine-green dark:text-sunset-orange"> Karp, Amur, Szczupak</strong>.
+              </p>
+              <ul className="list-disc pl-5 space-y-2 mt-4">
+                <li>Wygodny dostęp do linii brzegowej</li>
+                <li>Naturalne, trawiaste stanowiska wędkarskie</li>
+                <li>Monitoring i ochrona obiektu</li>
+              </ul>
+            </div>
+            <Link href="/o-lowisku" className="inline-flex items-center gap-2 text-sunset-orange font-bold hover:underline">
+              Więcej o łowisku <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="relative h-96 w-full overflow-hidden rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+            {/* Image Placeholder */}
+            <div className="absolute inset-0 bg-[url('/krajobraz.jpg')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-6 left-6 text-white">
+              <p className="font-bold text-lg">Spokój i Natura</p>
+              <p className="text-sm opacity-80">Idealne miejsce na weekend</p>
+            </div>
+          </div>
+        </SectionReveal>
+      </section>
+    </>
   );
 }
