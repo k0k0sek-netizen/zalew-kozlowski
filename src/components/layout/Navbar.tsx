@@ -58,11 +58,11 @@ export const Navbar = () => {
                 )}
             >
                 <div
-                    className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 transition-all duration-300"
+                    className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 transition-all duration-300"
                 >
                     <Link href="/" onClick={handleLogoClick} className="z-50 flex items-center gap-2 group">
                         <div
-                            className="relative h-20 w-auto aspect-video transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 group-hover:drop-shadow-lg"
+                            className="relative h-16 w-auto aspect-video transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 group-hover:drop-shadow-lg"
                         >
                             <Image
                                 src="/logo-brand.png"
