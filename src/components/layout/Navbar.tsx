@@ -71,7 +71,7 @@ export const Navbar = () => {
                             )}
                         >
                             <Image
-                                src="/logo.png"
+                                src="/logo-brand.png"
                                 alt="Zalew Kozłowski Logo"
                                 fill
                                 className="object-contain" // Ensures logo isn't stretched
