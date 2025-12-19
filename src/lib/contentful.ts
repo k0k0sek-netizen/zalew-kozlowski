@@ -39,3 +39,13 @@ export type PriceItemSkeleton = {
         order?: EntryFieldTypes.Integer;
     };
 };
+
+export type RegulationEntrySkeleton = {
+    contentTypeId: "regulationEntry";
+    fields: {
+        title: EntryFieldTypes.Text;
+        type: EntryFieldTypes.Text; // "General" or "Safety"
+        rules: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+        order?: EntryFieldTypes.Integer;
+    };
+};
