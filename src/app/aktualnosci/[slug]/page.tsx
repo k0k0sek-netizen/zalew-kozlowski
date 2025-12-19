@@ -3,7 +3,8 @@ import { ArrowLeft, Calendar, Fish } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { contentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { contentfulClient, createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { draftMode } from "next/headers";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, MARKS } from '@contentful/rich-text-types';
 import { Asset } from "contentful";
@@ -26,9 +27,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
+    const { isEnabled } = await draftMode();
+    const client = createContentfulClient({ preview: isEnabled });
 
     // Fetch
-    const entries = await contentfulClient.getEntries<ArticleSkeleton>({
+    const entries = await client.getEntries<ArticleSkeleton>({
         content_type: "article",
         "fields.slug": slug,
         limit: 1,

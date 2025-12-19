@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsent } from "@/components/features/CookieConsent";
 import { GoogleAnalytics } from "@/components/features/GoogleAnalytics";
+import DraftModeBanner from "@/components/features/DraftModeBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -105,6 +106,7 @@ export default function RootLayout({
         <Footer />
         <CookieConsent />
         <GoogleAnalytics />
+        <DraftModeBanner />
       </body>
     </html>
   );

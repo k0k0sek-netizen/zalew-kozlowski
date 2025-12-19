@@ -3,7 +3,8 @@ import { SectionReveal } from "@/components/ui/section-reveal";
 import { Calendar, Fish, Trophy, Users, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { contentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { contentfulClient, createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { draftMode } from "next/headers";
 import { Asset } from "contentful";
 
 export const metadata: Metadata = {
@@ -11,8 +12,12 @@ export const metadata: Metadata = {
     description: "Bądź na bieżąco z życiem łowiska. Informacje o zarybieniach, zawodach i wydarzeniach nad Zalewem Kozłowskim.",
 };
 
+
 export default async function NewsPage() {
-    const entries = await contentfulClient.getEntries<ArticleSkeleton>({
+    const { isEnabled } = await draftMode();
+    const client = createContentfulClient({ preview: isEnabled });
+
+    const entries = await client.getEntries<ArticleSkeleton>({
         content_type: "article",
         order: ["-fields.date"],
     });

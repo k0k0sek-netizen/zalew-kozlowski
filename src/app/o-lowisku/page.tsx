@@ -2,8 +2,9 @@ import { FishCard } from "@/components/features/FishCard";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Sprout, Sun, CloudRain, Snowflake, Leaf, ShieldCheck, Trophy } from "lucide-react";
 import { Metadata } from "next";
-import { contentfulClient, FishSpeciesSkeleton } from "@/lib/contentful";
+import { contentfulClient, createContentfulClient, FishSpeciesSkeleton } from "@/lib/contentful";
 import { Asset } from "contentful";
+import { draftMode } from "next/headers";
 
 export const revalidate = 3600;
 
@@ -12,15 +13,17 @@ export const metadata: Metadata = {
     description: "Poznaj charakterystykę Zalewu Kozłowskiego. Sprawdź jakie ryby u nas występują i dlaczego warto nas odwiedzić.",
 };
 
-async function getFishSpecies() {
-    const response = await contentfulClient.getEntries<FishSpeciesSkeleton>({
+async function getFishSpecies(preview: boolean) {
+    const client = createContentfulClient({ preview });
+    const response = await client.getEntries<FishSpeciesSkeleton>({
         content_type: "fishSpecies",
     });
     return response.items;
 }
 
 export default async function AboutPage() {
-    const fishSpecies = await getFishSpecies();
+    const { isEnabled } = await draftMode();
+    const fishSpecies = await getFishSpecies(isEnabled);
 
     return (
         <div className="min-h-screen bg-sand-beige py-24 dark:bg-pine-green-dark">

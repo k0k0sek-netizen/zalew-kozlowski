@@ -1,7 +1,8 @@
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Metadata } from "next";
-import { contentfulClient, PriceItemSkeleton } from "@/lib/contentful";
+import { contentfulClient, createContentfulClient, PriceItemSkeleton } from "@/lib/contentful";
+import { draftMode } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Cennik | Zalew Kozłowski",
@@ -10,8 +11,9 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
-async function getPrices() {
-    const response = await contentfulClient.getEntries<PriceItemSkeleton>({
+async function getPrices(preview: boolean) {
+    const client = createContentfulClient({ preview });
+    const response = await client.getEntries<PriceItemSkeleton>({
         content_type: "priceItem",
         order: ["fields.order"],
     });
@@ -19,7 +21,8 @@ async function getPrices() {
 }
 
 export default async function PricingPage() {
-    const prices = await getPrices();
+    const { isEnabled } = await draftMode();
+    const prices = await getPrices(isEnabled);
 
     // Helper to identify specific cards for styling
     // We can use the 'category' field or title to distinguish them
