@@ -39,9 +39,6 @@ export const metadata: Metadata = {
     title: "Zalew Kozłowski | Prywatne Łowisko",
     description: "Cisza, spokój i wielka ryba. Odwiedź nas!",
   },
-  icons: {
-    icon: "/favicon.ico",
-  },
   manifest: "/manifest.json",
 };
 

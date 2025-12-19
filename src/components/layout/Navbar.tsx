@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Fish } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { WeatherWidget } from "@/components/features/WeatherWidget";
 
 const NAV_ITEMS = [
@@ -58,12 +59,15 @@ export const Navbar = () => {
             >
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
                     <Link href="/" onClick={handleLogoClick} className="z-50 flex items-center gap-2 group">
-                        <div className="rounded-full bg-sunset-orange p-2 transition-transform group-hover:scale-110">
-                            <Fish className="h-6 w-6 text-white" />
+                        <div className="relative h-12 w-auto aspect-3/1 transition-transform group-hover:scale-105">
+                            <Image
+                                src="/logo.png"
+                                alt="Zalew Kozłowski Logo"
+                                fill
+                                className="object-contain" // Ensures logo isn't stretched
+                                sizes="(max-width: 768px) 100vw, 200px"
+                            />
                         </div>
-                        <span className="text-xl font-bold tracking-wide text-white">
-                            Zalew Kozłowski
-                        </span>
                     </Link>
 
 
