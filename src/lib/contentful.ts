@@ -59,3 +59,14 @@ export type InfoBlockSkeleton = {
         subtitle?: EntryFieldTypes.Text;
     };
 };
+
+export type FishSpeciesSkeleton = {
+    contentTypeId: "fishSpecies";
+    fields: {
+        name: EntryFieldTypes.Text;
+        description: EntryFieldTypes.Text;
+        image: EntryFieldTypes.AssetLink;
+        stats: EntryFieldTypes.Object; // JSON object: { strength, difficulty, activity }
+        tags: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+    };
+};

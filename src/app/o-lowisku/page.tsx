@@ -1,15 +1,27 @@
 import { FishCard } from "@/components/features/FishCard";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { SectionReveal } from "@/components/ui/section-reveal";
-import { Sprout, Sun, CloudRain, Snowflake, Leaf, ShieldCheck, Trophy, Info } from "lucide-react";
+import { Sprout, Sun, CloudRain, Snowflake, Leaf, ShieldCheck, Trophy } from "lucide-react";
 import { Metadata } from "next";
+import { contentfulClient, FishSpeciesSkeleton } from "@/lib/contentful";
+import { Asset } from "contentful";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
     title: "O Łowisku | Zalew Kozłowski",
     description: "Poznaj charakterystykę Zalewu Kozłowskiego. Sprawdź jakie ryby u nas występują i dlaczego warto nas odwiedzić.",
 };
 
-export default function AboutPage() {
+async function getFishSpecies() {
+    const response = await contentfulClient.getEntries<FishSpeciesSkeleton>({
+        content_type: "fishSpecies",
+    });
+    return response.items;
+}
+
+export default async function AboutPage() {
+    const fishSpecies = await getFishSpecies();
+
     return (
         <div className="min-h-screen bg-sand-beige py-24 dark:bg-pine-green-dark">
             <div className="mx-auto max-w-6xl px-4">
@@ -34,27 +46,23 @@ export default function AboutPage() {
                     </div>
 
                     <div className="grid gap-8 md:grid-cols-3">
-                        <FishCard
-                            name="Karp Królewski"
-                            description="Inteligentny i silny. Nasze karpie (do 15kg) znają sztuczki wędkarzy. Wymagają cierpliwości i precyzyjnego nęcenia."
-                            imageSrc="/ryby/karp.jpg"
-                            stats={{ strength: 8, difficulty: 9, activity: 6 }}
-                            tags={["Król Wód", "Waleczny", "Sprytny"]}
-                        />
-                        <FishCard
-                            name="Amur Biały"
-                            description="Torpeda naszych wód. Po zacięciu startuje jak rakieta. Uwielbia roślinność i słoneczne dni."
-                            imageSrc="/ryby/amur.jpg"
-                            stats={{ strength: 10, difficulty: 6, activity: 8 }}
-                            tags={["Siłacz", "Szybki", "Apetyt"]}
-                        />
-                        <FishCard
-                            name="Karaś Złocisty"
-                            description="Piękna, złota ryba, która cieszy oko. Idealny cel dla początkujących i miłośników metody spławikowej."
-                            imageSrc="/ryby/karas.jpg"
-                            stats={{ strength: 4, difficulty: 3, activity: 9 }}
-                            tags={["Złoty", "Aktywny", "Spławik"]}
-                        />
+                        {fishSpecies.map((fish) => {
+                            const image = fish.fields.image as Asset;
+                            const imageUrl = image?.fields?.file?.url
+                                ? `https:${image.fields.file.url}`
+                                : "/ryby/karp.jpg"; // Fallback
+
+                            return (
+                                <FishCard
+                                    key={fish.sys.id}
+                                    name={fish.fields.name}
+                                    description={fish.fields.description}
+                                    imageSrc={imageUrl}
+                                    stats={fish.fields.stats as any}
+                                    tags={fish.fields.tags || []}
+                                />
+                            );
+                        })}
                     </div>
                 </SectionReveal>
 
