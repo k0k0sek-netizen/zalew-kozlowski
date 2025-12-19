@@ -27,3 +27,15 @@ export type ArticleSkeleton = {
         category: EntryFieldTypes.Text;
     };
 };
+
+export type PriceItemSkeleton = {
+    contentTypeId: "priceItem";
+    fields: {
+        title: EntryFieldTypes.Text;
+        price: EntryFieldTypes.Text;
+        description?: EntryFieldTypes.Text;
+        details: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+        category: EntryFieldTypes.Text;
+        order?: EntryFieldTypes.Integer;
+    };
+};
