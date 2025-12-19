@@ -58,17 +58,11 @@ export const Navbar = () => {
                 )}
             >
                 <div
-                    className={cn(
-                        "mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-300",
-                        scrolled ? "h-24" : "h-40"
-                    )}
+                    className="mx-auto flex h-24 max-w-7xl items-center justify-between px-6 transition-all duration-300"
                 >
                     <Link href="/" onClick={handleLogoClick} className="z-50 flex items-center gap-2 group">
                         <div
-                            className={cn(
-                                "relative w-auto aspect-video transition-all duration-300",
-                                scrolled ? "h-16" : "h-32"
-                            )}
+                            className="relative h-20 w-auto aspect-video transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 group-hover:drop-shadow-lg"
                         >
                             <Image
                                 src="/logo-brand.png"

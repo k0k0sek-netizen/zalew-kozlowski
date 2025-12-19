@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Fish } from "lucide-react";
+import Image from "next/image";
 
 export const Footer = () => {
     return (
@@ -9,10 +10,15 @@ export const Footer = () => {
                     {/* Brand */}
                     <div className="md:col-span-1">
                         <Link href="/" className="flex items-center gap-2 mb-4 group">
-                            <div className="rounded-full bg-sunset-orange p-1.5 transition-transform group-hover:scale-110">
-                                <Fish className="h-4 w-4 text-white" />
+                            <div className="relative h-10 w-auto aspect-video transition-transform group-hover:scale-110">
+                                <Image
+                                    src="/logo-brand.png"
+                                    alt="Zalew Kozłowski"
+                                    fill
+                                    className="object-contain"
+                                />
                             </div>
-                            <span className="text-lg font-bold tracking-wide text-white">
+                            <span className="text-lg font-bold tracking-wide text-white group-hover:text-sunset-orange transition-colors">
                                 Zalew Kozłowski
                             </span>
                         </Link>

@@ -1,5 +1,6 @@
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { ArrowLeft, Calendar, Fish } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { contentfulClient, ArticleSkeleton } from "@/lib/contentful";
@@ -107,8 +108,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         {documentToReactComponents(content, renderOptions)}
 
                         <div className="mt-16 flex items-center gap-5 border-t border-neutral-200 dark:border-white/10 pt-10">
-                            <div className="h-14 w-14 rounded-full bg-sunset-orange p-3 flex items-center justify-center shadow-xl shadow-orange-500/20 transform hover:scale-110 transition-transform">
-                                <Fish className="h-8 w-8 text-white" />
+                            <div className="h-16 w-16 rounded-full bg-white p-1 flex items-center justify-center shadow-xl shadow-black/5 transform hover:scale-110 transition-transform overflow-hidden relative">
+                                <Image
+                                    src="/logo-brand.png"
+                                    alt="Logo"
+                                    fill
+                                    className="object-contain p-2"
+                                />
                             </div>
                             <div>
                                 <p className="font-bold text-xl leading-tight text-pine-green dark:text-white">Gospodarz Łowiska</p>
