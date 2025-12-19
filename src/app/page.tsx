@@ -6,15 +6,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { WeatherBentoCard } from "@/components/features/WeatherBentoCard";
 import { Metadata } from "next";
+import { contentfulClient, InfoBlockSkeleton } from "@/lib/contentful";
 
-export const runtime = 'edge';
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Zalew Kozłowski | Prywatne Łowisko i Wypoczynek",
   description: "Odkryj spokój nad Zalewem Kozłowskim. Prywatne łowisko No Kill, piękne karpie, amury i drapieżniki. Idealne miejsce na wędkowanie i wypoczynek blisko Dębicy.",
 };
 
-export default function Home() {
+async function getInfoBlocks() {
+  const response = await contentfulClient.getEntries<InfoBlockSkeleton>({
+    content_type: "infoBlock",
+  });
+  return response.items;
+}
+
+export default async function Home() {
+  const infoBlocks = await getInfoBlocks();
+
+  // Helper to find block content
+  const getBlock = (search: string) => {
+    return infoBlocks.find(b =>
+      b.fields.id === search ||
+      b.fields.title.toLowerCase().includes(search.toLowerCase())
+    );
+  };
+
+  const hoursBlock = getBlock('hours') || getBlock('godziny');
+  const noKillBlock = getBlock('no-kill') || getBlock('no kill');
+
   return (
     <>
       {/* Hero Section */}
@@ -73,10 +94,10 @@ export default function Home() {
 
           <BentoGrid>
             <BentoCard
-              name="Godziny Otwarcia"
+              name={hoursBlock?.fields.title || "Godziny Otwarcia"}
               className="md:col-span-2"
               Icon={Clock}
-              description="Czynne od świtu do zmierzchu. Wędkowanie nocne możliwe po wcześniejszym uzgodnieniu telefonicznym."
+              description={hoursBlock?.fields.value || "Czynne od świtu do zmierzchu. Wędkowanie nocne możliwe po wcześniejszym uzgodnieniu telefonicznym."}
               href="/regulamin"
               cta="Sprawdź"
               background={
@@ -90,10 +111,10 @@ export default function Home() {
               }
             />
             <BentoCard
-              name="No Kill"
+              name={noKillBlock?.fields.title || "No Kill"}
               className="md:col-span-1"
               Icon={Fish}
-              description="Obowiązuje całkowity zakaz zabierania ryb. Każda złowiona sztuka wraca do wody."
+              description={noKillBlock?.fields.value || "Obowiązuje całkowity zakaz zabierania ryb. Każda złowiona sztuka wraca do wody."}
               href="/regulamin"
               cta="Zasady"
               background={

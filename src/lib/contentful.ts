@@ -49,3 +49,13 @@ export type RegulationEntrySkeleton = {
         order?: EntryFieldTypes.Integer;
     };
 };
+
+export type InfoBlockSkeleton = {
+    contentTypeId: "infoBlock";
+    fields: {
+        id: EntryFieldTypes.Text; // e.g., 'hours', 'no-kill'
+        title: EntryFieldTypes.Text;
+        value: EntryFieldTypes.Text;
+        subtitle?: EntryFieldTypes.Text;
+    };
+};
