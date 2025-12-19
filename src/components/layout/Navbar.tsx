@@ -66,7 +66,7 @@ export const Navbar = () => {
                     <Link href="/" onClick={handleLogoClick} className="z-50 flex items-center gap-2 group">
                         <div
                             className={cn(
-                                "relative w-auto aspect-3/1 transition-all duration-300",
+                                "relative w-auto aspect-video transition-all duration-300",
                                 scrolled ? "h-16" : "h-32"
                             )}
                         >
