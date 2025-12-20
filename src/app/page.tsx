@@ -5,6 +5,7 @@ import { Clock, Fish, MapPin, CalendarDays, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { WeatherBentoCard } from "@/components/features/WeatherBentoCard";
+import { TrustBadge } from "@/components/features/TrustBadge";
 import { Metadata } from "next";
 import { contentfulClient, InfoBlockSkeleton } from "@/lib/contentful";
 
@@ -55,6 +56,10 @@ export default async function Home() {
             Nasz piękny zbiornik, położony w malowniczej okolicy tuż obok Dębicy,
             to wyjątkowe miejsce wypoczynku i spotkań z wędką, dom dla karpi, amurów i szczupaków.
           </p>
+
+          <div className="mt-6 flex justify-center">
+            <TrustBadge />
+          </div>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <Link
