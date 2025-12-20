@@ -4,7 +4,8 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsent } from "@/components/features/CookieConsent";
-import { GoogleAnalytics } from "@/components/features/GoogleAnalytics";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/react";
 import DraftModeBanner from "@/components/features/DraftModeBanner";
 
 const geistSans = Geist({
@@ -105,8 +106,9 @@ export default function RootLayout({
         </main>
         <Footer />
         <CookieConsent />
-        <GoogleAnalytics />
         <DraftModeBanner />
+        <Analytics />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || ""} />
       </body>
     </html>
   );

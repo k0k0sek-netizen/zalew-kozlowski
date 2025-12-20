@@ -91,6 +91,30 @@ export async function uploadGalleryPhoto(formData: FormData) {
             },
         });
 
+        // 7. Send Email Notification (Non-blocking)
+        if (process.env.RESEND_API_KEY) {
+            try {
+                const { Resend } = await import("resend");
+                const resend = new Resend(process.env.RESEND_API_KEY);
+
+                await resend.emails.send({
+                    from: 'Powiadomienia Zalew <onboarding@resend.dev>',
+                    to: 'lowiskokozlow@gmail.com',
+                    subject: `🐟 Nowe zdjęcie w galerii: ${title}`,
+                    html: `
+                        <h2>Ktoś dodał nowe zdjęcie!</h2>
+                        <p><strong>Tytuł:</strong> ${title}</p>
+                        <p><strong>Autor:</strong> ${author}</p>
+                        <hr />
+                        <p>Wejdź do <a href="https://app.contentful.com">Contentfula</a> aby zatwierdzić publikację (zmień "Draft" na "Published").</p>
+                    `,
+                });
+            } catch (emailError) {
+                console.error("Failed to send email notification:", emailError);
+                // Don't fail the upload just because email failed
+            }
+        }
+
         return { success: true, id: entry.sys.id };
 
     } catch (error: any) {
