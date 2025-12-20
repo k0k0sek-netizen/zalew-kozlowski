@@ -69,7 +69,7 @@ export const SpotlightCard = ({ children, className = "", ...props }: SpotlightC
                     background: `radial-gradient(1000px circle at ${position.x}px ${position.y}px, rgba(249, 115, 22, 0.25), transparent 40%)`,
                     maskImage: "linear-gradient(#fff, #fff) padding-box, linear-gradient(#fff, #fff)",
                     WebkitMaskImage: "linear-gradient(#fff, #fff) padding-box, linear-gradient(#fff, #fff)",
-                    maskComposite: "xor",
+                    maskComposite: "exclude",
                     WebkitMaskComposite: "xor",
                 }}
             />
