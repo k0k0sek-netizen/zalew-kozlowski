@@ -16,6 +16,7 @@ export const Footer = () => {
                                     alt="Zalew Kozłowski"
                                     fill
                                     className="object-contain"
+                                    sizes="100px"
                                 />
                             </div>
                             <span className="text-lg font-bold tracking-wide text-white group-hover:text-sunset-orange transition-colors">

@@ -68,6 +68,7 @@ export const Navbar = () => {
                                 src="/logo-brand.png"
                                 alt="Zalew Kozłowski Logo"
                                 fill
+                                priority
                                 className="object-contain" // Ensures logo isn't stretched
                                 sizes="(max-width: 768px) 100vw, 200px"
                             />

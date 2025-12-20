@@ -49,11 +49,16 @@ export const FishCard = ({ name, description, imageSrc, stats, tags }: FishCardP
             {/* Image Area */}
             <div className="relative h-48 w-full overflow-hidden">
                 <div className="absolute inset-0 bg-neutral-200 animate-pulse" /> {/* Placeholder loading */}
-                <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                    style={{ backgroundImage: `url('${imageSrc}')` }}
+                <Image
+                    src={imageSrc}
+                    alt={name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent opacity-60" />
+
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
                 <div className="absolute bottom-4 left-4">
                     <h3 className="text-2xl font-black text-white uppercase tracking-tight">{name}</h3>
                 </div>

@@ -4,6 +4,7 @@ import { SectionReveal } from "@/components/ui/section-reveal";
 import { Camera } from "lucide-react";
 import { useState } from "react";
 import { Lightbox } from "@/components/ui/lightbox";
+import Image from "next/image";
 
 export interface GalleryImage {
     src: string;
@@ -34,9 +35,12 @@ export const GalleryGrid = ({ images }: GalleryGridProps) => {
                             onClick={() => setSelectedIndex(index)}
                             className={`relative overflow-hidden rounded-xl group cursor-pointer ${image.span || "col-span-1 row-span-1"}`}
                         >
-                            <div
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                                style={{ backgroundImage: `url('${image.src}')` }}
+                            <Image
+                                src={image.src}
+                                alt={image.title}
+                                fill
+                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors" />
                             <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">

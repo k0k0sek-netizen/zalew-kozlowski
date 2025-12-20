@@ -21,7 +21,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
 
             {/* Overlay gradient for text readability and atmosphere */}
             <div
-                className="absolute inset-0 z-10 bg-linear-to-b from-pine-green-dark/40 via-transparent to-pine-green-dark/90 transition-opacity duration-1000"
+                className="absolute inset-0 z-10 bg-linear-to-b from-black/60 via-black/30 to-pine-green-dark/95 transition-opacity duration-1000"
             />
 
             {!videoSrc && posterSrc && (

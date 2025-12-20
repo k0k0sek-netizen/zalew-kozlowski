@@ -50,7 +50,7 @@ export default async function Home() {
           <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-7xl lg:text-8xl drop-shadow-lg">
             Zalew Kozłowski
           </h1>
-          <p className="max-w-2xl text-lg font-light text-neutral-200 md:text-xl drop-shadow-md">
+          <p className="max-w-2xl text-lg font-medium text-white md:text-xl drop-shadow-xl shadow-black">
             Witaj na stronie informacyjnej prywatnego łowiska Zalew Kozłowski!
             Nasz piękny zbiornik, położony w malowniczej okolicy tuż obok Dębicy,
             to wyjątkowe miejsce wypoczynku i spotkań z wędką, dom dla karpi, amurów i szczupaków.
@@ -178,7 +178,13 @@ export default async function Home() {
 
           <div className="relative h-96 w-full overflow-hidden rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
             {/* Image Placeholder */}
-            <div className="absolute inset-0 bg-[url('/krajobraz.jpg')] bg-cover bg-center" />
+            <Image
+              src="/krajobraz.jpg"
+              alt="Krajobraz Zalewu Kozłowskiego"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
             <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-6 left-6 text-white">
               <p className="font-bold text-lg">Spokój i Natura</p>
