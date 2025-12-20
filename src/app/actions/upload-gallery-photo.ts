@@ -91,27 +91,25 @@ export async function uploadGalleryPhoto(formData: FormData) {
             },
         });
 
-        // 7. Send Email Notification (Non-blocking)
-        if (process.env.RESEND_API_KEY) {
+        // 7. Send Notification via Formspree (Simple POST)
+        if (process.env.FORMSPREE_FORM_ID) {
             try {
-                const { Resend } = await import("resend");
-                const resend = new Resend(process.env.RESEND_API_KEY);
-
-                await resend.emails.send({
-                    from: 'Powiadomienia Zalew <onboarding@resend.dev>',
-                    to: 'lowiskokozlow@gmail.com',
-                    subject: `🐟 Nowe zdjęcie w galerii: ${title}`,
-                    html: `
-                        <h2>Ktoś dodał nowe zdjęcie!</h2>
-                        <p><strong>Tytuł:</strong> ${title}</p>
-                        <p><strong>Autor:</strong> ${author}</p>
-                        <hr />
-                        <p>Wejdź do <a href="https://app.contentful.com">Contentfula</a> aby zatwierdzić publikację (zmień "Draft" na "Published").</p>
-                    `,
+                await fetch(`https://formspree.io/f/${process.env.FORMSPREE_FORM_ID}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        subject: `🐟 Nowe zdjęcie: ${title}`,
+                        message: `Ktoś wgrał nowe zdjęcie do galerii.\nTytuł: ${title}\nAutor: ${author}\n\nWejdź do Contentfula aby zatwierdzić.`,
+                        title: title,
+                        author: author,
+                        _replyto: "no-reply@zalew-kozlowski.pl"
+                    })
                 });
-            } catch (emailError) {
-                console.error("Failed to send email notification:", emailError);
-                // Don't fail the upload just because email failed
+            } catch (formError) {
+                console.error("Failed to send Formspree notification:", formError);
+                // Don't fail the upload just because notification failed
             }
         }
 
