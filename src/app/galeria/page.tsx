@@ -3,7 +3,8 @@ import { GalleryUploadForm } from "@/components/features/GalleryUploadForm";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Metadata } from "next";
 import { GalleryGrid, GalleryImage } from "@/components/features/GalleryGrid";
-import { contentfulClient, GalleryPhotoSkeleton } from "@/lib/contentful";
+import { contentfulClient, createContentfulClient, GalleryPhotoSkeleton } from "@/lib/contentful";
+import { draftMode } from "next/headers";
 
 export const metadata: Metadata = {
     title: "Galeria | Zalew Kozłowski",
@@ -51,9 +52,11 @@ const assignSpans = (index: number) => {
 
 export default async function GalleryPage() {
     let images = fallbackImages;
+    const { isEnabled } = await draftMode();
+    const client = createContentfulClient({ preview: isEnabled });
 
     try {
-        const response = await contentfulClient.getEntries<GalleryPhotoSkeleton>({
+        const response = await client.getEntries<GalleryPhotoSkeleton>({
             content_type: "galleryPhoto",
             order: ["-sys.createdAt"]
         });

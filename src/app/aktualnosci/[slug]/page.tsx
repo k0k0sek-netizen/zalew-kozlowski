@@ -12,13 +12,16 @@ import { Metadata } from "next";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const entries = await contentfulClient.getEntries<ArticleSkeleton>({
+    const { isEnabled } = await draftMode(); // Check draft mode in metadata
+    const client = createContentfulClient({ preview: isEnabled });
+
+    const entries = await client.getEntries<ArticleSkeleton>({
         content_type: "article",
         "fields.slug": slug,
         limit: 1,
     });
     const post = entries.items[0];
-    if (!post) return { title: "Nie znaleziono artykułu" };
+    if (!post) return { title: "Nie znaleziono artykułu (404)" };
     return {
         title: `${post.fields.title} | Zalew Kozłowski`,
         description: post.fields.excerpt,
@@ -38,6 +41,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     });
 
     const post = entries.items[0];
+
+    // DEBUG MODE: Show error instead of 404 if in draft mode
     if (!post) notFound();
 
     const { title, date, content, coverImage, category } = post.fields;
