@@ -4,7 +4,7 @@ import Image from "next/image";
 export const TrustBadge = () => {
     return (
         <a
-            href="https://www.google.com/maps?cid=1758914041727787308"
+            href="https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski&query_place_id=ChIJyca1WCEbPUcRLCImk6TmaBg"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-full bg-white/10 backdrop-blur-md px-4 py-2 border border-white/20 hover:bg-white/20 transition-colors group"
