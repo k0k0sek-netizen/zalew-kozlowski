@@ -72,9 +72,9 @@ export default async function NewsPage() {
                             return (
                                 <SpotlightCard
                                     key={post.id}
-                                    className="overflow-hidden border-none shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl h-full"
+                                    className="h-full overflow-hidden border-none shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl"
                                 >
-                                    <div className="flex flex-col h-full">
+                                    <div className="flex flex-col h-full relative z-10">
                                         {/* Image Area */}
                                         <div className="relative h-48 w-full overflow-hidden bg-neutral-200 shrink-0">
                                             <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
@@ -89,7 +89,7 @@ export default async function NewsPage() {
                                         </div>
 
                                         {/* Content Area */}
-                                        <div className="flex flex-1 flex-col p-6 relative z-10 bg-white dark:bg-pine-green-dark/50">
+                                        <div className="flex flex-col flex-grow p-6 bg-white dark:bg-pine-green-dark/50">
                                             <div className="mb-3 flex items-center gap-2 text-xs font-medium text-neutral-400">
                                                 <Calendar className="h-3.5 w-3.5" />
                                                 {post.date}
@@ -97,10 +97,10 @@ export default async function NewsPage() {
                                             <h2 className="mb-3 text-xl font-bold leading-tight text-pine-green dark:text-white">
                                                 {post.title}
                                             </h2>
-                                            <p className="mb-6 flex-1 text-sm text-neutral-600 dark:text-neutral-300">
+                                            <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-300">
                                                 {post.excerpt}
                                             </p>
-                                            <div className="group inline-flex items-center gap-2 text-sm font-bold text-sunset-orange transition-colors hover:text-orange-600">
+                                            <div className="mt-auto group inline-flex items-center gap-2 text-sm font-bold text-sunset-orange transition-colors hover:text-orange-600">
                                                 Czytaj więcej
                                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                             </div>
