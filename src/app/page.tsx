@@ -48,7 +48,7 @@ export default async function Home() {
         />
 
         <SectionReveal className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
-          <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-7xl lg:text-8xl drop-shadow-lg">
+          <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-7xl lg:text-8xl drop-shadow-lg">
             Zalew Kozłowski
           </h1>
           <p className="max-w-2xl text-lg font-medium text-white md:text-xl drop-shadow-xl shadow-black">
@@ -89,7 +89,7 @@ export default async function Home() {
       <section className="bg-sand-beige px-4 py-24 dark:bg-pine-green-dark">
         <SectionReveal className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-5xl">
               Najważniejsze Informacje
             </h2>
             <p className="mt-4 text-earth-brown dark:text-neutral-400">
@@ -158,7 +158,7 @@ export default async function Home() {
       <section className="bg-white px-4 py-24 dark:bg-black/20">
         <SectionReveal className="mx-auto max-w-7xl grid gap-12 md:grid-cols-2 items-center" delay={0.2}>
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-4xl">
+            <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-4xl">
               Charakterystyka Zalewu
             </h2>
             <div className="prose prose-lg text-earth-brown dark:text-neutral-300">

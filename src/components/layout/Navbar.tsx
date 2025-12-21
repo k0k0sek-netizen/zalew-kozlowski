@@ -74,6 +74,7 @@ export const Navbar = () => {
                                 priority
                                 className="object-contain"
                                 sizes="128px"
+                                fetchPriority="high"
                             />
                         </div>
                     </Link>
