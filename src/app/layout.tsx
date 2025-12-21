@@ -54,6 +54,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-sand-beige text-pine-green-dark selection:bg-sunset-orange selection:text-white`}
       >
+        <link rel="preconnect" href="https://api.open-meteo.com" />
         {/* Accessibility: Skip Link */}
         <a
           href="#main-content"

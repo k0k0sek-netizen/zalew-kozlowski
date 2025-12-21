@@ -17,8 +17,8 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
         // Check if user has already consented
         const consent = localStorage.getItem("cookie-consent");
         if (!consent) {
-            // Show banner after a short delay for better UX
-            const timer = setTimeout(() => setIsVisible(true), 1000);
+            // Show banner after a delay to better UX and avoid LCP penalty
+            const timer = setTimeout(() => setIsVisible(true), 3500);
             return () => clearTimeout(timer);
         }
     }, []);
@@ -28,7 +28,7 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
         setIsVisible(false);
         // Force re-render of analytics component via custom event or reload
         // For now, simpler approach: simple reload ensures all scripts fire correctly
-        window.location.reload();
+        // window.location.reload(); // Removed to prevent refresh
     };
 
     const handleDecline = () => {
