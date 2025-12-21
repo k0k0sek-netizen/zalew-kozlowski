@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export const Footer = () => {
     return (
-        <footer className="bg-pine-green-dark border-t border-white/10 pt-16 pb-8 text-neutral-300">
+        <footer className="bg-pine-green-dark border-t border-white/10 pt-16 pb-8 text-stone-200">
             <div className="mx-auto max-w-7xl px-6">
                 <div className="grid gap-12 md:grid-cols-4 mb-12">
                     {/* Brand */}

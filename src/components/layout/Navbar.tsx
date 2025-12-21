@@ -65,7 +65,7 @@ export const Navbar = () => {
                 >
                     <Link href="/" onClick={handleLogoClick} className="z-50 flex items-center gap-2 group">
                         <div
-                            className="relative h-16 w-auto aspect-video transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-2 group-hover:drop-shadow-xl"
+                            className="relative h-16 w-32 shrink-0"
                         >
                             <Image
                                 src="/logo-brand.png"

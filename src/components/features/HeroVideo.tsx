@@ -39,6 +39,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                     muted
                     loop
                     playsInline
+                    preload="none"
                     aria-hidden="true"
                 >
                     {mobileVideoSrc && (
