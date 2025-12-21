@@ -60,6 +60,7 @@ export const BentoCard = ({
             </div>
 
             <div
+                className={cn(
                     "pointer-events-none absolute bottom-0 z-20 flex w-full transform-gpu flex-row items-center p-4 transition-all duration-300",
                     "translate-y-0 opacity-100", // Mobile: Always visible
                     "md:translate-y-10 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100" // Desktop: Hover reveal
