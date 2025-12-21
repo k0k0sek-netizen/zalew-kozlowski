@@ -19,7 +19,6 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
         if (!consent) {
             // Show banner immediately to minimize LCP delay if this element is picked by Lighthouse
             setIsVisible(true);
-            return () => clearTimeout(timer);
         }
     }, []);
 
