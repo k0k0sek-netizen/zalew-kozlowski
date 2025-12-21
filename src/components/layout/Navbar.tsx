@@ -157,22 +157,28 @@ export const Navbar = () => {
                         className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-pine-green-dark/95 backdrop-blur-xl md:hidden"
                     >
                         <div className="flex flex-col items-center gap-8 text-center">
-                            {NAV_ITEMS.map((item, idx) => (
-                                <motion.div
-                                    key={item.href}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.1 + idx * 0.1 }}
-                                >
-                                    <Link
-                                        href={item.href}
-                                        onClick={() => setIsOpen(false)}
-                                        className="text-3xl font-bold text-white transition-colors hover:text-sunset-orange"
+                            {NAV_ITEMS.map((item, idx) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <motion.div
+                                        key={item.href}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.1 + idx * 0.1 }}
                                     >
-                                        {item.label}
-                                    </Link>
-                                </motion.div>
-                            ))}
+                                        <Link
+                                            href={item.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className={cn(
+                                                "text-3xl font-bold transition-colors",
+                                                isActive ? "text-sunset-orange" : "text-white hover:text-sunset-orange"
+                                            )}
+                                        >
+                                            {item.label}
+                                        </Link>
+                                    </motion.div>
+                                );
+                            })}
 
                             {/* Mobile Weather Widget */}
                             <motion.div
