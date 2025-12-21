@@ -72,7 +72,7 @@ export const Navbar = () => {
                                 alt="Zalew Kozłowski Logo"
                                 fill
                                 priority
-                                className="object-contain drop-shadow-md"
+                                className="object-contain"
                                 sizes="(max-width: 768px) 100vw, 200px"
                             />
                         </div>

@@ -31,7 +31,7 @@ export const Footer = () => {
 
                     {/* Links */}
                     <div>
-                        <h4 className="font-bold text-white mb-4">Na Skróty</h4>
+                        <h3 className="font-bold text-white mb-4">Na Skróty</h3>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/o-lowisku" className="hover:text-sunset-orange transition-colors">O Łowisku</Link></li>
                             <li><Link href="/regulamin" className="hover:text-sunset-orange transition-colors">Regulamin</Link></li>
@@ -42,7 +42,7 @@ export const Footer = () => {
 
                     {/* Contact */}
                     <div>
-                        <h4 className="font-bold text-white mb-4">Kontakt</h4>
+                        <h3 className="font-bold text-white mb-4">Kontakt</h3>
                         <ul className="space-y-2 text-sm opacity-70">
                             <li>Kozłów 4A</li>
                             <li>39-200 Dębica</li>
@@ -53,7 +53,7 @@ export const Footer = () => {
 
                     {/* Legal */}
                     <div>
-                        <h4 className="font-bold text-white mb-4">Informacje</h4>
+                        <h3 className="font-bold text-white mb-4">Informacje</h3>
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/polityka-prywatnosci" className="hover:text-sunset-orange transition-colors">Polityka Prywatności</Link></li>
                             <li><Link href="/regulamin" className="hover:text-sunset-orange transition-colors">Zasady Pobytu</Link></li>
