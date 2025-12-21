@@ -13,10 +13,11 @@ export const Footer = () => {
                             <div className="relative h-10 w-auto aspect-video transition-transform group-hover:scale-110">
                                 <Image
                                     src="/logo-brand.png"
-                                    alt="Zalew Kozłowski"
+                                    alt=""
                                     fill
                                     className="object-contain"
                                     sizes="100px"
+                                    aria-hidden="true"
                                 />
                             </div>
                             <span className="text-lg font-bold tracking-wide text-white group-hover:text-sunset-orange transition-colors">
@@ -71,7 +72,7 @@ export const Footer = () => {
                             href="https://wektorkodu.pl"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-bold text-sunset-orange hover:text-white transition-colors"
+                            className="font-bold text-white hover:text-sunset-orange transition-colors"
                         >
                             WektorKodu.pl
                         </a>
