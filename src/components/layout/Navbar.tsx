@@ -23,6 +23,8 @@ export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
 
+    const [hoveredPath, setHoveredPath] = useState<string | null>(null);
+
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
@@ -78,16 +80,46 @@ export const Navbar = () => {
 
 
                     {/* Desktop Menu */}
-                    <div className="hidden items-center gap-8 md:flex">
-                        {NAV_ITEMS.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="text-sm font-bold text-white drop-shadow-md transition-colors hover:text-sunset-orange"
-                            >
-                                {item.label}
-                            </Link>
-                        ))}
+                    <div className="hidden items-center gap-1 md:flex">
+                        {NAV_ITEMS.map((item) => {
+                            const isActive = pathname === item.href;
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    className={cn(
+                                        "relative px-4 py-2 text-sm font-bold transition-colors rounded-full",
+                                        isActive ? "text-sunset-orange" : "text-white hover:text-white/90"
+                                    )}
+                                    onMouseEnter={() => setHoveredPath(item.href)}
+                                    onMouseLeave={() => setHoveredPath(null)}
+                                >
+                                    <span className="relative z-10 drop-shadow-md">{item.label}</span>
+                                    {hoveredPath === item.href && (
+                                        <motion.div
+                                            layoutId="navbar-hover"
+                                            className="absolute inset-0 z-0 rounded-full bg-white/15 backdrop-blur-sm"
+                                            transition={{
+                                                type: "spring",
+                                                bounce: 0.2,
+                                                duration: 0.6,
+                                            }}
+                                        />
+                                    )}
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="navbar-active"
+                                            className="absolute bottom-0 left-3 right-3 h-0.5 bg-sunset-orange shadow-[0_0_8px_rgba(251,146,60,0.8)]"
+                                            transition={{
+                                                type: "spring",
+                                                bounce: 0.2,
+                                                duration: 0.6,
+                                            }}
+                                        />
+                                    )}
+                                </Link>
+                            );
+                        })}
 
                         <WeatherWidget className="hidden lg:flex" />
 
