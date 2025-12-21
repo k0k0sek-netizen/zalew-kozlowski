@@ -18,7 +18,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "downloads.ctfassets.net",
       },
+      // Fallback for any contentful assets if needed
+      {
+        protocol: "https",
+        hostname: "*.contentful.com",
+      }
     ],
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion", "date-fns"],
   },
 };
 
