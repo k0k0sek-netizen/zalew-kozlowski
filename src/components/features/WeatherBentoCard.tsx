@@ -39,12 +39,12 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
 
             {/* 1. Dynamic Animated Gradient Background - Grayscale until hover */}
             <div className={cn(
-                "absolute inset-0 z-0 h-full w-full bg-size-[400%_400%] md:animate-gradient grayscale group-hover:grayscale-0 transition-[filter] duration-1000",
+                "absolute inset-0 z-0 h-full w-full bg-size-[400%_400%] md:animate-gradient md:grayscale group-hover:grayscale-0 transition-[filter] duration-1000",
                 weather ? getBgClass(weather.score) : "bg-neutral-900"
             )} />
 
             {/* 2. Abstract Shapes/Noise Overlay */}
-            <div className="absolute inset-0 z-0 opacity-50 mix-blend-soft-light grayscale group-hover:grayscale-0 transition-all duration-700">
+            <div className="absolute inset-0 z-0 opacity-50 mix-blend-soft-light md:grayscale group-hover:grayscale-0 transition-all duration-700">
                 <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
                     <filter id="noiseFilter">
                         <feTurbulence type="fractalNoise" baseFrequency="0.8" stitchTiles="stitch" />
@@ -82,7 +82,7 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
                 </div>
 
                 {/* Main Score Display - More Compact */}
-                <div className="flex-1 flex flex-col justify-center items-center my-1 group-hover:scale-105 grayscale group-hover:grayscale-0 transition-all duration-700">
+                <div className="flex-1 flex flex-col justify-center items-center my-1 group-hover:scale-105 md:grayscale group-hover:grayscale-0 transition-all duration-700">
                     {loading ? (
                         <div className="h-20 w-20 animate-pulse rounded-full bg-white/10" />
                     ) : weather ? (
@@ -104,7 +104,7 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
 
                 {/* Grid of details - Compact Rows (Icon+Label on one line) */}
                 {weather && (
-                    <div className="grid grid-cols-3 gap-y-3 gap-x-1 border-t border-white/10 pt-3 opacity-80 group-hover:opacity-100 bg-black/10 rounded-xl p-2 backdrop-blur-sm mx-auto w-full grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div className="grid grid-cols-3 gap-y-3 gap-x-1 border-t border-white/10 pt-3 opacity-100 md:opacity-80 group-hover:opacity-100 bg-black/10 rounded-xl p-2 backdrop-blur-sm mx-auto w-full md:grayscale group-hover:grayscale-0 transition-all duration-700">
 
                         {/* 1. Temp */}
                         <div className="flex flex-col items-center justify-center border-r border-white/10">
@@ -168,7 +168,7 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
             </div>
 
             {/* Hover Effect CTA */}
-            <div className="pointer-events-none absolute bottom-0 z-20 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 justify-end">
+            <div className="pointer-events-none absolute bottom-0 z-20 flex w-full transform-gpu flex-row items-center p-4 transition-all duration-300 translate-y-0 opacity-100 md:translate-y-10 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 justify-end">
                 <Link
                     href="/o-lowisku"
                     className="pointer-events-auto flex items-center gap-2 rounded-lg bg-white/20 backdrop-blur-md px-4 py-2 text-sm font-bold text-white shadow-lg border border-white/30 transition-all hover:bg-white/30 hover:scale-105"

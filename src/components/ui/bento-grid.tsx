@@ -51,17 +51,18 @@ export const BentoCard = ({
         >
             <div className="absolute inset-0 z-0">{background}</div>
 
-            <div className="relative z-20 pointer-events-none flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 group-hover:-translate-y-10">
-                <Icon className="h-12 w-12 origin-left transform-gpu text-earth-brown dark:text-sand-beige transition-all duration-300 ease-in-out group-hover:scale-75 group-hover:text-sunset-orange" />
-                <h3 className="text-xl font-semibold text-pine-green-dark dark:text-white group-hover:text-sunset-orange transition-colors">
+            <div className="relative z-20 pointer-events-none flex transform-gpu flex-col gap-1 p-6 transition-all duration-300 md:group-hover:-translate-y-10">
+                <Icon className="h-12 w-12 origin-left transform-gpu text-earth-brown dark:text-sand-beige transition-all duration-300 ease-in-out md:group-hover:scale-75 md:group-hover:text-sunset-orange" />
+                <h3 className="text-xl font-semibold text-pine-green-dark dark:text-white md:group-hover:text-sunset-orange transition-colors">
                     {name}
                 </h3>
                 <p className="max-w-lg text-neutral-500 dark:text-neutral-300">{description}</p>
             </div>
 
             <div
-                className={cn(
-                    "pointer-events-none absolute bottom-0 z-20 flex w-full translate-y-10 transform-gpu flex-row items-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+                    "pointer-events-none absolute bottom-0 z-20 flex w-full transform-gpu flex-row items-center p-4 transition-all duration-300",
+                    "translate-y-0 opacity-100", // Mobile: Always visible
+                    "md:translate-y-10 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100" // Desktop: Hover reveal
                 )}
             >
                 <Link
@@ -74,6 +75,6 @@ export const BentoCard = ({
             </div>
 
             <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/5 group-hover:dark:bg-white/5 z-10" />
-        </SpotlightCard>
+        </SpotlightCard >
     );
 };
