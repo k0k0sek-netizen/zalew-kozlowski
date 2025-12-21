@@ -39,7 +39,7 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
 
             {/* 1. Dynamic Animated Gradient Background - Grayscale until hover */}
             <div className={cn(
-                "absolute inset-0 z-0 h-full w-full transition-all duration-1000 bg-size-[400%_400%] animate-gradient grayscale group-hover:grayscale-0",
+                "absolute inset-0 z-0 h-full w-full bg-size-[400%_400%] md:animate-gradient grayscale group-hover:grayscale-0 transition-[filter] duration-1000",
                 weather ? getBgClass(weather.score) : "bg-neutral-900"
             )} />
 
