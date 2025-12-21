@@ -8,6 +8,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { WeatherWidget } from "@/components/features/WeatherWidget";
+import { Magnetic } from "@/components/ui/magnetic";
 
 const NAV_ITEMS = [
     { label: "O Łowisku", href: "/o-lowisku" },
@@ -80,44 +81,47 @@ export const Navbar = () => {
 
 
                     {/* Desktop Menu */}
-                    <div className="hidden items-center gap-1 md:flex">
+                    <div className="hidden items-center gap-2 md:flex">
                         {NAV_ITEMS.map((item) => {
                             const isActive = pathname === item.href;
                             return (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className={cn(
-                                        "relative px-4 py-2 text-sm font-bold transition-colors rounded-full",
-                                        isActive ? "text-sunset-orange" : "text-white hover:text-white/90"
-                                    )}
-                                    onMouseEnter={() => setHoveredPath(item.href)}
-                                    onMouseLeave={() => setHoveredPath(null)}
-                                >
-                                    <span className="relative z-10 drop-shadow-md">{item.label}</span>
-                                    {hoveredPath === item.href && (
-                                        <motion.div
-                                            layoutId="navbar-hover"
-                                            className="absolute inset-0 z-0 rounded-full bg-white/15 backdrop-blur-sm"
-                                            transition={{
-                                                type: "spring",
-                                                bounce: 0.2,
-                                                duration: 0.6,
-                                            }}
-                                        />
-                                    )}
-                                    {isActive && (
-                                        <motion.div
-                                            layoutId="navbar-active"
-                                            className="absolute bottom-0 left-3 right-3 h-0.5 bg-sunset-orange shadow-[0_0_8px_rgba(251,146,60,0.8)]"
-                                            transition={{
-                                                type: "spring",
-                                                bounce: 0.2,
-                                                duration: 0.6,
-                                            }}
-                                        />
-                                    )}
-                                </Link>
+                                <Magnetic key={item.href}>
+                                    <Link
+                                        href={item.href}
+                                        className={cn(
+                                            "relative px-5 py-2.5 text-sm font-bold transition-all rounded-full group",
+                                            isActive ? "text-sunset-orange" : "text-white hover:text-white/90"
+                                        )}
+                                        onMouseEnter={() => setHoveredPath(item.href)}
+                                        onMouseLeave={() => setHoveredPath(null)}
+                                    >
+                                        <span className="relative z-10 drop-shadow-md">{item.label}</span>
+                                        {hoveredPath === item.href && (
+                                            <motion.div
+                                                layoutId="navbar-hover"
+                                                className="absolute inset-0 z-0 rounded-full bg-white/10 backdrop-blur-md border border-white/20"
+                                                transition={{
+                                                    type: "spring",
+                                                    bounce: 0.2,
+                                                    duration: 0.6,
+                                                }}
+                                            />
+                                        )}
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="navbar-active"
+                                                className="absolute inset-0 z-0 rounded-full bg-white/5 shadow-[0_0_20px_rgba(251,146,60,0.3)] border border-sunset-orange/30"
+                                                transition={{
+                                                    type: "spring",
+                                                    bounce: 0.2,
+                                                    duration: 0.6,
+                                                }}
+                                            >
+                                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-sunset-orange to-transparent opacity-50" />
+                                            </motion.div>
+                                        )}
+                                    </Link>
+                                </Magnetic>
                             );
                         })}
 
