@@ -17,8 +17,8 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
         // Check if user has already consented
         const consent = localStorage.getItem("cookie-consent");
         if (!consent) {
-            // Show banner after a delay to better UX and avoid LCP penalty
-            const timer = setTimeout(() => setIsVisible(true), 3500);
+            // Show banner immediately to minimize LCP delay if this element is picked by Lighthouse
+            setIsVisible(true);
             return () => clearTimeout(timer);
         }
     }, []);
