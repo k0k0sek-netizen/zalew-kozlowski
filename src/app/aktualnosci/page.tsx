@@ -72,36 +72,38 @@ export default async function NewsPage() {
                             return (
                                 <SpotlightCard
                                     key={post.id}
-                                    className="flex flex-col overflow-hidden border-none shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl h-full"
+                                    className="overflow-hidden border-none shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl h-full"
                                 >
-                                    {/* Image Area */}
-                                    <div className="relative h-48 w-full overflow-hidden bg-neutral-200">
-                                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
-                                            style={{ backgroundImage: `url('${post.imageSrc}')` }}
-                                        />
-                                        <div className="absolute top-4 left-4">
-                                            <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold backdrop-blur-md ${post.color}`}>
-                                                <Icon className="h-3.5 w-3.5" />
-                                                {post.category}
-                                            </span>
+                                    <div className="flex flex-col h-full">
+                                        {/* Image Area */}
+                                        <div className="relative h-48 w-full overflow-hidden bg-neutral-200 shrink-0">
+                                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
+                                                style={{ backgroundImage: `url('${post.imageSrc}')` }}
+                                            />
+                                            <div className="absolute top-4 left-4">
+                                                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold backdrop-blur-md ${post.color}`}>
+                                                    <Icon className="h-3.5 w-3.5" />
+                                                    {post.category}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    {/* Content Area */}
-                                    <div className="flex flex-1 flex-col p-6 relative z-10 bg-white dark:bg-pine-green-dark/50">
-                                        <div className="mb-3 flex items-center gap-2 text-xs font-medium text-neutral-400">
-                                            <Calendar className="h-3.5 w-3.5" />
-                                            {post.date}
-                                        </div>
-                                        <h2 className="mb-3 text-xl font-bold leading-tight text-pine-green dark:text-white">
-                                            {post.title}
-                                        </h2>
-                                        <p className="mb-6 flex-1 text-sm text-neutral-600 dark:text-neutral-300">
-                                            {post.excerpt}
-                                        </p>
-                                        <div className="group inline-flex items-center gap-2 text-sm font-bold text-sunset-orange transition-colors hover:text-orange-600">
-                                            Czytaj więcej
-                                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                        {/* Content Area */}
+                                        <div className="flex flex-1 flex-col p-6 relative z-10 bg-white dark:bg-pine-green-dark/50">
+                                            <div className="mb-3 flex items-center gap-2 text-xs font-medium text-neutral-400">
+                                                <Calendar className="h-3.5 w-3.5" />
+                                                {post.date}
+                                            </div>
+                                            <h2 className="mb-3 text-xl font-bold leading-tight text-pine-green dark:text-white">
+                                                {post.title}
+                                            </h2>
+                                            <p className="mb-6 flex-1 text-sm text-neutral-600 dark:text-neutral-300">
+                                                {post.excerpt}
+                                            </p>
+                                            <div className="group inline-flex items-center gap-2 text-sm font-bold text-sunset-orange transition-colors hover:text-orange-600">
+                                                Czytaj więcej
+                                                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                            </div>
                                         </div>
                                     </div>
                                     <Link href={`/aktualnosci/${post.slug}`} className="absolute inset-0 z-20" aria-label={`Czytaj: ${post.title}`} />
