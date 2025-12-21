@@ -54,7 +54,7 @@ export const Navbar = () => {
         <>
             <nav
                 className={cn(
-                    "fixed top-0 z-50 w-full transition-all duration-300",
+                    "fixed top-0 z-50 w-full transition-colors duration-300",
                     scrolled || isOpen
                         ? "bg-pine-green-dark/95 backdrop-blur-md border-b border-white/10 shadow-lg"
                         : "bg-gradient-to-b from-black/80 via-black/40 to-transparent"
@@ -73,7 +73,7 @@ export const Navbar = () => {
                                 fill
                                 priority
                                 className="object-contain"
-                                sizes="(max-width: 768px) 100vw, 200px"
+                                sizes="128px"
                             />
                         </div>
                     </Link>
