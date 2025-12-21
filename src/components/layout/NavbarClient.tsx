@@ -60,7 +60,7 @@ export const NavbarClient = ({ logo }: NavbarClientProps) => {
                     "fixed top-0 z-50 w-full transition-colors duration-300",
                     scrolled || isOpen
                         ? "bg-pine-green-dark/95 backdrop-blur-md border-b border-white/10 shadow-lg"
-                        : "bg-gradient-to-b from-black/80 via-black/40 to-transparent"
+                        : "bg-linear-to-b from-black/80 via-black/40 to-transparent"
                 )}
             >
                 <div
@@ -112,7 +112,7 @@ export const NavbarClient = ({ logo }: NavbarClientProps) => {
                                                     duration: 0.6,
                                                 }}
                                             >
-                                                <div className="absolute inset-x-0 -bottom-px h-px bg-gradient-to-r from-transparent via-sunset-orange to-transparent opacity-50" />
+                                                <div className="absolute inset-x-0 -bottom-px h-px bg-linear-to-r from-transparent via-sunset-orange to-transparent opacity-50" />
                                             </motion.div>
                                         )}
                                     </Link>
