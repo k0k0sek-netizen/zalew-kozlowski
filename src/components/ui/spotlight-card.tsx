@@ -49,7 +49,7 @@ export const SpotlightCard = ({ children, className = "", ...props }: SpotlightC
             className={cn(
                 "group relative overflow-hidden rounded-xl",
                 "bg-white dark:bg-pine-green-dark border-2 border-transparent dark:border-pine-green/30",
-                "drop-shadow-sm transition-all duration-300 hover:shadow-2xl",
+                "drop-shadow-sm transition-shadow duration-300 hover:shadow-2xl",
                 className
             )}
             {...props}
