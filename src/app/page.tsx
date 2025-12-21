@@ -110,7 +110,7 @@ export default async function Home() {
                   src="/bento/zachod.webp"
                   alt="Zachód słońca"
                   fill
-                  className="absolute inset-0 h-full w-full object-cover opacity-50 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                  className="absolute inset-0 h-full w-full object-cover opacity-80 md:opacity-50 md:grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               }
@@ -127,7 +127,7 @@ export default async function Home() {
                   src="/bento/ryba2.webp"
                   alt="Ryba pod wodą"
                   fill
-                  className="absolute inset-0 h-full w-full object-cover opacity-50 grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
+                  className="absolute inset-0 h-full w-full object-cover opacity-80 md:opacity-50 md:grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               }
