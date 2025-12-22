@@ -1,6 +1,6 @@
 "use client";
 
-import { CloudSun, Wind, Droplets, Loader2, Moon, Sun, Sunrise, Sunset, CloudRain, Cloud } from "lucide-react";
+import { CloudSun, Wind, Loader2, Moon, Sun, CloudRain, Cloud } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useWeather } from "@/hooks/useWeather";
 
@@ -10,14 +10,13 @@ export const WeatherWidget = ({ className }: { className?: string }) => {
     if (!weather && !loading) return null;
 
     // Helper to pick main icon
-    const getWeatherIcon = () => {
+    const StatusIcon = (() => {
         if (!weather) return CloudSun;
         if (weather.rain > 0) return CloudRain;
         if (weather.cloudCover > 80) return Cloud;
         if (weather.cloudCover < 20) return Sun;
         return CloudSun;
-    };
-    const StatusIcon = getWeatherIcon();
+    })();
 
     return (
         <div className={cn(

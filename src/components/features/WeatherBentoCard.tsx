@@ -10,14 +10,13 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
     const { weather, loading } = useWeather();
 
     // Helper to pick main icon
-    const getWeatherIcon = () => {
+    const StatusIcon = (() => {
         if (!weather) return CloudSun;
         if (weather.rain > 0) return CloudRain;
         if (weather.cloudCover > 80) return Cloud;
         if (weather.cloudCover < 20) return Sun;
         return CloudSun;
-    };
-    const StatusIcon = getWeatherIcon();
+    })();
 
     // Determine colors based on score
     const getScoreColor = (score: number) => {

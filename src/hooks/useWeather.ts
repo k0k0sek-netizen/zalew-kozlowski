@@ -17,9 +17,9 @@ export interface WeatherData {
 
 // Simple Moon Phase Calculator (0-8 scale)
 const getMoonPhase = (date: Date) => {
-    let year = date.getFullYear();
+    const year = date.getFullYear();
     let month = date.getMonth() + 1;
-    let day = date.getDate();
+    const day = date.getDate();
 
     if (month < 3) {
         year--;
@@ -28,8 +28,8 @@ const getMoonPhase = (date: Date) => {
 
     ++month;
 
-    let c = 365.25 * year;
-    let e = 30.6 * month;
+    const c = 365.25 * year;
+    const e = 30.6 * month;
     let jd = c + e + day - 694039.09; // jd is total days elapsed
     jd /= 29.5305882; // divide by the moon cycle
     let b = parseInt(jd.toString()); // int(jd) -> b, take integer part of jd
