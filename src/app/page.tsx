@@ -10,6 +10,7 @@ import { Metadata } from "next";
 import { contentfulClient, InfoBlockSkeleton } from "@/lib/contentful";
 
 export const revalidate = 3600;
+export const runtime = 'edge';
 
 export const metadata: Metadata = {
   title: "Zalew Kozłowski | Prywatne Łowisko i Wypoczynek",
