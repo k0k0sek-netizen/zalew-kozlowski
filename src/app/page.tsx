@@ -42,8 +42,8 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative h-screen min-h-[600px] w-full items-center justify-center overflow-hidden">
         <HeroVideo
-          videoSrc="/hero.mp4"
-          mobileVideoSrc="/hero-mobile.mp4"
+          videoSrc="/hero2-raw.mp4"
+          mobileVideoSrc="/her2-raw-mobile.mp4"
           posterSrc="/hero-poster.jpg"
         />
 
@@ -107,12 +107,10 @@ export default async function Home() {
               cta="Sprawdź"
               background={
                 <Image
-                  src="/bento/zachod.webp"
-                  alt="Zachód słońca"
-                  fill
                   className="absolute inset-0 h-full w-full object-cover opacity-80 md:opacity-50 md:grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent dark:from-black/90 dark:via-black/40 dark:to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
               }
             />
             <BentoCard
@@ -124,12 +122,10 @@ export default async function Home() {
               cta="Zasady"
               background={
                 <Image
-                  src="/bento/ryba2.webp"
-                  alt="Ryba pod wodą"
-                  fill
                   className="absolute inset-0 h-full w-full object-cover opacity-80 md:opacity-50 md:grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/40 to-transparent dark:from-black/90 dark:via-black/40 dark:to-transparent opacity-100 group-hover:opacity-100 transition-opacity duration-500" />
               }
             />
             <BentoCard
