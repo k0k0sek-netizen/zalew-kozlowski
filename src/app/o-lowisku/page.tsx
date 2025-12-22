@@ -82,7 +82,7 @@ export default async function AboutPage() {
                     <div className="relative overflow-hidden rounded-3xl bg-neutral-900 px-6 py-12 text-white shadow-2xl md:px-12">
                         {/* Background Effects */}
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-purple-500/10 to-transparent" />
-                        <div className="absolute bottom-0 left-0 h-full w-full bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
+                        <div className="absolute bottom-0 left-0 h-full w-full bg-[url('/noise.svg')] opacity-20 mix-blend-overlay" />
 
                         <div className="relative z-10 grid gap-12 lg:grid-cols-2 lg:items-center">
                             <div>
