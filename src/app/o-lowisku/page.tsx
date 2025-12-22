@@ -1,6 +1,6 @@
 import { FishCard } from "@/components/features/FishCard";
 import { SectionReveal } from "@/components/ui/section-reveal";
-import { Sprout, Sun, CloudRain, Snowflake, Leaf, ShieldCheck, Trophy } from "lucide-react";
+import { Sprout, Sun, CloudRain, Snowflake, Leaf, ShieldCheck, Trophy, Gauge, Wind, Moon, ThermometerSun } from "lucide-react";
 import { Metadata } from "next";
 import { contentfulClient, createContentfulClient, FishSpeciesSkeleton } from "@/lib/contentful";
 import { Asset } from "contentful";
@@ -69,7 +69,82 @@ export default async function AboutPage() {
                     </div>
                 </SectionReveal>
 
-                {/* Why Choose Us (Replaces Map) */}
+                {/* Algorithm Explanation - LIVE Index Logic */}
+                <SectionReveal className="mb-24" delay={0.25}>
+                    <div className="mb-12 flex items-center gap-4">
+                        <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
+                        <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
+                            Algorytm "Indeks Brań"
+                        </h2>
+                        <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
+                    </div>
+
+                    <div className="relative overflow-hidden rounded-3xl bg-neutral-900 px-6 py-12 text-white shadow-2xl md:px-12">
+                        {/* Background Effects */}
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-500/20 via-purple-500/10 to-transparent" />
+                        <div className="absolute bottom-0 left-0 h-full w-full bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
+
+                        <div className="relative z-10 grid gap-12 lg:grid-cols-2 lg:items-center">
+                            <div>
+                                <h3 className="mb-6 text-3xl font-bold leading-tight md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
+                                    To nie jest losowa liczba.
+                                    <br />
+                                    To nauka. 🧪
+                                </h3>
+                                <p className="mb-8 text-lg text-neutral-300 leading-relaxed">
+                                    Nasz system łączy się na żywo z API pogodowym i analizuje 4 kluczowe czynniki wpływające na aktywność ryb.
+                                    Algorytm (oparty na teorii solunarnej) przelicza dane w czasie rzeczywistym, dając Ci przewagę nad wodą.
+                                </p>
+                            </div>
+
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                {/* Factor 1 */}
+                                <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
+                                    <div className="mb-3 flex items-center gap-3">
+                                        <div className="rounded-lg bg-blue-500/20 p-2 text-blue-400">
+                                            <Gauge className="h-6 w-6" />
+                                        </div>
+                                        <span className="font-bold">Ciśnienie</span>
+                                    </div>
+                                    <p className="text-sm text-neutral-400">Stabilne, wysokie ciśnienie (1015+ hPa) pobudza ryby do żerowania. Nagłe spadki je "usypiają".</p>
+                                </div>
+
+                                {/* Factor 2 */}
+                                <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
+                                    <div className="mb-3 flex items-center gap-3">
+                                        <div className="rounded-lg bg-purple-500/20 p-2 text-purple-400">
+                                            <Moon className="h-6 w-6" />
+                                        </div>
+                                        <span className="font-bold">Faza Księżyca</span>
+                                    </div>
+                                    <p className="text-sm text-neutral-400">Pełnia i Nów to momenty szczytowej aktywności (teoria solunarna). Ryby czują grawitację.</p>
+                                </div>
+
+                                {/* Factor 3 */}
+                                <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
+                                    <div className="mb-3 flex items-center gap-3">
+                                        <div className="rounded-lg bg-teal-500/20 p-2 text-teal-400">
+                                            <Wind className="h-6 w-6" />
+                                        </div>
+                                        <span className="font-bold">Wiatr</span>
+                                    </div>
+                                    <p className="text-sm text-neutral-400">Lekki wiatr natlenia wodę i maskuje obecność wędkarza. Silny wiatr (&gt;30km/h) utrudnia łowy.</p>
+                                </div>
+
+                                {/* Factor 4 */}
+                                <div className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-colors">
+                                    <div className="mb-3 flex items-center gap-3">
+                                        <div className="rounded-lg bg-orange-500/20 p-2 text-orange-400">
+                                            <ThermometerSun className="h-6 w-6" />
+                                        </div>
+                                        <span className="font-bold">Sezon</span>
+                                    </div>
+                                    <p className="text-sm text-neutral-400">Wiosenne przebudzenie (III-V) i jesienne żerowanie (IX-X) to bonusowe punkty do wyniku.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </SectionReveal>
                 <SectionReveal className="mb-24" delay={0.3}>
                     <div className="rounded-3xl bg-pine-green p-8 text-white shadow-2xl md:p-12 relative overflow-hidden">
                         <div className="absolute inset-0 bg-[url('/krajobraz.jpg')] bg-cover bg-center opacity-10" />
