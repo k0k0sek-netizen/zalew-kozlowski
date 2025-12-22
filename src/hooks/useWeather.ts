@@ -17,7 +17,7 @@ export interface WeatherData {
 
 // Simple Moon Phase Calculator (0-8 scale)
 const getMoonPhase = (date: Date) => {
-    const year = date.getFullYear();
+    let year = date.getFullYear();
     let month = date.getMonth() + 1;
     const day = date.getDate();
 
