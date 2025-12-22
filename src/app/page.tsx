@@ -42,8 +42,8 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative h-screen min-h-[600px] w-full items-center justify-center overflow-hidden">
         <HeroVideo
-          videoSrc="/hero.mp4"
-          mobileVideoSrc="/hero-mobile.mp4"
+          videoSrc="/hero-hq.mp4"
+          mobileVideoSrc="/hero-mobile-hq.mp4"
           posterSrc="/hero-poster.jpg"
         />
 
