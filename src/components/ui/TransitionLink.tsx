@@ -49,11 +49,11 @@ export const TransitionLink = ({ children, href, className, ...props }: Transiti
 
             let isResolved = false;
 
-            // Bezpiecznik (600ms) - zapobiega zamrożeniu ekranu w trybie dev (kompilacja Turbopack)
+            // Bezpiecznik (300ms) - zapobiega zamrożeniu ekranu w trybie dev
             const safetyTimeout = setTimeout(() => {
               isResolved = true;
               resolve();
-            }, 600);
+            }, 300);
 
             // Odpytywanie w celu wykrycia faktycznego przesunięcia wskaźnika w menu
             const checkPath = () => {
@@ -97,12 +97,12 @@ export const TransitionLink = ({ children, href, className, ...props }: Transiti
           transition.finished?.catch(() => {});
           transition.updateCallbackDone?.catch(() => {});
         }
-      }, 180); // Wstrzymanie o 180ms na płynne wygaszenie starej strony w CSS
+      }, 50); // Wstrzymanie o 50ms na płynne wygaszenie starej strony w CSS
     } else {
       // Fallback dla Safari < 18 i Firefox
       setTimeout(() => {
         navigate();
-      }, 180);
+      }, 50);
     }
   };
 
