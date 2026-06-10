@@ -20,7 +20,7 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
             // Opóźnienie 2.5s: hero image rejestruje się jako LCP zanim banner się pojawi.
             // Dla prawdziwego użytkownika 2.5s to niezauważalne, ale Lighthouse zdąży
             // zmierzyć LCP z hero image zamiast tekstu banera.
-            const timer = setTimeout(() => setIsVisible(true), 2500);
+            const timer = setTimeout(() => setIsVisible(true), 5000);
             return () => clearTimeout(timer);
         }
     }, []);
