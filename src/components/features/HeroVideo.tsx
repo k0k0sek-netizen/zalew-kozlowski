@@ -40,12 +40,11 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
             {videoSrc && (
                 <video
                     className="absolute inset-0 h-full w-full object-cover animate-zoom-out hero-video-scroll"
-                    poster={posterSrc}
                     autoPlay
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload="none"
                     aria-hidden="true"
                 >
                     {mobileVideoSrc && (

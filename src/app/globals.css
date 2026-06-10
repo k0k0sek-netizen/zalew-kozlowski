@@ -69,6 +69,7 @@
     }
   }
 
+
   @keyframes phone-shake {
     0%, 100% { transform: rotate(0deg); }
     15% { transform: rotate(-15deg); }
@@ -100,6 +101,11 @@
       background-position: 100% 50%;
     }
   }
+}
+
+/* Hint przeglądarce żeby przygotowała się na animację background-position */
+.animate-shine {
+  will-change: background-position;
 }
 
 body {
