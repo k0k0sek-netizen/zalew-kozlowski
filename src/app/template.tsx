@@ -1,8 +1,14 @@
 "use client";
-
+ 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-
+ 
 export default function Template({ children }: { children: React.ReactNode }) {
+    useEffect(() => {
+        // Usuwanie klasy transition-lock po zakończeniu wczytywania nowej podstrony
+        document.body.classList.remove("page-transitioning");
+    }, []);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -14,3 +20,4 @@ export default function Template({ children }: { children: React.ReactNode }) {
         </motion.div>
     );
 }
+

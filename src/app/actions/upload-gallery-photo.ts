@@ -2,6 +2,10 @@
 
 import { createClient } from "contentful-management";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY || "missing_key");
 
 // Zod schema for input validation
 const UploadSchema = z.object({
@@ -91,28 +95,40 @@ export async function uploadGalleryPhoto(formData: FormData) {
             },
         });
 
-        // 7. Send Notification via Formspree (Simple POST)
-        if (process.env.FORMSPREE_FORM_ID) {
+        // 7. Send Notification via Resend
+        if (process.env.RESEND_API_KEY) {
             try {
-                await fetch(`https://formspree.io/f/${process.env.FORMSPREE_FORM_ID}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        subject: `🐟 Nowe zdjęcie: ${title}`,
-                        message: `Ktoś wgrał nowe zdjęcie do galerii.\nTytuł: ${title}\nAutor: ${author}\n\nWejdź do Contentfula aby zatwierdzić.`,
-                        title: title,
-                        author: author,
-                        _replyto: "no-reply@zalew-kozlowski.pl"
-                    })
+                await resend.emails.send({
+                    from: "Zalew Kozłowski CMS <onboarding@resend.dev>",
+                    to: ["lowiskokozlow@gmail.com"],
+                    subject: `🐟 Nowe zdjęcie czeka na zatwierdzenie: ${title}`,
+                    html: `
+                        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                            <div style="background-color: #f97316; padding: 20px; text-align: center;">
+                                <h2 style="color: white; margin: 0;">Powiadomienie z Zalewu Kozłowskiego</h2>
+                            </div>
+                            <div style="padding: 20px;">
+                                <p style="font-size: 16px; color: #333;">Ktoś właśnie wysłał nowe zdjęcie do galerii przez stronę internetową!</p>
+                                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                                <ul style="color: #555; font-size: 14px; line-height: 1.6;">
+                                    <li><strong>Tytuł zdjęcia:</strong> ${title}</li>
+                                    <li><strong>Autor (podpis):</strong> ${author}</li>
+                                    <li><strong>ID wpisu w CMS:</strong> ${entry.sys.id}</li>
+                                </ul>
+                                <p style="font-size: 14px; color: #555; margin-top: 20px;">
+                                    Zaloguj się do panelu Contentful. Zdjęcie ma status "Draft". Zobacz je i kliknij <strong>Publish</strong>, aby pojawiło się na stronie głównej.
+                                </p>
+                            </div>
+                        </div>
+                    `
                 });
-            } catch (formError) {
-                console.error("Failed to send Formspree notification:", formError);
+            } catch (emailError) {
+                console.error("Failed to send Resend notification:", emailError);
                 // Don't fail the upload just because notification failed
             }
         }
 
+        revalidatePath("/galeria");
         return { success: true, id: entry.sys.id };
 
     } catch (error: any) {

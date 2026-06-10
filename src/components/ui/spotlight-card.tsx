@@ -47,30 +47,32 @@ export const SpotlightCard = ({ children, className = "", ...props }: SpotlightC
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className={cn(
-                "group relative overflow-hidden rounded-xl",
-                "bg-white dark:bg-pine-green-dark border-2 border-transparent dark:border-pine-green/30",
-                "drop-shadow-sm transition-shadow duration-300 hover:shadow-2xl",
+                "group relative overflow-hidden rounded-xl transition-all duration-300",
+                "bg-white/70 backdrop-blur-md dark:bg-white/5",
+                "drop-shadow-sm hover:shadow-2xl",
                 className
             )}
             {...props}
         >
+            {/* Static Base Border (drawn inside to prevent clipping) */}
+            <div className="pointer-events-none absolute inset-0 border border-earth-brown/10 dark:border-pine-green/20 rounded-[inherit] z-10" />
+
+            {/* Inner background glow (behind content) */}
             <div
-                className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-0"
+                className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 z-0"
                 style={{
                     opacity,
-                    background: `radial-gradient(1200px circle at ${position.x}px ${position.y}px, rgba(249, 115, 22, 0.08), transparent 40%)`,
+                    background: `radial-gradient(1200px circle at ${position.x}px ${position.y}px, rgba(var(--active-glow-color, 249, 115, 22), 0.25), transparent 40%)`,
                 }}
             />
-            {/* Inner Border Gradient */}
+            {/* Inner Border Gradient (rendered exactly on top of the static border) */}
             <div
-                className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-0"
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-20 rounded-[inherit]"
                 style={{
                     opacity,
-                    background: `radial-gradient(1000px circle at ${position.x}px ${position.y}px, rgba(249, 115, 22, 0.25), transparent 40%)`,
-                    maskImage: "linear-gradient(#fff, #fff) padding-box, linear-gradient(#fff, #fff)",
-                    WebkitMaskImage: "linear-gradient(#fff, #fff) padding-box, linear-gradient(#fff, #fff)",
-                    maskComposite: "exclude",
-                    WebkitMaskComposite: "xor",
+                    border: "1px solid rgba(var(--active-glow-color, 249, 115, 22), 0.95)",
+                    maskImage: `radial-gradient(250px circle at ${position.x}px ${position.y}px, black 30%, transparent 70%)`,
+                    WebkitMaskImage: `radial-gradient(250px circle at ${position.x}px ${position.y}px, black 30%, transparent 70%)`,
                 }}
             />
             {children}

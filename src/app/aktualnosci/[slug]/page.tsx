@@ -9,6 +9,23 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS } from '@contentful/rich-text-types';
 import { Asset } from "contentful";
 import { Metadata } from "next";
+import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
+import { ContentfulImage } from "@/components/ui/ContentfulImage";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
+
+export async function generateStaticParams() {
+    const client = createContentfulClient({ preview: false });
+    const response = await client.getEntries<ArticleSkeleton>({
+        content_type: "article",
+        select: ["fields.slug" as any],
+    });
+
+    return response.items
+        .filter(item => item.fields.slug)
+        .map((item) => ({
+            slug: item.fields.slug,
+        }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
@@ -22,9 +39,32 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     });
     const post = entries.items[0];
     if (!post) return { title: "Nie znaleziono artykułu (404)" };
+
+    const title = `${post.fields.title} | Zalew Kozłowski`;
+    const description = post.fields.excerpt || "";
+    const coverImage = post.fields.coverImage as Asset | undefined;
+    const imageUrl = coverImage?.fields?.file?.url
+        ? `https:${coverImage.fields.file.url}?w=1200&h=630&fit=fill&fm=jpg&q=80`
+        : undefined;
+
     return {
-        title: `${post.fields.title} | Zalew Kozłowski`,
-        description: post.fields.excerpt,
+        title,
+        description,
+        openGraph: {
+            title: post.fields.title as string,
+            description,
+            url: `/aktualnosci/${slug}`,
+            type: "article",
+            ...(post.fields.date && { publishedTime: new Date(post.fields.date as string).toISOString() }),
+            ...(imageUrl && {
+                images: [{
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: post.fields.title as string,
+                }],
+            }),
+        },
     };
 }
 
@@ -61,7 +101,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             [BLOCKS.UL_LIST]: (node: any, children: React.ReactNode) => <ul className="mb-6 list-disc pl-6 text-earth-brown dark:text-neutral-300">{children}</ul>,
             [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => <ol className="mb-6 list-decimal pl-6 text-earth-brown dark:text-neutral-300">{children}</ol>,
             [BLOCKS.QUOTE]: (node: any, children: React.ReactNode) => (
-                <blockquote className="border-l-4 border-sunset-orange pl-4 italic text-pine-green dark:text-neutral-200 my-6 bg-neutral-50 dark:bg-white/5 p-4 rounded-r-lg">
+                <blockquote
+                    className="border-l-4 pl-4 italic text-pine-green dark:text-neutral-200 my-6 bg-neutral-50 dark:bg-white/5 p-4 rounded-r-lg"
+                    style={{ borderColor: "rgb(var(--active-glow-color, 249, 115, 22))" }}
+                >
                     {children}
                 </blockquote>
             ),
@@ -69,14 +112,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     };
 
     return (
-        <article className="min-h-screen bg-sand-beige dark:bg-pine-green-dark">
+        <SubpageWrapper as="article" hideTopFade={true} className="pt-0 pb-36 px-0">
             {/* Hero Image */}
             <div className={`relative w-full overflow-hidden ${imageUrl ? 'h-[60vh] min-h-[500px]' : 'h-[40vh] min-h-[300px]'}`}>
                 {imageUrl && (
-                    <div
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url('${imageUrl}')` }}
-                    >
+                    <div className="absolute inset-0">
+                        <ContentfulImage
+                            src={imageUrl}
+                            alt={title}
+                            fill
+                            priority
+                            className="object-cover"
+                            sizes="100vw"
+                        />
                         <div className="absolute inset-0 bg-linear-to-t from-pine-green-dark via-pine-green-dark/50 to-transparent" />
                     </div>
                 )}
@@ -92,8 +140,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                 Wróć do aktualności
                             </Link>
 
-                            <div className="mb-4 flex items-center gap-4 text-sm font-bold text-sunset-orange">
-                                <span className="uppercase tracking-wider">{category || "Aktualności"}</span>
+                            <div className="mb-4 flex items-center gap-4 text-sm font-bold">
+                                <span
+                                    className="uppercase tracking-wider"
+                                    style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
+                                >
+                                    {category || "Aktualności"}
+                                </span>
                                 <span className="h-1 w-1 rounded-full bg-white/50" />
                                 <span className="flex items-center gap-2 text-white/80">
                                     <Calendar className="h-4 w-4" />
@@ -110,28 +163,40 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Content Body */}
-            <div className="mx-auto max-w-2xl px-4 py-16">
+            <div className="mx-auto max-w-3xl px-4 py-16">
                 <SectionReveal delay={0.2}>
-                    <div className="prose prose-lg prose-neutral dark:prose-invert mx-auto leading-loose">
-                        {documentToReactComponents(content, renderOptions)}
+                    <SpotlightCard className="p-8 md:p-12 rounded-2xl">
+                        <div className="prose prose-lg prose-neutral dark:prose-invert mx-auto leading-loose relative z-10">
+                            {documentToReactComponents(content, renderOptions)}
 
-                        <div className="mt-16 flex items-center gap-5 border-t border-neutral-200 dark:border-white/10 pt-10">
-                            <div className="h-16 w-16 rounded-full bg-white p-1 flex items-center justify-center shadow-xl shadow-black/5 transform hover:scale-110 transition-transform overflow-hidden relative">
-                                <Image
-                                    src="/logo-brand.png"
-                                    alt="Logo"
-                                    fill
-                                    className="object-contain p-2"
-                                />
-                            </div>
-                            <div>
-                                <p className="font-bold text-xl leading-tight text-pine-green dark:text-white">Gospodarz Łowiska</p>
-                                <p className="text-base text-neutral-500 dark:text-neutral-400">Zalew Kozłowski</p>
+                            <div className="mt-16 border-t border-neutral-200 dark:border-white/10 pt-10">
+                                <Link href="/" className="group flex items-center gap-3.5 w-fit">
+                                    <div className="relative h-16 w-16 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                                        <Image
+                                            src="/logo-icon-v6.png"
+                                            alt="Zalew Kozłowski Logo"
+                                            fill
+                                            className="object-contain scale-[1.45] transition-all duration-300"
+                                            sizes="64px"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col select-none text-pine-green dark:text-white transition-colors duration-300">
+                                        <span className="font-display font-bold text-[13px] leading-tight tracking-wide group-hover:text-sunset-orange dark:group-hover:text-sunset-orange transition-colors duration-300">
+                                            Zalew
+                                        </span>
+                                        <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-sunset-orange -mt-0.5">
+                                            Kozłowski
+                                        </span>
+                                        <span className="text-[0.7rem] uppercase tracking-wider opacity-85 font-bold mt-1.5 leading-none group-hover:text-sunset-orange dark:group-hover:text-sunset-orange transition-colors duration-300">
+                                            Gospodarz Łowiska
+                                        </span>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
-                    </div>
+                    </SpotlightCard>
                 </SectionReveal>
             </div>
-        </article>
+        </SubpageWrapper>
     );
 }

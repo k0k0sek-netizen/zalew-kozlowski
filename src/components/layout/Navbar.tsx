@@ -1,20 +1,17 @@
 import { NavbarClient } from "./NavbarClient";
 import Image from "next/image";
+import { getWeatherAction } from "@/app/actions/weather";
+import { getInfoBlocks } from "@/lib/contentful";
+import { draftMode } from "next/headers";
 
-export const Navbar = () => {
-    const logo = (
-        <div className="relative h-16 w-32 shrink-0">
-            <Image
-                src="/logo-brand.png"
-                alt="Zalew Kozłowski Logo"
-                fill
-                priority
-                className="object-contain"
-                sizes="128px"
-                fetchPriority="high"
-            />
-        </div>
-    );
+export const Navbar = async () => {
+    const { isEnabled } = await draftMode();
+    const [weatherData, infoBlocks] = await Promise.all([
+        getWeatherAction(),
+        getInfoBlocks(isEnabled).catch(() => []),
+    ]);
 
-    return <NavbarClient logo={logo} />;
+    const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
+
+    return <NavbarClient initialWeather={weatherData} phone={phone} />;
 };

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useSpring, useMotionValue, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { motion, useSpring, useMotionValue } from "framer-motion";
+import { useRef } from "react";
+import { SPRING_TOKENS } from "@/lib/motion";
 
 interface MagneticProps {
     children: React.ReactNode;
@@ -32,9 +33,8 @@ export const Magnetic = ({ children, strength = 0.2 }: MagneticProps) => {
     const { x, y } = position;
 
     // Physics configuration for that "fluid" feel
-    const springConfig = { damping: 15, stiffness: 150, mass: 0.1 };
-    const springX = useSpring(x, springConfig);
-    const springY = useSpring(y, springConfig);
+    const springX = useSpring(x, SPRING_TOKENS.fluid);
+    const springY = useSpring(y, SPRING_TOKENS.fluid);
 
     return (
         <motion.div

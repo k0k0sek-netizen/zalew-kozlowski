@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Syne } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -7,14 +7,18 @@ import { CookieConsent } from "@/components/features/CookieConsent";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
 import DraftModeBanner from "@/components/features/DraftModeBanner";
+import { getWeatherAction } from "@/app/actions/weather";
+import { getInfoBlocks } from "@/lib/contentful";
+import { getGlowColorForScore } from "@/lib/bite-index-theme";
+import { draftMode } from "next/headers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
 });
 
@@ -44,15 +48,46 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled } = await draftMode();
+  const [weatherData, infoBlocks] = await Promise.all([
+    getWeatherAction().catch(() => null),
+    getInfoBlocks(isEnabled).catch(() => []),
+  ]);
+
+  const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
+  const email = infoBlocks.find((b: any) => b.fields.id === "email")?.fields.value || "lowiskokozlow@gmail.com";
+
+  const activeGlowColor = weatherData ? getGlowColorForScore(weatherData.score) : "249, 115, 22";
+
   return (
-    <html lang="pl">
+    <html lang="pl" data-scroll-behavior="smooth" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme');
+                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (_) {}
+              })()
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-sand-beige text-pine-green-dark selection:bg-sunset-orange selection:text-white`}
+        className={`${outfit.variable} ${syne.variable} antialiased bg-background text-foreground selection:bg-sunset-orange selection:text-white`}
+        style={{ "--active-glow-color": activeGlowColor } as React.CSSProperties}
+        suppressHydrationWarning
       >
         <link rel="preconnect" href="https://api.open-meteo.com" />
         {/* Accessibility: Skip Link */}
@@ -72,8 +107,8 @@ export default function RootLayout({
               "@type": "LocalBusiness", // More specific than Organization for a physical location
               "name": "Zalew Kozłowski",
               "image": "https://zalew-kozlowski.pl/hero.mp4", // Ideally an image URL
-              "telephone": "601389365",
-              "email": "lowiskokozlow@gmail.com",
+              "telephone": phone.replace(/\s+/g, ""),
+              "email": email,
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Kozłów 4A",
@@ -96,7 +131,7 @@ export default function RootLayout({
                   "closes": "20:00"
                 }
               ],
-              "description": "Prywatne łowisko No Kill w Kozłowie. Karpie, Amury, Szczupaki. Cisza i spokój."
+              "description": "Prywatne łowisko No Kill in Kozłów. Karpie, Amury, Szczupaki. Cisza i spokój."
             }),
           }}
         />

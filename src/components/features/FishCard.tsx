@@ -1,8 +1,9 @@
 "use client";
 
-import { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import contentfulLoader from "@/lib/contentful-loader";
+import { TiltCard } from "@/components/ui/TiltCard";
 
 interface FishStatProps {
     label: string;
@@ -41,20 +42,26 @@ interface FishCardProps {
         activity: number;
     };
     tags: string[];
+    priority?: boolean;
 }
 
-export const FishCard = ({ name, description, imageSrc, stats, tags }: FishCardProps) => {
+export const FishCard = ({ name, description, imageSrc, stats, tags, priority }: FishCardProps) => {
     return (
-        <div className="group relative overflow-hidden rounded-3xl bg-white shadow-xl transition-all hover:-translate-y-2 hover:shadow-2xl dark:bg-white/5">
+        <TiltCard
+            noBg
+            className="group rounded-2xl bg-white/70 backdrop-blur-md shadow-xl dark:bg-white/5 scroll-reveal-card overflow-hidden"
+        >
             {/* Image Area */}
-            <div className="relative h-48 w-full overflow-hidden">
-                <div className="absolute inset-0 bg-neutral-200 animate-pulse" /> {/* Placeholder loading */}
+            <div className="relative h-48 w-full overflow-hidden z-10">
+                <div className="absolute inset-0 bg-neutral-200 animate-pulse" />
                 <Image
+                    loader={contentfulLoader}
                     src={imageSrc}
                     alt={name}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority={priority}
                 />
 
                 {/* Overlay Gradient */}
@@ -65,16 +72,16 @@ export const FishCard = ({ name, description, imageSrc, stats, tags }: FishCardP
             </div>
 
             {/* Content Area */}
-            <div className="p-6">
+            <div className="p-6 relative z-10">
                 <div className="mb-6 flex flex-wrap gap-2">
                     {tags.map(tag => (
-                        <span key={tag} className="px-2 py-1 text-[10px] uppercase font-bold bg-neutral-100 text-neutral-600 rounded-md dark:bg-white/10 dark:text-neutral-300">
+                        <span key={tag} className="px-2.5 py-1 text-[10px] uppercase font-bold bg-pine-green/10 text-pine-green-dark rounded-md dark:bg-white/10 dark:text-neutral-200">
                             {tag}
                         </span>
                     ))}
                 </div>
 
-                <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed min-h-[60px]">
                     {description}
                 </p>
 
@@ -85,6 +92,6 @@ export const FishCard = ({ name, description, imageSrc, stats, tags }: FishCardP
                     <StatBar label="AKTYWNOŚĆ" value={stats.activity} color="bg-green-500" />
                 </div>
             </div>
-        </div>
+        </TiltCard>
     );
 };

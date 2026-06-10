@@ -1,14 +1,20 @@
 
-import { GalleryUploadForm } from "@/components/features/GalleryUploadForm";
+import { GalleryClientContainer } from "@/components/features/GalleryClientContainer";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Metadata } from "next";
-import { GalleryGrid, GalleryImage } from "@/components/features/GalleryGrid";
-import { contentfulClient, createContentfulClient, GalleryPhotoSkeleton } from "@/lib/contentful";
+import { GalleryImage } from "@/components/features/GalleryGrid";
+import { createContentfulClient, GalleryPhotoSkeleton } from "@/lib/contentful";
 import { draftMode } from "next/headers";
+import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 
 export const metadata: Metadata = {
     title: "Galeria | Zalew Kozłowski",
     description: "Zobacz zdjęcia naszych gości i piękne okazy złowione na Zalewie Kozłowskim. Dołącz do naszej społeczności!",
+    openGraph: {
+        title: "Galeria — Zalew Kozłowski",
+        description: "Piękne okazy złowione na naszym łowisku. Zobacz zdjęcia gości!",
+        url: "/galeria",
+    },
 };
 
 // Fallback data (gdyby Contentful był pusty lub niedostępny)
@@ -91,7 +97,7 @@ export default async function GalleryPage() {
     }
 
     return (
-        <div className="min-h-screen bg-sand-beige py-24 dark:bg-pine-green-dark">
+        <SubpageWrapper>
             <div className="mx-auto max-w-7xl px-4">
                 <SectionReveal className="mb-12 text-center">
                     <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
@@ -102,12 +108,8 @@ export default async function GalleryPage() {
                     </p>
                 </SectionReveal>
 
-                <GalleryGrid images={images} />
-
-                <SectionReveal delay={0.4} className="mt-24 mb-12">
-                    <GalleryUploadForm />
-                </SectionReveal>
+                <GalleryClientContainer initialImages={images} />
             </div>
-        </div>
+        </SubpageWrapper>
     );
 }

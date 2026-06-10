@@ -1,14 +1,19 @@
 "use client";
 
-import { useWeather } from "@/hooks/useWeather";
-import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { ArrowRight, CloudSun, CloudRain, Sun, Cloud, Wind, Droplets, Moon, Sunrise, Sunset, Loader2, Info, Thermometer, Gauge } from "lucide-react";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { TransitionLink } from "@/components/ui/TransitionLink";
+import { WebGLCaustics } from "@/components/ui/WebGLCaustics";
+import { ArrowRight, CloudSun, CloudRain, Sun, Cloud, Wind, Droplets, Moon, Thermometer, Gauge } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { WeatherData } from "@/app/actions/weather";
+import { getGlowColorForScore } from "@/lib/bite-index-theme";
 
-export const WeatherBentoCard = ({ className }: { className?: string }) => {
-    const { weather, loading } = useWeather();
+interface WeatherBentoCardProps {
+    className?: string;
+    weather: WeatherData;
+}
 
+export const WeatherBentoCard = ({ className, weather }: WeatherBentoCardProps) => {
     // Helper to pick main icon
     const StatusIcon = (() => {
         if (!weather) return CloudSun;
@@ -18,46 +23,30 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
         return CloudSun;
     })();
 
-    // Determine colors based on score
-    const getScoreColor = (score: number) => {
-        if (score >= 80) return "text-purple-500";
-        if (score >= 60) return "text-green-500";
-        if (score <= 35) return "text-red-500";
-        return "text-yellow-500";
-    };
-
-    const getBgClass = (score: number) => {
-        if (score >= 80) return "bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700"; // Wyśmienite (Purple/Indigo)
-        if (score >= 60) return "bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700"; // Dobre (Teal/Green)
-        if (score <= 35) return "bg-gradient-to-br from-slate-600 via-gray-700 to-zinc-800"; // Słabe (Gary/Dark)
-        return "bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700"; // Średnie (Blue)
-    };
+    // Centralized color from bite-index-theme.ts
+    const glowColor = getGlowColorForScore(weather?.score ?? 50);
 
     return (
-        <SpotlightCard className={cn("col-span-3 md:col-span-2 w-full overflow-hidden relative group h-full border-none shadow-xl", className)}>
+        <TiltCard
+            glowColor={weather ? glowColor : "59, 130, 246"}
+            className={cn("col-span-3 md:col-span-2 w-full overflow-hidden relative group h-full border-none shadow-xl", className)}
+        >
 
-            {/* 1. Dynamic Animated Gradient Background - Grayscale until hover */}
-            <div className={cn(
-                "absolute inset-0 z-0 h-full w-full bg-size-[400%_400%] md:animate-gradient md:grayscale group-hover:grayscale-0 transition-[filter] duration-1000",
-                weather ? getBgClass(weather.score) : "bg-neutral-900"
-            )} />
+            {/* 1. Dark base — always visible, fallback if WebGL fails */}
+            <div className="absolute inset-0 z-0 bg-neutral-950" />
 
-            {/* 2. Abstract Shapes/Noise Overlay */}
-            <div className="absolute inset-0 z-0 opacity-50 mix-blend-soft-light md:grayscale group-hover:grayscale-0 transition-all duration-700">
-                <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                    <filter id="noiseFilter">
-                        <feTurbulence type="fractalNoise" baseFrequency="0.8" stitchTiles="stitch" />
-                        <feColorMatrix type="saturate" values="0" />
-                    </filter>
-                    <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-                </svg>
-            </div>
+            {/* 2. WebGL Water Caustics — color & speed driven by score */}
+            <WebGLCaustics
+                glowColor={glowColor}
+                score={weather?.score ?? 50}
+                className="z-[1] opacity-90"
+            />
 
-            {/* 3. Subtle Radial Glow */}
-            <div className="absolute -top-1/2 -right-1/2 h-[200%] w-[200%] bg-[radial-gradient(circle,rgba(255,255,255,0.15)_0%,transparent_50%)] blur-3xl pointer-events-none" />
+            {/* 3. Subtle dark vignette overlay so text stays readable */}
+            <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/60 via-black/10 to-black/20 pointer-events-none" />
 
             {/* Content Container - Compact Padding */}
-            <div className="relative z-20 p-4 pb-12 h-full flex flex-col justify-between text-white">
+            <div className="bento-parallax-content-static relative z-20 p-4 pb-12 h-full flex flex-col justify-between text-white">
 
                 {/* Header */}
                 <div className="flex items-start justify-between">
@@ -75,16 +64,14 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
                         </p>
                     </div>
                     {/* Icon */}
-                    <div className="rounded-full bg-white/10 p-2 md:p-3 backdrop-blur-md border border-white/20 text-white shadow-lg group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
-                        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <StatusIcon className="h-5 w-5" />}
+                    <div className="rounded-full bg-white/10 p-2 md:p-3 backdrop-blur-md border border-white/20 text-white shadow-lg group-hover:bg-white/20 group-hover:scale-110 transition-all duration-500 cubic-bezier-spring">
+                        <StatusIcon className="h-5 w-5" />
                     </div>
                 </div>
 
                 {/* Main Score Display - More Compact */}
-                <div className="flex-1 flex flex-col justify-center items-center my-1 group-hover:scale-105 md:grayscale group-hover:grayscale-0 transition-all duration-700">
-                    {loading ? (
-                        <div className="h-20 w-20 animate-pulse rounded-full bg-white/10" />
-                    ) : weather ? (
+                <div className="flex-1 flex flex-col justify-center items-center my-1 group-hover:scale-105 transition-all duration-300">
+                    {weather && (
                         <div className="text-center">
                             <div className="flex items-baseline justify-center gap-1 px-2">
                                 <span className="text-5xl md:text-7xl font-black tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white to-white/60 drop-shadow-sm">
@@ -98,12 +85,12 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
                                 </span>
                             </div>
                         </div>
-                    ) : null}
+                    )}
                 </div>
 
                 {/* Grid of details - Compact Rows (Icon+Label on one line) */}
                 {weather && (
-                    <div className="grid grid-cols-3 gap-y-3 gap-x-1 border-t border-white/10 pt-3 opacity-100 md:opacity-80 group-hover:opacity-100 bg-black/10 rounded-xl p-2 backdrop-blur-sm mx-auto w-full md:grayscale group-hover:grayscale-0 transition-all duration-700">
+                    <div className="grid grid-cols-3 gap-y-3 gap-x-1 border-t border-white/10 pt-3 opacity-100 md:opacity-90 group-hover:opacity-100 bg-black/15 rounded-xl p-2 backdrop-blur-sm mx-auto w-full transition-all duration-300">
 
                         {/* 1. Temp */}
                         <div className="flex flex-col items-center justify-center border-r border-white/10">
@@ -133,7 +120,6 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
                         </div>
 
                         {/* 4. Humidity */}
-                        {/* 4. Humidity */}
                         <div className="flex flex-col items-center justify-center border-r border-t border-white/10 pt-2 mt-1">
                             <div className="flex items-center gap-1 mb-0.5 opacity-60">
                                 <Droplets className="h-3.5 w-3.5" />
@@ -157,7 +143,7 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
                                 {weather.moonPhase ? <Moon className="h-3.5 w-3.5" /> : <Sun className="h-3.5 w-3.5" />}
                                 <span className="text-[9px] uppercase font-bold">Faza</span>
                             </div>
-                            <span className="text-lg font-bold text-white leading-none truncate max-w-[80px]">
+                            <span className="text-sm md:text-base font-bold text-white leading-none text-center">
                                 {weather.moonPhase ? weather.moonPhase : (weather.isDay ? "Dzień" : "Noc")}
                             </span>
                         </div>
@@ -168,14 +154,14 @@ export const WeatherBentoCard = ({ className }: { className?: string }) => {
 
             {/* Hover Effect CTA */}
             <div className="pointer-events-none absolute bottom-0 z-20 flex w-full transform-gpu flex-row items-center p-4 transition-all duration-300 translate-y-0 opacity-100 md:translate-y-10 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 justify-end">
-                <Link
+                <TransitionLink
                     href="/o-lowisku"
-                    className="pointer-events-auto flex items-center gap-2 rounded-lg bg-white/20 backdrop-blur-md px-4 py-2 text-sm font-bold text-white shadow-lg border border-white/30 transition-all hover:bg-white/30 hover:scale-105"
+                    className="btn-ai-glow pointer-events-auto"
                 >
                     Szczegóły
                     <ArrowRight className="h-4 w-4" />
-                </Link>
+                </TransitionLink>
             </div>
-        </SpotlightCard>
+        </TiltCard>
     );
 };

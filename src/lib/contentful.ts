@@ -47,17 +47,20 @@ export type ArticleSkeleton = {
     };
 };
 
-export type PriceItemSkeleton = {
+export interface PriceItemSkeleton {
     contentTypeId: "priceItem";
     fields: {
-        title: EntryFieldTypes.Text;
-        price: EntryFieldTypes.Text;
-        description?: EntryFieldTypes.Text;
+        title: EntryFieldTypes.Symbol;
+        description: EntryFieldTypes.Text;
+        price: EntryFieldTypes.Symbol;
+        category: EntryFieldTypes.Symbol;
         details: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
-        category: EntryFieldTypes.Text;
-        order?: EntryFieldTypes.Integer;
+        order: EntryFieldTypes.Integer;
+        price1Rod?: EntryFieldTypes.Integer;
+        price2Rods?: EntryFieldTypes.Integer;
+        priceSpinning?: EntryFieldTypes.Integer;
     };
-};
+}
 
 export type RegulationEntrySkeleton = {
     contentTypeId: "regulationEntry";
@@ -89,3 +92,11 @@ export type FishSpeciesSkeleton = {
         tags: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
     };
 };
+
+export async function getInfoBlocks(preview = false) {
+    const client = createContentfulClient({ preview });
+    const response = await client.getEntries<InfoBlockSkeleton>({
+        content_type: "infoBlock",
+    });
+    return response.items;
+}

@@ -6,10 +6,17 @@ import { Metadata } from "next";
 import { contentfulClient, createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
 import { draftMode } from "next/headers";
 import { Asset } from "contentful";
+import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
+import { ContentfulImage } from "@/components/ui/ContentfulImage";
 
 export const metadata: Metadata = {
     title: "Aktualności | Zalew Kozłowski",
     description: "Bądź na bieżąco z życiem łowiska. Informacje o zarybieniach, zawodach i wydarzeniach nad Zalewem Kozłowskim.",
+    openGraph: {
+        title: "Aktualności — Zalew Kozłowski",
+        description: "Informacje o zarybieniach, zawodach i wydarzeniach nad zalewem.",
+        url: "/aktualnosci",
+    },
 };
 
 
@@ -44,16 +51,16 @@ export default async function NewsPage() {
             category: entry.fields.category || "Aktualności",
             icon: getIcon(entry.fields.category),
             imageSrc: imageUrl,
-            color: "text-amber-500 bg-amber-500/10", // You could map this too if needed
+            color: "text-amber-700 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/20", // Mapped with proper contrast
             slug: entry.fields.slug,
         };
     });
 
     return (
-        <div className="min-h-screen bg-sand-beige py-24 dark:bg-pine-green-dark">
+        <SubpageWrapper>
             <div className="mx-auto max-w-6xl px-4">
                 <SectionReveal className="mb-12 text-center">
-                    <h1 className="mb-4 text-4xl font-bold text-pine-green-dark dark:text-white md:text-5xl">
+                    <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
                         Aktualności
                     </h1>
                     <p className="mx-auto max-w-2xl text-lg text-earth-brown dark:text-neutral-300">
@@ -72,13 +79,17 @@ export default async function NewsPage() {
                             return (
                                 <SpotlightCard
                                     key={post.id}
-                                    className="h-full overflow-hidden border-none shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl"
+                                    className="h-full overflow-hidden transition-all duration-300 hover:-translate-y-2"
                                 >
                                     <div className="flex flex-col h-full relative z-10">
                                         {/* Image Area */}
                                         <div className="relative h-48 w-full overflow-hidden bg-neutral-200 shrink-0">
-                                            <div className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
-                                                style={{ backgroundImage: `url('${post.imageSrc}')` }}
+                                            <ContentfulImage
+                                                src={post.imageSrc}
+                                                alt={post.title}
+                                                fill
+                                                className="object-cover transition-transform duration-700 hover:scale-110"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             />
                                             <div className="absolute top-4 left-4">
                                                 <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold backdrop-blur-md ${post.color}`}>
@@ -89,7 +100,7 @@ export default async function NewsPage() {
                                         </div>
 
                                         {/* Content Area */}
-                                        <div className="flex flex-col flex-grow p-6 bg-white dark:bg-pine-green-dark/50">
+                                        <div className="flex flex-col grow p-6 bg-transparent">
                                             <div className="mb-3 flex items-center gap-2 text-xs font-medium text-neutral-400">
                                                 <Calendar className="h-3.5 w-3.5" />
                                                 {post.date}
@@ -97,10 +108,13 @@ export default async function NewsPage() {
                                             <h2 className="mb-3 text-xl font-bold leading-tight text-pine-green dark:text-white">
                                                 {post.title}
                                             </h2>
-                                            <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-300">
+                                            <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">
                                                 {post.excerpt}
                                             </p>
-                                            <div className="mt-auto group inline-flex items-center gap-2 text-sm font-bold text-sunset-orange transition-colors hover:text-orange-600">
+                                            <div 
+                                                className="mt-auto group inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 hover:opacity-80"
+                                                style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
+                                            >
                                                 Czytaj więcej
                                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                             </div>
@@ -113,6 +127,6 @@ export default async function NewsPage() {
                     </SectionReveal>
                 )}
             </div>
-        </div>
+        </SubpageWrapper>
     );
 }
