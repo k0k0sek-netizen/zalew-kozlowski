@@ -90,7 +90,7 @@ export default async function RootLayout({
         style={{ "--active-glow-color": activeGlowColor } as React.CSSProperties}
         suppressHydrationWarning
       >
-        <link rel="preconnect" href="https://api.open-meteo.com" />
+
         {/* Accessibility: Skip Link */}
         <a
           href="#main-content"
