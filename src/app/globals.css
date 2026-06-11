@@ -273,11 +273,9 @@ body.page-transitioning main {
 /* 1. Typographic Entrance Reveal for Hero Title */
 @keyframes title-reveal {
   from {
-    clip-path: inset(0 0 100% 0);
-    transform: translateY(24px);
+    transform: translateY(100%);
   }
   to {
-    clip-path: inset(0 0 0 0);
     transform: translateY(0);
   }
 }
@@ -352,7 +350,6 @@ body.page-transitioning main {
       to {
         transform: translateY(-60px);
         opacity: 0;
-        filter: blur(6px);
       }
     }
 
@@ -366,7 +363,7 @@ body.page-transitioning main {
     @keyframes indicator-fade {
       to {
         opacity: 0;
-        visibility: hidden;
+        pointer-events: none;
       }
     }
   }

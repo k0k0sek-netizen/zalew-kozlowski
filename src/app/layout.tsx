@@ -4,7 +4,6 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsent } from "@/components/features/CookieConsent";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import DraftModeBanner from "@/components/features/DraftModeBanner";

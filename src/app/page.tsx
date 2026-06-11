@@ -68,8 +68,8 @@ export default async function Home() {
         <div className="absolute inset-0 bg-black/20 dark:bg-black/45 z-[1] pointer-events-none" />
 
         <SectionReveal className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center hero-content-scroll">
-          <div className="overflow-hidden py-2 animate-title-reveal">
-            <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-7xl lg:text-8xl drop-shadow-lg">
+          <div className="overflow-hidden py-2">
+            <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-7xl lg:text-8xl drop-shadow-lg animate-title-reveal">
               Zalew Kozłowski
             </h1>
           </div>
@@ -304,7 +304,7 @@ export default async function Home() {
                   fill
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
+                  quality={70}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 to-transparent z-[1]" />
               </div>

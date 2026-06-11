@@ -17,6 +17,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                     alt="Zalew Kozłowski"
                     fill
                     priority
+                    fetchPriority="high"
                     sizes="100vw"
                     className="absolute inset-0 h-full w-full object-cover -z-20 hero-video-scroll"
                 />

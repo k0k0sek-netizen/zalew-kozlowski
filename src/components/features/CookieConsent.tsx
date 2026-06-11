@@ -69,7 +69,7 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
                                 </button>
                                 <button
                                     onClick={handleAccept}
-                                    className="rounded-lg px-6 py-2 text-sm font-bold text-white dark:text-pine-green-dark shadow-md transition-all hover:scale-105 active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sunset-orange cursor-pointer"
+                                    className="rounded-lg px-6 py-2 text-sm font-bold text-pine-green-dark shadow-md transition-all hover:scale-105 active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sunset-orange cursor-pointer"
                                     style={{
                                         backgroundColor: "rgb(var(--active-glow-color, 249, 115, 22))",
                                         boxShadow: "0 8px 15px -3px rgba(var(--active-glow-color, 249, 115, 22), 0.3)"
