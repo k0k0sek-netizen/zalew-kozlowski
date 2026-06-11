@@ -108,8 +108,11 @@ export const WebGLCaustics: React.FC<WebGLCausticsProps> = ({
     const glRef = useRef<WebGLRenderingContext | null>(null);
     const programRef = useRef<WebGLProgram | null>(null);
     const animFrameRef = useRef<number>(0);
-    const startTimeRef = useRef<number>(Date.now());
-    const isVisibleRef = useRef(true);
+    const isVisibleRef = useRef(false);
+
+    // Track active rendering time and last frame timestamp
+    const timeRef = useRef<number>(0);
+    const lastTimeRef = useRef<number>(0);
 
     // Parse "R, G, B" string → [r, g, b] normalized 0-1
     const parseColor = useCallback((colorStr: string): [number, number, number] => {
@@ -195,19 +198,6 @@ export const WebGLCaustics: React.FC<WebGLCausticsProps> = ({
         const resizeObserver = new ResizeObserver(resize);
         resizeObserver.observe(canvas.parentElement || canvas);
 
-        // ── Visibility observer (pause when off-screen) ──
-        const intersectionObserver = new IntersectionObserver(
-            ([entry]) => {
-                isVisibleRef.current = entry.isIntersecting;
-                if (entry.isIntersecting) {
-                    startTimeRef.current = Date.now() - (startTimeRef.current || 0);
-                    render();
-                }
-            },
-            { threshold: 0.05 }
-        );
-        intersectionObserver.observe(canvas);
-
         // ── Uniform locations ──
         const uTime = gl.getUniformLocation(program, "u_time");
         const uResolution = gl.getUniformLocation(program, "u_resolution");
@@ -215,14 +205,26 @@ export const WebGLCaustics: React.FC<WebGLCausticsProps> = ({
         const uIntensity = gl.getUniformLocation(program, "u_intensity");
 
         // ── Render loop ──
-        startTimeRef.current = Date.now();
+        timeRef.current = 0;
+        lastTimeRef.current = 0;
 
         function render() {
-            if (!gl || !isVisibleRef.current) return;
+            if (!gl || !isVisibleRef.current) {
+                lastTimeRef.current = 0;
+                return;
+            }
 
-            const elapsed = (Date.now() - startTimeRef.current) / 1000;
+            const now = performance.now();
+            if (lastTimeRef.current === 0) {
+                lastTimeRef.current = now;
+            }
+            const delta = (now - lastTimeRef.current) / 1000;
+            lastTimeRef.current = now;
 
-            gl.uniform1f(uTime, elapsed);
+            // Accumulate active time, wrapping it to prevent precision issues over long periods
+            timeRef.current = (timeRef.current + delta) % 3600;
+
+            gl.uniform1f(uTime, timeRef.current);
             gl.uniform2f(uResolution, canvas!.width, canvas!.height);
             gl.uniform1f(uIntensity, intensity);
 
@@ -232,6 +234,27 @@ export const WebGLCaustics: React.FC<WebGLCausticsProps> = ({
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             animFrameRef.current = requestAnimationFrame(render);
         }
+
+        // ── Visibility observer (pause when off-screen) ──
+        const intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+                const wasVisible = isVisibleRef.current;
+                isVisibleRef.current = entry.isIntersecting;
+                
+                if (entry.isIntersecting) {
+                    if (!wasVisible) {
+                        lastTimeRef.current = 0;
+                        cancelAnimationFrame(animFrameRef.current);
+                        render();
+                    }
+                } else {
+                    cancelAnimationFrame(animFrameRef.current);
+                    lastTimeRef.current = 0;
+                }
+            },
+            { threshold: 0.05 }
+        );
+        intersectionObserver.observe(canvas);
 
         render();
 
