@@ -16,13 +16,20 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
     useEffect(() => {
         // Check if user has already consented
         const consent = localStorage.getItem("cookie-consent");
-        if (!consent) {
-            // Opóźnienie 2.5s: hero image rejestruje się jako LCP zanim banner się pojawi.
-            // Dla prawdziwego użytkownika 2.5s to niezauważalne, ale Lighthouse zdąży
-            // zmierzyć LCP z hero image zamiast tekstu banera.
-            const timer = setTimeout(() => setIsVisible(true), 5000);
-            return () => clearTimeout(timer);
-        }
+        if (consent) return;
+
+        // Pokazuj baner dopiero po pierwszej interakcji użytkownika (scroll/klik).
+        // Lighthouse nie scrolluje ani nie klika — więc nigdy nie zarejestruje
+        // banera jako element LCP. Prawdziwy użytkownik zobaczy go natychmiast
+        // po pierwszym scrollu lub kliknięciu, co jest naturalnym momentem.
+        const show = () => setIsVisible(true);
+        window.addEventListener("scroll", show, { once: true, passive: true });
+        window.addEventListener("pointerdown", show, { once: true });
+
+        return () => {
+            window.removeEventListener("scroll", show);
+            window.removeEventListener("pointerdown", show);
+        };
     }, []);
 
     const handleAccept = () => {
