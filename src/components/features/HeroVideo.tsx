@@ -1,4 +1,6 @@
-import { ComponentProps } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 interface HeroVideoProps {
@@ -8,6 +10,28 @@ interface HeroVideoProps {
 }
 
 export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProps) => {
+    const [activeVideoSrc, setActiveVideoSrc] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!videoSrc) return;
+
+        const mediaQuery = window.matchMedia("(max-width: 768px)");
+        const handleMatch = (e: MediaQueryListEvent | MediaQueryList) => {
+            if (e.matches && mobileVideoSrc) {
+                setActiveVideoSrc(mobileVideoSrc);
+            } else {
+                setActiveVideoSrc(videoSrc);
+            }
+        };
+
+        // Run once on mount
+        handleMatch(mediaQuery);
+
+        // Listen for screen size changes
+        mediaQuery.addEventListener("change", handleMatch);
+        return () => mediaQuery.removeEventListener("change", handleMatch);
+    }, [videoSrc, mobileVideoSrc]);
+
     return (
         <div className="absolute inset-0 z-0 overflow-hidden bg-pine-green-dark">
             {/* LCP Optimization: High Priority Poster Image */}
@@ -18,6 +42,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                     fill
                     priority
                     fetchPriority="high"
+                    quality={70}
                     sizes="100vw"
                     className="absolute inset-0 h-full w-full object-cover -z-20 hero-video-scroll"
                 />
@@ -38,8 +63,9 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                 />
             )}
 
-            {videoSrc && (
+            {activeVideoSrc && (
                 <video
+                    key={activeVideoSrc}
                     className="absolute inset-0 h-full w-full object-cover animate-zoom-out hero-video-scroll"
                     autoPlay
                     muted
@@ -48,10 +74,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                     preload="none"
                     aria-hidden="true"
                 >
-                    {mobileVideoSrc && (
-                        <source src={mobileVideoSrc} type="video/mp4" media="(max-width: 768px)" />
-                    )}
-                    <source src={videoSrc} type="video/mp4" />
+                    <source src={activeVideoSrc} type="video/mp4" />
                 </video>
             )}
         </div>
