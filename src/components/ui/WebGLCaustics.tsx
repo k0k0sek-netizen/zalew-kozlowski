@@ -70,27 +70,27 @@ void main() {
     // Multiply layers → caustic diamond pattern
     float caustic = c1 * c2 * c3;
 
-    // Shape the falloff — sharper at low intensity, softer glow at high
-    float sharpness = 2.5 - u_intensity * 1.2;
+    // Shape the falloff — slightly softer (1.8 instead of 2.5) to make lines more defined on mobile screens
+    float sharpness = 1.8 - u_intensity * 0.8;
     caustic = pow(caustic, sharpness);
 
-    // Brightness boost based on intensity
-    float brightness = 0.6 + u_intensity * 0.8;
+    // Higher brightness boost based on intensity
+    float brightness = 1.1 + u_intensity * 0.9;
     caustic *= brightness;
 
     // ── Color composition ──
-    // Dark underwater base
-    vec3 deepBase = u_color * 0.08;
-    // Bright caustic lines in the theme color
-    vec3 causticColor = u_color * (1.0 + u_intensity * 0.5);
-    // Subtle white highlight on the brightest spots
-    vec3 highlight = vec3(1.0) * pow(caustic, 3.0) * 0.25;
+    // Richer underwater base (15% color instead of 8% to prevent pure black dead zones)
+    vec3 deepBase = u_color * 0.15;
+    // Stronger caustic lines in the theme color
+    vec3 causticColor = u_color * (1.2 + u_intensity * 0.8);
+    // More pronounced white shimmer highlights on the brightest spots
+    vec3 highlight = vec3(1.0) * pow(caustic, 2.5) * 0.55;
 
     vec3 finalColor = deepBase + causticColor * caustic + highlight;
 
-    // Subtle vignette for depth
+    // Softer vignette (0.4 instead of 0.8) so corners don't get completely washed out on mobile
     vec2 vigUv = gl_FragCoord.xy / u_resolution - 0.5;
-    float vignette = 1.0 - dot(vigUv, vigUv) * 0.8;
+    float vignette = 1.0 - dot(vigUv, vigUv) * 0.4;
     finalColor *= vignette;
 
     gl_FragColor = vec4(finalColor, 1.0);

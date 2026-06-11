@@ -39,11 +39,11 @@ export const WeatherBentoCard = ({ className, weather }: WeatherBentoCardProps) 
             <WebGLCaustics
                 glowColor={glowColor}
                 score={weather?.score ?? 50}
-                className="z-[1] opacity-90"
+                className="z-[1] opacity-95"
             />
 
-            {/* 3. Subtle dark vignette overlay so text stays readable */}
-            <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/60 via-black/10 to-black/20 pointer-events-none" />
+            {/* 3. Subtle dark vignette overlay so text stays readable (slightly softened for mobile visibility) */}
+            <div className="absolute inset-0 z-[2] bg-gradient-to-t from-black/50 via-transparent to-black/10 pointer-events-none" />
 
             {/* Content Container - Compact Padding */}
             <div className="bento-parallax-content-static relative z-20 p-4 pb-12 h-full flex flex-col justify-between text-white">
