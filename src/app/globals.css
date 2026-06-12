@@ -630,3 +630,13 @@ body.page-transitioning main {
   animation-duration: 350ms;
   animation-timing-function: var(--ease-premium-reveal);
 }
+
+/* Dynamic active-glow-color utilities mapped to weather bite index */
+.text-accent {
+  color: rgb(var(--active-glow-color, 249, 115, 22)) !important;
+  transition: color 0.3s ease;
+}
+
+.group:hover .group-hover\:text-accent {
+  color: rgb(var(--active-glow-color, 249, 115, 22)) !important;
+}

@@ -57,8 +57,8 @@ export const BentoCard = ({
             <div className="bento-parallax-bg">{background}</div>
 
             <div className="bento-parallax-content-slide relative z-20 pointer-events-none flex transform-gpu flex-col gap-1 p-6">
-                <Icon className="h-12 w-12 origin-left transform-gpu text-sunset-orange transition-all duration-500 cubic-bezier-spring md:group-hover:scale-75 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
-                <h3 className="text-xl font-semibold text-white md:group-hover:text-sunset-orange transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                <Icon className="h-12 w-12 origin-left transform-gpu text-accent transition-all duration-500 cubic-bezier-spring md:group-hover:scale-75 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+                <h3 className="text-xl font-semibold text-white group-hover:text-accent transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                     {name}
                 </h3>
                 <p className="max-w-lg text-stone-100 font-medium drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">{description}</p>

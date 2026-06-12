@@ -11,6 +11,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "missing_key");
 const UploadSchema = z.object({
     file: z.instanceof(File, { message: "Plik jest wymagany" })
         .refine((file) => file.size > 0, "Plik nie może być pusty")
+        .refine((file) => file.size <= 5 * 1024 * 1024, "Plik jest za duży (maksymalnie 5MB)")
         .refine((file) => file.type.startsWith("image/"), "Dozwolone są tylko pliki graficzne"),
     title: z.string().min(3, "Tytuł musi mieć min. 3 znaki").max(100, "Tytuł zbyt długi"),
     author: z.string().optional().default("Anonim"),
