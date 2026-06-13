@@ -1,7 +1,7 @@
 import { createClient, EntryFieldTypes } from "contentful";
 
 // Factory function to create a client (Standard or Preview)
-export const createContentfulClient = ({ preview }: { preview?: boolean } = {}) => {
+export const createContentfulClient = ({ preview }: { preview?: boolean } = {}): ReturnType<typeof createClient> => {
     const accessToken = preview
         ? process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
         : process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
@@ -9,9 +9,18 @@ export const createContentfulClient = ({ preview }: { preview?: boolean } = {}) 
     const host = preview ? "preview.contentful.com" : "cdn.contentful.com";
 
     if (!accessToken) {
-        throw new Error(
-            `Missing access token for ${preview ? "Preview" : "Delivery"} API. Check .env.local`
+        console.warn(
+            `[Contentful] Warning: Missing access token for ${preview ? "Preview" : "Delivery"} API. Check .env.local`
         );
+        // Return a dummy client that throws when query methods are called
+        return {
+            getEntries: async () => {
+                throw new Error("Contentful client not initialized: missing access token");
+            },
+            getEntry: async () => {
+                throw new Error("Contentful client not initialized: missing access token");
+            }
+        } as any as ReturnType<typeof createClient>;
     }
 
     return createClient({
@@ -94,9 +103,14 @@ export type FishSpeciesSkeleton = {
 };
 
 export async function getInfoBlocks(preview = false) {
-    const client = createContentfulClient({ preview });
-    const response = await client.getEntries<InfoBlockSkeleton>({
-        content_type: "infoBlock",
-    });
-    return response.items;
+    try {
+        const client = createContentfulClient({ preview });
+        const response = await client.getEntries<InfoBlockSkeleton>({
+            content_type: "infoBlock",
+        });
+        return response.items;
+    } catch (err) {
+        console.error("[Contentful] Failed to getInfoBlocks:", err);
+        return [];
+    }
 }

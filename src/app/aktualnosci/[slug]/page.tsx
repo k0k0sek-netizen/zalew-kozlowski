@@ -14,58 +14,68 @@ import { ContentfulImage } from "@/components/ui/ContentfulImage";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export async function generateStaticParams() {
-    const client = createContentfulClient({ preview: false });
-    const response = await client.getEntries<ArticleSkeleton>({
-        content_type: "article",
-        select: ["fields.slug" as any],
-    });
+    try {
+        const client = createContentfulClient({ preview: false });
+        const response = await client.getEntries<ArticleSkeleton>({
+            content_type: "article",
+            select: ["fields.slug" as any],
+        });
 
-    return response.items
-        .filter(item => item.fields.slug)
-        .map((item) => ({
-            slug: item.fields.slug,
-        }));
+        return response.items
+            .filter(item => item.fields.slug)
+            .map((item) => ({
+                slug: item.fields.slug,
+            }));
+    } catch (err) {
+        console.error("[Contentful] generateStaticParams failed:", err);
+        return [];
+    }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const { isEnabled } = await draftMode(); // Check draft mode in metadata
-    const client = createContentfulClient({ preview: isEnabled });
+    try {
+        const { isEnabled } = await draftMode(); // Check draft mode in metadata
+        const client = createContentfulClient({ preview: isEnabled });
 
-    const entries = await client.getEntries<ArticleSkeleton>({
-        content_type: "article",
-        "fields.slug": slug,
-        limit: 1,
-    });
-    const post = entries.items[0];
-    if (!post) return { title: "Nie znaleziono artykułu (404)" };
+        const entries = await client.getEntries<ArticleSkeleton>({
+            content_type: "article",
+            "fields.slug": slug,
+            limit: 1,
+        });
+        const post = entries.items[0];
+        if (!post) return { title: "Nie znaleziono artykułu (404)" };
 
-    const title = `${post.fields.title} | Zalew Kozłowski`;
-    const description = post.fields.excerpt || "";
-    const coverImage = post.fields.coverImage as Asset | undefined;
-    const imageUrl = coverImage?.fields?.file?.url
-        ? `https:${coverImage.fields.file.url}?w=1200&h=630&fit=fill&fm=jpg&q=80`
-        : undefined;
+        const title = `${post.fields.title} | Zalew Kozłowski`;
+        const description = post.fields.excerpt || "";
+        const coverImage = post.fields.coverImage as Asset | undefined;
+        const imageUrl = coverImage?.fields?.file?.url
+            ? `https:${coverImage.fields.file.url}?w=1200&h=630&fit=fill&fm=jpg&q=80`
+            : undefined;
 
-    return {
-        title,
-        description,
-        openGraph: {
-            title: post.fields.title as string,
+        return {
+            title,
             description,
-            url: `/aktualnosci/${slug}`,
-            type: "article",
-            ...(post.fields.date && { publishedTime: new Date(post.fields.date as string).toISOString() }),
-            ...(imageUrl && {
-                images: [{
-                    url: imageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: post.fields.title as string,
-                }],
-            }),
-        },
-    };
+            openGraph: {
+                title: post.fields.title as string,
+                description,
+                url: `/aktualnosci/${slug}`,
+                type: "article",
+                ...(post.fields.date && { publishedTime: new Date(post.fields.date as string).toISOString() }),
+                ...(imageUrl && {
+                    images: [{
+                        url: imageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: post.fields.title as string,
+                    }],
+                }),
+            },
+        };
+    } catch (err) {
+        console.error("[Contentful] generateMetadata failed:", err);
+        return { title: "Aktualności | Zalew Kozłowski" };
+    }
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -73,16 +83,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     const { isEnabled } = await draftMode();
     const client = createContentfulClient({ preview: isEnabled });
 
-    // Fetch
-    const entries = await client.getEntries<ArticleSkeleton>({
-        content_type: "article",
-        "fields.slug": slug,
-        limit: 1,
-    });
+    let post = null;
+    try {
+        const entries = await client.getEntries<ArticleSkeleton>({
+            content_type: "article",
+            "fields.slug": slug,
+            limit: 1,
+        });
+        post = entries.items[0];
+    } catch (err) {
+        console.error("[Contentful] ArticlePage failed to fetch post:", err);
+    }
 
-    const post = entries.items[0];
-
-    // DEBUG MODE: Show error instead of 404 if in draft mode
     if (!post) notFound();
 
     const { title, date, content, coverImage, category } = post.fields;

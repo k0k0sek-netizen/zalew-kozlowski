@@ -18,14 +18,51 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
+const fallbackRegulations = [
+    {
+        sys: { id: "fallback-reg-general" },
+        fields: {
+            title: "Zasady Ogólne",
+            type: "General",
+            rules: [
+                "CAŁKOWITY ZAKAZ ZABIERANIA RYB (NO KILL).",
+                "Wędkowanie: Sobota-Niedziela (Pon-Pt możliwe po uzgodnieniu).",
+                "Osoby spoza Kozłowa: wymagany wcześniejszy kontakt telefoniczny.",
+                "Limit: Max 2 wędki na osobę (lub 1 spinning).",
+                "Zasady zachowania i etyki wędkarskiej zgodne z regulaminem PZW."
+            ],
+            order: 1
+        }
+    },
+    {
+        sys: { id: "fallback-reg-safety" },
+        fields: {
+            title: "Bezpieczeństwo i Porządek",
+            type: "Safety",
+            rules: [
+                "Przebywanie na łowisku po zmroku ZABRONIONE.",
+                "Zakaz kąpieli.",
+                "Zakaz rozpalania ognisk (poza wyznaczonymi miejscami)."
+            ],
+            order: 2
+        }
+    }
+];
+
 async function getRegulations(preview: boolean) {
-    const client = createContentfulClient({ preview });
-    const response = await client.getEntries<RegulationEntrySkeleton>({
-        content_type: "regulationEntry",
-        order: ["fields.order"],
-    });
-    return response.items;
+    try {
+        const client = createContentfulClient({ preview });
+        const response = await client.getEntries<RegulationEntrySkeleton>({
+            content_type: "regulationEntry",
+            order: ["fields.order"],
+        });
+        return response.items;
+    } catch (err) {
+        console.error("[Contentful] Failed to getRegulations, using fallback:", err);
+        return fallbackRegulations;
+    }
 }
+
 
 export default async function RulesPage() {
     const { isEnabled } = await draftMode();

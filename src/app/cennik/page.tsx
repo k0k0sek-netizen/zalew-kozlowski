@@ -17,14 +17,56 @@ export const metadata: Metadata = {
 
 export const revalidate = 3600;
 
+const fallbackPrices = [
+    {
+        sys: { id: "fallback-price-main" },
+        fields: {
+            title: "Zezwolenie Wędkarskie",
+            price: "15 zł / 20 zł",
+            description: "Opłata za jedną wędkę",
+            details: [
+                "Max 2 wędki (20 zł)",
+                "LUB 1 wędka spinningowa",
+                "Tylko gotówka",
+                "Mieszkańcy Kozłowa: 0 zł"
+            ],
+            category: "Główne",
+            order: 1,
+            price1Rod: 15,
+            price2Rods: 20,
+            priceSpinning: 15
+        }
+    },
+    {
+        sys: { id: "fallback-price-info" },
+        fields: {
+            title: "Dostępność Łowiska",
+            price: "Czynne",
+            details: [
+                "Weekend: Sobota - Niedziela (Świt - Zmierzch)",
+                "Pon - Pt: Możliwe wyłącznie po uzgodnieniu telefonicznym.",
+                "Goście: Wymagany wcześniejszy kontakt."
+            ],
+            category: "Info",
+            order: 2
+        }
+    }
+];
+
 async function getPrices(preview: boolean) {
-    const client = createContentfulClient({ preview });
-    const response = await client.getEntries<PriceItemSkeleton>({
-        content_type: "priceItem",
-        order: ["fields.order"],
-    });
-    return response.items;
+    try {
+        const client = createContentfulClient({ preview });
+        const response = await client.getEntries<PriceItemSkeleton>({
+            content_type: "priceItem",
+            order: ["fields.order"],
+        });
+        return response.items;
+    } catch (err) {
+        console.error("[Contentful] Failed to getPrices, using fallback:", err);
+        return fallbackPrices;
+    }
 }
+
 
 export default async function PricingPage() {
     const { isEnabled } = await draftMode();

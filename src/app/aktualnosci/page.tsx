@@ -24,10 +24,15 @@ export default async function NewsPage() {
     const { isEnabled } = await draftMode();
     const client = createContentfulClient({ preview: isEnabled });
 
-    const entries = await client.getEntries<ArticleSkeleton>({
-        content_type: "article",
-        order: ["-fields.date"],
-    });
+    let entries = { items: [] as any[] };
+    try {
+        entries = await client.getEntries<ArticleSkeleton>({
+            content_type: "article",
+            order: ["-fields.date"],
+        });
+    } catch (err) {
+        console.error("[Contentful] Failed to get entries for NewsPage:", err);
+    }
 
     const getIcon = (category: string = "") => {
         const lower = category.toLowerCase();
