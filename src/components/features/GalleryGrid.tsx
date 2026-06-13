@@ -27,6 +27,10 @@ interface GalleryImageItemProps {
 
 const GalleryImageItem = ({ image, onClick }: GalleryImageItemProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const isLarge = image.span && (image.span.includes("col-span-2") || image.span.includes("sm:col-span-2"));
+    const sizes = isLarge
+        ? "(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 66vw, (max-width: 1280px) 50vw, 640px"
+        : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px";
 
     return (
         <button
@@ -47,11 +51,12 @@ const GalleryImageItem = ({ image, onClick }: GalleryImageItemProps) => {
                 src={image.src}
                 alt={image.title}
                 fill
+                quality={80}
                 className={cn(
                     "object-cover transition-all duration-700 ease-out group-hover:scale-110 transform-gpu",
                     isLoaded ? "blur-0 scale-100 opacity-100" : "blur-md scale-105 opacity-0"
                 )}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 320px"
+                sizes={sizes}
                 onLoad={() => setIsLoaded(true)}
             />
             {image.isOptimistic ? (

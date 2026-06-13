@@ -80,33 +80,7 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                     <div
                         className="relative h-full w-full max-w-7xl flex items-center justify-center p-4"
                     >
-                        {/* Navigation Buttons */}
-                        {selectedIndex > 0 && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onNavigate(selectedIndex - 1);
-                                }}
-                                aria-label="Poprzednie zdjęcie"
-                                className="absolute left-4 top-1/2 -translate-y-1/2 z-50 rounded-full bg-white/10 p-3 text-white transition-all duration-300 border border-transparent hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.2)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.4)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
-                            >
-                                <ChevronLeft className="h-8 w-8" />
-                            </button>
-                        )}
-
-                        {selectedIndex < images.length - 1 && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onNavigate(selectedIndex + 1);
-                                }}
-                                aria-label="Następne zdjęcie"
-                                className="absolute right-4 top-1/2 -translate-y-1/2 z-50 rounded-full bg-white/10 p-3 text-white transition-all duration-300 border border-transparent hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.2)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.4)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
-                            >
-                                <ChevronRight className="h-8 w-8" />
-                            </button>
-                        )}
-
+                        {/* Animated Image Container */}
                         <motion.div
                             key={selectedIndex}
                             initial={{ scale: 0.9, opacity: 0 }}
@@ -136,6 +110,33 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                                 </div>
                             )}
                         </motion.div>
+
+                        {/* Navigation Buttons (rendered after image to ensure they sit on top in DOM order) */}
+                        {selectedIndex > 0 && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNavigate(selectedIndex - 1);
+                                }}
+                                aria-label="Poprzednie zdjęcie"
+                                className="absolute left-4 top-1/2 -translate-y-1/2 z-[1005] rounded-full bg-black/60 backdrop-blur-md p-3 text-white transition-all duration-300 border border-white/10 shadow-lg hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.6)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.8)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
+                            >
+                                <ChevronLeft className="h-8 w-8" />
+                            </button>
+                        )}
+
+                        {selectedIndex < images.length - 1 && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNavigate(selectedIndex + 1);
+                                }}
+                                aria-label="Następne zdjęcie"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 z-[1005] rounded-full bg-black/60 backdrop-blur-md p-3 text-white transition-all duration-300 border border-white/10 shadow-lg hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.6)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.8)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
+                            >
+                                <ChevronRight className="h-8 w-8" />
+                            </button>
+                        )}
                     </div>
                 </motion.div>
             )}
