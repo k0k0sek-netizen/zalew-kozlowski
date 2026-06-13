@@ -65,7 +65,10 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                 >
                     {/* Close Button */}
                     <button
-                        onClick={onClose}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}
                         aria-label="Zamknij podgląd"
                         className="absolute right-4 top-4 z-[1010] rounded-full bg-white/10 p-3 text-white transition-all duration-300 border border-transparent hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.2)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.4)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
                     >
@@ -79,7 +82,10 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                         {/* Navigation Buttons */}
                         {selectedIndex > 0 && (
                             <button
-                                onClick={() => onNavigate(selectedIndex - 1)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNavigate(selectedIndex - 1);
+                                }}
                                 aria-label="Poprzednie zdjęcie"
                                 className="absolute left-4 top-1/2 -translate-y-1/2 z-50 rounded-full bg-white/10 p-3 text-white transition-all duration-300 border border-transparent hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.2)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.4)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
                             >
@@ -89,7 +95,10 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
 
                         {selectedIndex < images.length - 1 && (
                             <button
-                                onClick={() => onNavigate(selectedIndex + 1)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onNavigate(selectedIndex + 1);
+                                }}
                                 aria-label="Następne zdjęcie"
                                 className="absolute right-4 top-1/2 -translate-y-1/2 z-50 rounded-full bg-white/10 p-3 text-white transition-all duration-300 border border-transparent hover:text-white hover:bg-[rgba(var(--active-glow-color,249,115,22),0.2)] hover:border-[rgba(var(--active-glow-color,249,115,22),0.4)] focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]"
                             >
