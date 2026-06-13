@@ -17,6 +17,8 @@ interface LightboxProps {
 export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: LightboxProps) => {
     const isOpen = selectedIndex !== null;
     const currentImage = selectedIndex !== null ? images[selectedIndex] : null;
+    const nextIndex = selectedIndex !== null && selectedIndex + 1 < images.length ? selectedIndex + 1 : null;
+    const prevIndex = selectedIndex !== null && selectedIndex - 1 >= 0 ? selectedIndex - 1 : null;
     const [mounted, setMounted] = useState(false);
 
     // Client-side hydration check
@@ -136,6 +138,26 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                             >
                                 <ChevronRight className="h-8 w-8" />
                             </button>
+                        )}
+
+                        {/* Hidden prefetch images for next and previous items */}
+                        {nextIndex !== null && (
+                            <img
+                                key={`preload-next-${nextIndex}`}
+                                src={contentfulLoader({ src: images[nextIndex].src, width: 1080, quality: 80 })}
+                                style={{ display: "none" }}
+                                fetchPriority="low"
+                                alt=""
+                            />
+                        )}
+                        {prevIndex !== null && (
+                            <img
+                                key={`preload-prev-${prevIndex}`}
+                                src={contentfulLoader({ src: images[prevIndex].src, width: 1080, quality: 80 })}
+                                style={{ display: "none" }}
+                                fetchPriority="low"
+                                alt=""
+                            />
                         )}
                     </div>
                 </motion.div>

@@ -23,9 +23,10 @@ interface GalleryGridProps {
 interface GalleryImageItemProps {
     image: GalleryImage;
     onClick: () => void;
+    priority?: boolean;
 }
 
-const GalleryImageItem = ({ image, onClick }: GalleryImageItemProps) => {
+const GalleryImageItem = ({ image, onClick, priority }: GalleryImageItemProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const isLarge = image.span && (image.span.includes("col-span-2") || image.span.includes("sm:col-span-2"));
     const sizes = isLarge
@@ -52,6 +53,7 @@ const GalleryImageItem = ({ image, onClick }: GalleryImageItemProps) => {
                 alt={image.title}
                 fill
                 quality={80}
+                priority={priority}
                 className={cn(
                     "object-cover transition-all duration-700 ease-out group-hover:scale-110 transform-gpu",
                     isLoaded ? "blur-0 scale-100 opacity-100" : "blur-md scale-105 opacity-0"
@@ -94,6 +96,7 @@ export const GalleryGrid = ({ images }: GalleryGridProps) => {
                             key={index}
                             image={image}
                             onClick={() => setSelectedIndex(index)}
+                            priority={index < 4}
                         />
                     ))}
                 </SectionReveal>
