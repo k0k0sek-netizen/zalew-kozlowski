@@ -29,8 +29,9 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                 return { success: false, error: "Wybierz plik graficzny przed wysłaniem" };
             }
 
-            if (!file.type.startsWith("image/")) {
-                return { success: false, error: "Możesz przesyłać wyłącznie pliki graficzne" };
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+            if (!allowedTypes.includes(file.type)) {
+                return { success: false, error: "Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF" };
             }
 
             if (file.size > 5 * 1024 * 1024) {
@@ -68,8 +69,9 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
             const file = e.target.files[0];
             
             // Client-side validation: image type
-            if (!file.type.startsWith("image/")) {
-                setClientError("Wybrany plik nie jest obrazem. Dozwolone są wyłącznie grafiki.");
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+            if (!allowedTypes.includes(file.type)) {
+                setClientError("Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF.");
                 e.target.value = ""; // Reset
                 setFileName("");
                 return;
@@ -110,8 +112,9 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
             const file = e.dataTransfer.files[0];
 
             // Client-side validation: image type
-            if (!file.type.startsWith("image/")) {
-                setClientError("Upuszczony plik nie jest obrazem. Dozwolone są wyłącznie grafiki.");
+            const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+            if (!allowedTypes.includes(file.type)) {
+                setClientError("Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF.");
                 return;
             }
 
@@ -167,7 +170,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                         type="file"
                         name="file"
                         id="file-upload"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
                         required
                         disabled={isPending}
                         onChange={handleFileChange}
