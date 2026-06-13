@@ -5,6 +5,7 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { SPRING_TOKENS } from "@/lib/motion";
 import { useEffect, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
+import contentfulLoader from "@/lib/contentful-loader";
 
 interface LightboxProps {
     images: { src: string; alt?: string; title?: string; author?: string; date?: string }[];
@@ -115,8 +116,10 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                             className="relative max-h-full max-w-full flex flex-col items-center justify-center"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <img
-                                src={currentImage.src}
+                             <img
+                                src={contentfulLoader({ src: currentImage.src, width: 1080, quality: 80 })}
+                                srcSet={`${contentfulLoader({ src: currentImage.src, width: 640, quality: 80 })} 640w, ${contentfulLoader({ src: currentImage.src, width: 1080, quality: 80 })} 1080w, ${contentfulLoader({ src: currentImage.src, width: 1920, quality: 80 })} 1920w`}
+                                sizes="(max-width: 768px) 100vw, 1920px"
                                 alt={currentImage.alt || "Galeria"}
                                 className="max-h-[85vh] w-auto max-w-full rounded-md object-contain shadow-2xl"
                             />

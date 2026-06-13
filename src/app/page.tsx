@@ -158,7 +158,7 @@ export default async function Home() {
                       alt="Zachód słońca"
                       fill
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 66vw, 854px"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/10 to-transparent dark:from-black/85 dark:via-black/40 dark:to-black/15 group-hover:from-black/60 group-hover:via-black/20 group-hover:to-transparent dark:group-hover:from-black/90 dark:group-hover:via-black/50 dark:group-hover:to-black/20 transition-all duration-500" />
                   </>
@@ -179,7 +179,7 @@ export default async function Home() {
                       alt="Ryba pod wodą"
                       fill
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 427px"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/45 via-black/10 to-transparent dark:from-black/85 dark:via-black/40 dark:to-black/15 group-hover:from-black/60 group-hover:via-black/20 group-hover:to-transparent dark:group-hover:from-black/90 dark:group-hover:via-black/50 dark:group-hover:to-black/20 transition-all duration-500" />
                   </>
@@ -200,7 +200,7 @@ export default async function Home() {
                       alt="Mapa Dojazdu"
                       fill
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 427px"
                     />
                     <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent dark:from-black/90 dark:via-black/45 dark:to-black/20 group-hover:from-black/65 group-hover:via-black/20 group-hover:to-transparent dark:group-hover:from-black/95 dark:group-hover:via-black/55 dark:group-hover:to-black/25 transition-all duration-500" />
                   </>
@@ -303,7 +303,7 @@ export default async function Home() {
                   alt="Krajobraz Zalewu Kozłowskiego"
                   fill
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu will-change-transform"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 640px"
                   quality={70}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/35 to-transparent z-[1]" />

@@ -42,7 +42,7 @@ export const HeroVideo = ({ videoSrc, mobileVideoSrc, posterSrc }: HeroVideoProp
                     fill
                     priority
                     fetchPriority="high"
-                    quality={70}
+                    quality={60}
                     sizes="100vw"
                     className="absolute inset-0 h-full w-full object-cover -z-20 hero-video-scroll"
                 />
