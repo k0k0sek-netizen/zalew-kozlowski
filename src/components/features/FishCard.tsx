@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import contentfulLoader from "@/lib/contentful-loader";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { cn } from "@/lib/utils";
 
 interface FishStatProps {
     label: string;
@@ -46,6 +47,8 @@ interface FishCardProps {
 }
 
 export const FishCard = ({ name, description, imageSrc, stats, tags, priority }: FishCardProps) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
     return (
         <TiltCard
             noBg
@@ -53,20 +56,24 @@ export const FishCard = ({ name, description, imageSrc, stats, tags, priority }:
         >
             {/* Image Area */}
             <div className="relative h-48 w-full overflow-hidden z-10">
-                <div className="absolute inset-0 bg-neutral-200 animate-pulse" />
+                <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-0" />
                 <Image
                     loader={contentfulLoader}
                     src={imageSrc}
                     alt={name}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    className={cn(
+                        "object-cover transition-all duration-700 ease-out group-hover:scale-110 transform-gpu",
+                        isLoaded ? "blur-0 scale-100 opacity-100" : "blur-md scale-105 opacity-0"
+                    )}
                     sizes="(max-width: 768px) 100vw, (max-width: 1152px) 33vw, 384px"
                     priority={priority}
+                    onLoad={() => setIsLoaded(true)}
                 />
 
                 {/* Overlay Gradient */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
-                <div className="absolute bottom-4 left-4">
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-90 transition-opacity group-hover:opacity-100 z-10" />
+                <div className="absolute bottom-4 left-4 z-20">
                     <h3 className="text-2xl font-black text-white uppercase tracking-tight">{name}</h3>
                 </div>
             </div>

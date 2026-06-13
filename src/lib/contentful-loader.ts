@@ -37,7 +37,7 @@ export default function contentfulLoader({ src, width, quality }: ContentfulLoad
         const url = new URL(normalizedSrc);
         url.searchParams.set("w", width.toString());
         url.searchParams.set("q", (quality || 75).toString());
-        url.searchParams.set("fm", "avif");
+        url.searchParams.set("fm", "webp");
         return url.toString();
     } catch (e) {
         console.warn("Failed to parse Contentful image URL in loader:", e);
