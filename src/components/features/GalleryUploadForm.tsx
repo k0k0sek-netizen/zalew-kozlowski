@@ -201,6 +201,18 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                     </div>
                 </div>
 
+                {/* Honeypot Spam Protection Field - Hidden from real users/screen readers, filled by bots */}
+                <div className="hidden" aria-hidden="true">
+                    <label htmlFor="website">Nie wpisuj nic w tym polu</label>
+                    <input
+                        type="text"
+                        name="website"
+                        id="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                    />
+                </div>
+
                 {/* Grid for Inputs */}
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div>

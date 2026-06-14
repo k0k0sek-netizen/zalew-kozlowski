@@ -21,6 +21,13 @@ const UploadSchema = z.object({
 });
 
 export async function uploadGalleryPhoto(formData: FormData) {
+    // 0. Honeypot check: reject bot submissions silently with decoy success
+    const website = formData.get("website") as string;
+    if (website) {
+        console.warn("[Honeypot] Spam detected and rejected silently.");
+        return { success: true, id: "decoy-success" };
+    }
+
     // 1. Validate Input (Runtime Type Safety)
     const result = UploadSchema.safeParse({
         file: formData.get("file"),

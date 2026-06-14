@@ -55,4 +55,31 @@ test.describe('Gallery Upload Form Client-Side Validation', () => {
         await expect(fileNameText).toBeVisible();
         await expect(dropzoneText).not.toBeVisible();
     });
+
+    test('should trigger honeypot and return decoy success when hidden field is filled', async ({ page }) => {
+        const fileInput = page.locator('input#file-upload');
+        const titleInput = page.locator('input#title');
+        const authorInput = page.locator('input#author');
+        const honeypotInput = page.locator('input[name="website"]');
+        const submitBtn = page.getByRole('button', { name: 'Wyślij do Galerii' });
+
+        // 1. Fill valid data
+        await fileInput.setInputFiles({
+            name: 'honeypot-test.jpg',
+            mimeType: 'image/jpeg',
+            buffer: Buffer.from('fake image data'),
+        });
+        await titleInput.fill('Oszukany Karp');
+        await authorInput.fill('Bot');
+
+        // 2. Fill the honeypot input (simulating bot behavior, using evaluate because element is hidden)
+        await honeypotInput.evaluate((el: HTMLInputElement) => el.value = 'http://spam-bot.com');
+
+        // 3. Submit
+        await submitBtn.click();
+
+        // 4. Verify decoy success message is displayed (client-side transitions to success page)
+        const successTitle = page.getByText('Dzięki za zdjęcie!');
+        await expect(successTitle).toBeVisible();
+    });
 });

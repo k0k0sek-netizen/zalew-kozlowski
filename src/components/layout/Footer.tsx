@@ -16,6 +16,8 @@ export const Footer = async () => {
 
     const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
     const email = infoBlocks.find((b: any) => b.fields.id === "email")?.fields.value || "lowiskokozlow@gmail.com";
+    const address = infoBlocks.find((b: any) => b.fields.id === "address")?.fields.value || "Kozłów 4A, 39-200 Dębica";
+    const mapUrl = infoBlocks.find((b: any) => b.fields.id === "map-url")?.fields.value || "https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w";
 
     return (
         <footer className="relative overflow-hidden bg-clay-gray dark:bg-pine-green-dark pt-16 pb-8 text-pine-green-dark dark:text-stone-200 border-t border-pine-green/10 dark:border-white/5 transition-colors duration-300">
@@ -129,13 +131,13 @@ export const Footer = async () => {
                             <ul className="space-y-2.5 text-sm">
                                 <li className="opacity-90">
                                     <a
-                                        href="https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w"
+                                        href={mapUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="group flex items-start gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange transition-all duration-300 w-fit"
                                     >
                                         <MapPin className="h-4.5 w-4.5 text-sunset-orange shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-115 group-hover:-translate-y-1" />
-                                        <span>Kozłów 4A, 39-200 Dębica</span>
+                                        <span>{address}</span>
                                     </a>
                                 </li>
                                 <li>

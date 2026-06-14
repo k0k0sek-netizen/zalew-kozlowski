@@ -56,6 +56,8 @@ export default async function Home() {
   const securityTitle = getBlock('characteristics-security')?.fields.title || "Ochrona i monitoring";
   const securityValue = getBlock('characteristics-security')?.fields.value || "Bezpieczeństwo i spokój podczas wypoczynku.";
 
+  const mapUrl = getBlock('map-url')?.fields.value || "https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w";
+
   return (
     <>
       {/* Hero Section */}
@@ -81,7 +83,7 @@ export default async function Home() {
 
           <div className="mt-6 flex justify-center z-10">
             <Magnetic strength={0.1}>
-              <TrustBadge />
+              <TrustBadge mapUrl={mapUrl} />
             </Magnetic>
           </div>
 

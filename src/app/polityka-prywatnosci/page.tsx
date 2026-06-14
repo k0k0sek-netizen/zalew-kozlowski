@@ -22,6 +22,7 @@ export default async function PrivacyPolicyPage() {
     const infoBlocks = await getInfoBlocks(isEnabled);
     const phone = (infoBlocks.find(b => b.fields.id === "phone")?.fields.value as string) || "601 389 365";
     const email = (infoBlocks.find(b => b.fields.id === "email")?.fields.value as string) || "lowiskokozlow@gmail.com";
+    const address = (infoBlocks.find(b => b.fields.id === "address")?.fields.value as string) || "Kozłów 4A, 39-200 Dębica";
 
     return (
         <SubpageWrapper>
@@ -45,7 +46,7 @@ export default async function PrivacyPolicyPage() {
 
                             <h3 className="text-xl font-bold text-pine-green dark:text-white mt-8 mb-4">2. Administrator Danych</h3>
                             <p className="mb-6 leading-relaxed">
-                                Administratorem danych osobowych jest <strong>Zalew Kozłowski - Łowisko Prywatne</strong>, z siedzibą w: Kozłów 4A, 39-200 Dębica.
+                                Administratorem danych osobowych jest <strong>Zalew Kozłowski - Łowisko Prywatne</strong>, z siedzibą w: {address}.
                                 Kontakt z administratorem możliwy jest pod numerem telefonu: {phone} lub adresem e-mail: {email}.
                             </p>
 

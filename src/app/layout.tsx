@@ -63,6 +63,31 @@ export default async function RootLayout({
 
   const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
   const email = infoBlocks.find((b: any) => b.fields.id === "email")?.fields.value || "lowiskokozlow@gmail.com";
+  const addressVal = infoBlocks.find((b: any) => b.fields.id === "address")?.fields.value || "Kozłów 4A, 39-200 Dębica";
+
+  // Basic parser for "Street, PostalCode Locality"
+  let streetAddress = "Kozłów 4A";
+  let postalCode = "39-200";
+  let addressLocality = "Kozłów";
+
+  try {
+    const parts = addressVal.split(",");
+    if (parts.length >= 2) {
+      streetAddress = parts[0].trim();
+      const secondPart = parts[1].trim();
+      const match = secondPart.match(/^(\d{2}-\d{3})\s+(.+)$/);
+      if (match) {
+        postalCode = match[1];
+        addressLocality = match[2];
+      } else {
+        addressLocality = secondPart;
+      }
+    } else {
+      streetAddress = addressVal;
+    }
+  } catch (e) {
+    console.error("Failed to parse address for JSON-LD:", e);
+  }
 
   const activeGlowColor = weatherData ? getGlowColorForScore(weatherData.score) : "249, 115, 22";
 
@@ -113,9 +138,9 @@ export default async function RootLayout({
               "email": email,
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Kozłów 4A",
-                "addressLocality": "Kozłów",
-                "postalCode": "39-200",
+                "streetAddress": streetAddress,
+                "addressLocality": addressLocality,
+                "postalCode": postalCode,
                 "addressCountry": "PL"
               },
               "geo": {

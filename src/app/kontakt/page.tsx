@@ -23,6 +23,8 @@ export default async function ContactPage() {
 
     const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
     const email = infoBlocks.find((b: any) => b.fields.id === "email")?.fields.value || "lowiskokozlow@gmail.com";
+    const address = infoBlocks.find((b: any) => b.fields.id === "address")?.fields.value || "Kozłów 4A, 39-200 Dębica";
+    const mapEmbed = infoBlocks.find((b: any) => b.fields.id === "map-embed")?.fields.value || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d20546.77259688636!2d21.4362375!3d50.0944237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473d0b2158b5c6c9%3A0x1868e6a4962b222c!2sZalew%20Koz%C5%82owski!5e0!3m2!1spl!2spl!4v1700000000000!5m2!1spl!2spl";
 
     return (
         <SubpageWrapper>
@@ -54,7 +56,7 @@ export default async function ContactPage() {
                                         />
                                         <div>
                                             <p className="font-bold text-pine-green-dark dark:text-white">Adres</p>
-                                            <p className="text-earth-brown dark:text-neutral-300">Kozłów 4A, 39-200 Kozłów</p>
+                                            <p className="text-earth-brown dark:text-neutral-300">{address}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
@@ -104,7 +106,7 @@ export default async function ContactPage() {
                         } as React.CSSProperties}
                     >
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d20546.77259688636!2d21.4362375!3d50.0944237!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x473d0b2158b5c6c9%3A0x1868e6a4962b222c!2sZalew%20Koz%C5%82owski!5e0!3m2!1spl!2spl!4v1700000000000!5m2!1spl!2spl"
+                            src={mapEmbed}
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}

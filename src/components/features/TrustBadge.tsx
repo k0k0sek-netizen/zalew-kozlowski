@@ -1,10 +1,10 @@
 import { Star } from "lucide-react";
 import Image from "next/image";
 
-export const TrustBadge = () => {
+export const TrustBadge = ({ mapUrl }: { mapUrl?: string }) => {
     return (
         <a
-            href="https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w"
+            href={mapUrl || "https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w"}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-full bg-white/10 backdrop-blur-md px-4 py-2 border border-white/20 hover:bg-white/20 transition-colors group"
