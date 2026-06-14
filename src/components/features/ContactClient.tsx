@@ -73,6 +73,7 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                                     key={opt.id}
                                     type="button"
                                     onClick={() => setType(opt.id as TypeType)}
+                                    aria-pressed={type === opt.id}
                                     className={cn(
                                         "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center min-w-[120px] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                         type === opt.id 
@@ -111,6 +112,7 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                                         key={opt.id}
                                         type="button"
                                         onClick={() => setDuration(opt.id as DurationType)}
+                                        aria-pressed={duration === opt.id}
                                         className={cn(
                                             "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center min-w-[90px] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                             duration === opt.id 

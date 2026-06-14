@@ -1,6 +1,6 @@
 "use client";
  
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { TransitionLink } from "@/components/ui/TransitionLink";
@@ -35,6 +35,46 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
     const [hoveredPath, setHoveredPath] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
     const [theme, setTheme] = useState<"light" | "dark">("dark");
+    const navRef = useRef<HTMLElement>(null);
+
+    // Escape key and mobile menu focus trap
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
+
+            if (e.key === "Tab") {
+                if (!navRef.current) return;
+                
+                const focusables = navRef.current.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex="0"]'
+                );
+                
+                if (focusables.length === 0) return;
+
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        last.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        first.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -124,6 +164,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
     return (
         <>
             <motion.nav
+                ref={navRef}
                 animate={{
                     width: (scrolled || isOpen) ? "92%" : "100%",
                     borderRadius: (scrolled || isOpen) ? (isOpen ? "32px" : "9999px") : "0px",
@@ -331,7 +372,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                             <button
                                 onClick={toggleTheme}
                                 className={cn(
-                                    "p-2 transition-all duration-300 flex items-center justify-center cursor-pointer opacity-60 hover:opacity-100 hover:scale-110 focus-visible:outline-hidden",
+                                    "p-2 transition-all duration-300 flex items-center justify-center cursor-pointer opacity-60 hover:opacity-100 hover:scale-110 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sunset-orange rounded-full",
                                     scrolled
                                         ? "text-pine-green-dark dark:text-white"
                                         : "text-white"

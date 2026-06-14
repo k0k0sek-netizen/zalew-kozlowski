@@ -166,6 +166,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
             <div className="space-y-4">
                 {/* File Input and visual Dropzone wrapper */}
                 <div className="relative group">
+                    <label htmlFor="file-upload" className="sr-only">Wybierz zdjęcie z dysku (maksymalnie 5MB)</label>
                     <input
                         type="file"
                         name="file"

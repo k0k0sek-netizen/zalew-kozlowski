@@ -108,6 +108,7 @@ export const PricingClient = ({
                                         <div className="flex gap-1.5 bg-neutral-100/50 dark:bg-white/5 p-1 rounded-full border border-neutral-200/30 dark:border-white/5 relative overflow-hidden">
                                             <button
                                                 onClick={() => setMethod("grunt")}
+                                                aria-pressed={method === "grunt"}
                                                 className={cn(
                                                     "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                                     method === "grunt"
@@ -130,6 +131,7 @@ export const PricingClient = ({
                                             </button>
                                             <button
                                                 onClick={() => setMethod("spinning")}
+                                                aria-pressed={method === "spinning"}
                                                 className={cn(
                                                     "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                                     method === "spinning"
@@ -163,6 +165,7 @@ export const PricingClient = ({
                                             <button
                                                 disabled={method === "spinning"}
                                                 onClick={() => method === "grunt" && setRods(1)}
+                                                aria-pressed={rods === 1 && method !== "spinning"}
                                                 className={cn(
                                                     "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                                     rods === 1 && method !== "spinning"
@@ -186,6 +189,7 @@ export const PricingClient = ({
                                             <button
                                                 disabled={method === "spinning"}
                                                 onClick={() => setRods(2)}
+                                                aria-pressed={rods === 2 && method !== "spinning"}
                                                 className={cn(
                                                     "relative px-4 py-2 rounded-full text-xs font-bold transition-colors duration-300 cursor-pointer flex-1 text-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
                                                     rods === 2 && method !== "spinning"
@@ -211,10 +215,11 @@ export const PricingClient = ({
 
                                     {/* Suwak (Slider) */}
                                     <div className="space-y-2">
-                                        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">Czas trwania ({days} {getDaysLabel(days)})</span>
+                                        <label htmlFor="zasiadka-duration-slider" className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 block">Czas trwania ({days} {getDaysLabel(days)})</label>
                                         <div className="px-1">
                                             <input 
                                                 type="range" 
+                                                id="zasiadka-duration-slider"
                                                 min="1" 
                                                 max="7" 
                                                 value={days}

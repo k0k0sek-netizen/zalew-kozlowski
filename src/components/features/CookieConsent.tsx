@@ -46,6 +46,8 @@ export const CookieConsent = ({ privacyPolicyUrl = "/polityka-prywatnosci" }: Co
         <AnimatePresence>
             {isVisible && (
                 <motion.div
+                    role="region"
+                    aria-label="Polityka plików cookie"
                     initial={{ y: 100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 100, opacity: 0 }}

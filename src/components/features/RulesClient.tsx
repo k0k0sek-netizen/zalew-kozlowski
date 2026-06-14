@@ -71,13 +71,21 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
             <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
 
                 {/* Tab Navigation Menu */}
-                <div className="flex overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 lg:flex-col gap-2 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
+                <div 
+                    role="tablist"
+                    aria-label="Wybór kategorii regulaminu"
+                    className="flex overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 lg:flex-col gap-2 no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0"
+                >
                     {tabs.map((tab) => {
                         const Icon = tab.icon;
                         const isActive = activeTab === tab.id;
                         return (
                             <button
                                 key={tab.id}
+                                role="tab"
+                                aria-selected={isActive}
+                                id={`tab-${tab.id}`}
+                                aria-controls={`panel-${tab.id}`}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={cn(
                                     "relative flex items-center gap-3 px-5 py-3 rounded-full lg:rounded-xl text-sm font-semibold transition-all shrink-0 cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]",
@@ -110,10 +118,15 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
+                        role="tabpanel"
+                        id={`panel-${activeTab}`}
+                        aria-labelledby={`tab-${activeTab}`}
+                        tabIndex={0}
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        className="focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[rgb(var(--active-glow-color,249,115,22))]/50 rounded-2xl"
                     >
                         {/* Tab Content 1: Zasady Ogólne */}
                         {activeTab === "general" && generalRules && (

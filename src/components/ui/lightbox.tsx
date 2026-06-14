@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { SPRING_TOKENS } from "@/lib/motion";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import contentfulLoader from "@/lib/contentful-loader";
 
@@ -20,6 +20,58 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
     const nextIndex = selectedIndex !== null && selectedIndex + 1 < images.length ? selectedIndex + 1 : null;
     const prevIndex = selectedIndex !== null && selectedIndex - 1 >= 0 ? selectedIndex - 1 : null;
     const [mounted, setMounted] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    // Manage focus trap and focus restoration
+    useEffect(() => {
+        if (!isOpen) return;
+
+        // Capture current active element (the thumbnail button) to restore later
+        const previousActiveElement = document.activeElement as HTMLElement | null;
+
+        // Shift focus to the close button (or container) once opened
+        const focusableElements = containerRef.current?.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex="0"]'
+        );
+        if (focusableElements && focusableElements.length > 0) {
+            focusableElements[0].focus();
+        }
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Tab") {
+                if (!containerRef.current) return;
+
+                const focusables = containerRef.current.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex="0"]'
+                );
+                
+                if (focusables.length === 0) return;
+
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === first) {
+                        last.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === last) {
+                        first.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            if (previousActiveElement) {
+                previousActiveElement.focus();
+            }
+        };
+    }, [isOpen, selectedIndex]);
 
     // Client-side hydration check
     useEffect(() => {
@@ -59,6 +111,10 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
         <AnimatePresence>
             {isOpen && currentImage && (
                 <motion.div
+                    ref={containerRef}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="Podgląd zdjęcia"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -98,7 +154,7 @@ export const Lightbox = ({ images, selectedIndex, onClose, onNavigate }: Lightbo
                                 sizes="(max-width: 768px) 100vw, 1920px"
                                 alt={currentImage.alt || "Galeria"}
                                 className="max-h-[85vh] w-auto max-w-full rounded-md object-contain shadow-2xl"
-                            />
+                             />
                             {currentImage.title && (
                                 <div className="mt-4 text-center bg-black/60 backdrop-blur-xs rounded-xl p-3 inline-block mx-auto max-w-lg border border-white/5">
                                     <p className="text-lg font-bold text-white leading-tight">{currentImage.title}</p>
