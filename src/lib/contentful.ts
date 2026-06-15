@@ -23,11 +23,42 @@ export const createContentfulClient = ({ preview }: { preview?: boolean } = {}):
         } as any as ReturnType<typeof createClient>;
     }
 
-    return createClient({
+    const rawClient = createClient({
         space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID || "",
         accessToken,
         host,
     });
+
+    // Wrap getEntries and getEntry to handle unknown locale errors and retry with default locale
+    const client = {
+        ...rawClient,
+        getEntries: async (query: any) => {
+            try {
+                return await rawClient.getEntries(query);
+            } catch (err: any) {
+                if (err && err.message && err.message.includes("Unknown locale")) {
+                    console.warn(`[Contentful] Unknown locale "${query.locale}". Retrying request without locale parameter.`);
+                    const { locale, ...restQuery } = query;
+                    return await rawClient.getEntries(restQuery);
+                }
+                throw err;
+            }
+        },
+        getEntry: async (id: string, query?: any) => {
+            try {
+                return await rawClient.getEntry(id, query);
+            } catch (err: any) {
+                if (err && err.message && err.message.includes("Unknown locale")) {
+                    console.warn(`[Contentful] Unknown locale "${query?.locale}". Retrying request without locale parameter.`);
+                    const { locale, ...restQuery } = query || {};
+                    return await rawClient.getEntry(id, restQuery);
+                }
+                throw err;
+            }
+        }
+    } as any as ReturnType<typeof createClient>;
+
+    return client;
 };
 
 // Default client for backward compatibility (Public API)
@@ -102,11 +133,12 @@ export type FishSpeciesSkeleton = {
     };
 };
 
-export async function getInfoBlocks(preview = false) {
+export async function getInfoBlocks(preview = false, locale = "pl") {
     try {
         const client = createContentfulClient({ preview });
         const response = await client.getEntries<InfoBlockSkeleton>({
             content_type: "infoBlock",
+            locale: locale === "en" ? "en-US" : "pl",
         });
         return response.items;
     } catch (err) {

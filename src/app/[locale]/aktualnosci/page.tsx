@@ -1,34 +1,44 @@
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Calendar, Fish, Trophy, Users, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Metadata } from "next";
-import { contentfulClient, createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
 import { draftMode } from "next/headers";
 import { Asset } from "contentful";
 import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { ContentfulImage } from "@/components/ui/ContentfulImage";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Aktualności | Zalew Kozłowski",
-    description: "Bądź na bieżąco z życiem łowiska. Informacje o zarybieniach, zawodach i wydarzeniach nad Zalewem Kozłowskim.",
-    openGraph: {
-        title: "Aktualności — Zalew Kozłowski",
-        description: "Informacje o zarybieniach, zawodach i wydarzeniach nad zalewem.",
-        url: "/aktualnosci",
-    },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    return {
+        title: locale === "en" ? "News | Kozłowski Reservoir" : "Aktualności | Zalew Kozłowski",
+        description: locale === "en"
+            ? "Stay up to date with the life of the fishery. Information about stocking, competitions, and events at the Kozłowski Reservoir."
+            : "Bądź na bieżąco z życiem łowiska. Informacje o zarybieniach, zawodach i wydarzeniach nad Zalewem Kozłowskim.",
+        openGraph: {
+            title: locale === "en" ? "News — Kozłowski Reservoir" : "Aktualności — Zalew Kozłowski",
+            description: locale === "en"
+                ? "Information about stocking, competitions, and events at the reservoir."
+                : "Informacje o zarybieniach, zawodach i wydarzeniach nad zalewem.",
+            url: "/aktualnosci",
+        },
+    };
+}
 
-
-export default async function NewsPage() {
+export default async function NewsPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const { isEnabled } = await draftMode();
     const client = createContentfulClient({ preview: isEnabled });
+    const t = await getTranslations({ locale, namespace: "news" });
 
     let entries = { items: [] as any[] };
     try {
         entries = await client.getEntries<ArticleSkeleton>({
             content_type: "article",
             order: ["-fields.date"],
+            locale: locale === "en" ? "en-US" : "pl",
         });
     } catch (err) {
         console.error("[Contentful] Failed to get entries for NewsPage:", err);
@@ -36,9 +46,9 @@ export default async function NewsPage() {
 
     const getIcon = (category: string = "") => {
         const lower = category.toLowerCase();
-        if (lower.includes("zarybi")) return Fish;
-        if (lower.includes("zawod")) return Trophy;
-        if (lower.includes("spotkanie")) return Users;
+        if (lower.includes("zarybi") || lower.includes("stock")) return Fish;
+        if (lower.includes("zawod") || lower.includes("compet") || lower.includes("tourn")) return Trophy;
+        if (lower.includes("spotkanie") || lower.includes("meet") || lower.includes("gather")) return Users;
         return Calendar;
     };
 
@@ -50,13 +60,13 @@ export default async function NewsPage() {
 
         return {
             id: entry.sys.id,
-            date: new Date(entry.fields.date).toLocaleDateString("pl-PL"),
+            date: new Date(entry.fields.date).toLocaleDateString(locale === "en" ? "en-US" : "pl-PL"),
             title: entry.fields.title,
             excerpt: entry.fields.excerpt,
-            category: entry.fields.category || "Aktualności",
+            category: entry.fields.category || (locale === "en" ? "News" : "Aktualności"),
             icon: getIcon(entry.fields.category),
             imageSrc: imageUrl,
-            color: "text-amber-700 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/20", // Mapped with proper contrast
+            color: "text-amber-700 bg-amber-500/10 dark:text-amber-400 dark:bg-amber-500/20",
             slug: entry.fields.slug,
         };
     });
@@ -66,16 +76,16 @@ export default async function NewsPage() {
             <div className="mx-auto max-w-6xl px-4">
                 <SectionReveal className="mb-12 text-center">
                     <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
-                        Aktualności
+                        {t("title")}
                     </h1>
                     <p className="mx-auto max-w-2xl text-lg text-earth-brown dark:text-neutral-300">
-                        Bądź na bieżąco z życiem naszego łowiska. Zarybienia, zawody i ważne komunikaty.
+                        {t("subtitle")}
                     </p>
                 </SectionReveal>
 
                 {posts.length === 0 ? (
                     <div className="text-center text-xl text-earth-brown dark:text-neutral-400 py-12">
-                        Brak aktualności. Zajrzyj tu wkrótce!
+                        {t("empty_news")}
                     </div>
                 ) : (
                     <SectionReveal className="grid gap-8 md:grid-cols-2 lg:grid-cols-3" delay={0.2}>
@@ -120,12 +130,12 @@ export default async function NewsPage() {
                                                 className="mt-auto group inline-flex items-center gap-2 text-sm font-bold transition-colors duration-300 hover:opacity-80"
                                                 style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                             >
-                                                Czytaj więcej
+                                                {t("read_more")}
                                                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                                             </div>
                                         </div>
                                     </div>
-                                    <Link href={`/aktualnosci/${post.slug}`} className="absolute inset-0 z-20" aria-label={`Czytaj: ${post.title}`} />
+                                    <Link href={`/aktualnosci/${post.slug}`} className="absolute inset-0 z-20" aria-label={t("read_more_aria", { title: post.title })} />
                                 </SpotlightCard>
                             );
                         })}

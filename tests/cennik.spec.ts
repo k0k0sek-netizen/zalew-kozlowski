@@ -66,6 +66,7 @@ test.describe('Pricing Page Calculator', () => {
             const valueSetter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(node), 'value')?.set;
             valueSetter?.call(node, val);
             node.dispatchEvent(new Event('input', { bubbles: true }));
+            node.dispatchEvent(new Event('change', { bubbles: true }));
         }, '3');
 
         await expect(priceDisplay).toHaveText(/60\s*zł/);
@@ -75,6 +76,7 @@ test.describe('Pricing Page Calculator', () => {
             const valueSetter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(node), 'value')?.set;
             valueSetter?.call(node, val);
             node.dispatchEvent(new Event('input', { bubbles: true }));
+            node.dispatchEvent(new Event('change', { bubbles: true }));
         }, '5');
 
         await expect(priceDisplay).toHaveText(/100\s*zł/);

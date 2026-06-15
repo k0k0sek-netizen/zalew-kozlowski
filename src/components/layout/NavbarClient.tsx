@@ -1,7 +1,8 @@
 "use client";
  
 import { useState, useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import { TransitionLink } from "@/components/ui/TransitionLink";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,12 +15,12 @@ import { WeatherData } from "@/app/actions/weather";
 import { SPRING_TOKENS } from "@/lib/motion";
 
 const NAV_ITEMS = [
-    { label: "O Łowisku", href: "/o-lowisku" },
-    { label: "Regulamin", href: "/regulamin" },
-    { label: "Cennik", href: "/cennik" },
-    { label: "Galeria", href: "/galeria" },
-    { label: "Aktualności", href: "/aktualnosci" },
-    { label: "Kontakt", href: "/kontakt" },
+    { labelKey: "about", href: "/o-lowisku" },
+    { labelKey: "rules", href: "/regulamin" },
+    { labelKey: "pricing", href: "/cennik" },
+    { labelKey: "gallery", href: "/galeria" },
+    { labelKey: "news", href: "/aktualnosci" },
+    { labelKey: "contact", href: "/kontakt" },
 ];
 
 interface NavbarClientProps {
@@ -31,10 +32,20 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const locale = useLocale();
+    const t = useTranslations("navbar");
+    const tCommon = useTranslations("common");
+
+    const toggleLocale = () => {
+        const nextLocale = locale === "pl" ? "en" : "pl";
+        router.replace(pathname, { locale: nextLocale });
+    };
 
     const [hoveredPath, setHoveredPath] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
     const [theme, setTheme] = useState<"light" | "dark">("dark");
+
     const navRef = useRef<HTMLElement>(null);
 
     // Escape key and mobile menu focus trap
@@ -232,10 +243,10 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                 {/* Logo Typography */}
                                 <div className="hidden sm:flex flex-col text-current select-none">
                                     <span className="font-display font-bold text-[13px] leading-tight tracking-wide drop-shadow-sm">
-                                        Zalew
+                                        {tCommon("logo_text_1")}
                                     </span>
                                     <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-sunset-orange dark:text-sunset-orange drop-shadow-sm -mt-0.5">
-                                        Kozłowski
+                                        {tCommon("logo_text_2")}
                                     </span>
                                 </div>
                             </a>
@@ -267,10 +278,10 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                 {/* Logo Typography */}
                                 <div className="hidden sm:flex flex-col text-current select-none">
                                     <span className="font-display font-bold text-[13px] leading-tight tracking-wide drop-shadow-sm">
-                                        Zalew
+                                        {tCommon("logo_text_1")}
                                     </span>
                                     <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-sunset-orange dark:text-sunset-orange drop-shadow-sm -mt-0.5">
-                                        Kozłowski
+                                        {tCommon("logo_text_2")}
                                     </span>
                                 </div>
                             </TransitionLink>
@@ -305,7 +316,8 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         style={isActive ? { color: "rgb(var(--active-glow-color, 249, 115, 22))" } : undefined}
                                         aria-current={isActive ? "page" : undefined}
                                     >
-                                        <span className="relative z-10 drop-shadow-sm whitespace-nowrap">{item.label}</span>
+                                        <span className="relative z-10 drop-shadow-sm whitespace-nowrap">{t(item.labelKey)}</span>
+
                                         {hoveredPath === item.href && (
                                             <motion.div
                                                 layoutId="navbar-hover"
@@ -377,7 +389,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         ? "text-pine-green-dark dark:text-white"
                                         : "text-white"
                                 )}
-                                aria-label="Przełącz motyw"
+                                aria-label={t("theme_toggle")}
                             >
                                 <AnimatePresence mode="wait" initial={false}>
                                     {!mounted ? (
@@ -399,6 +411,20 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
+                            </button>
+
+                            {/* Language Toggle (Desktop) */}
+                            <button
+                                onClick={toggleLocale}
+                                className={cn(
+                                    "px-2.5 py-1 text-xs font-extrabold tracking-wider transition-all duration-300 flex items-center justify-center cursor-pointer opacity-60 hover:opacity-100 hover:scale-105 border rounded-full focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sunset-orange",
+                                    scrolled
+                                        ? "text-pine-green-dark dark:text-stone-300 border-pine-green/10 dark:border-white/10 hover:bg-pine-green/5 dark:hover:bg-white/5"
+                                        : "text-white border-white/20 hover:bg-white/10"
+                                )}
+                                aria-label={locale === "pl" ? "Switch to English" : "Przełącz na język polski"}
+                            >
+                                {locale === "pl" ? "EN" : "PL"}
                             </button>
 
                             <Magnetic>
@@ -425,13 +451,14 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         }}
                                     />
                                     <Phone className="h-4 w-4 transition-transform group-hover:animate-shake shrink-0 relative z-10" />
-                                    <span className="relative z-10">Zadzwoń</span>
+                                    <span className="relative z-10">{tCommon("call")}</span>
                                 </a>
                             </Magnetic>
                         </div>
 
                         {/* Mobile Controls */}
                         <div className="flex xl:hidden items-center gap-3">
+
                             <button
                                 onClick={toggleTheme}
                                 className={cn(
@@ -440,7 +467,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         ? "text-pine-green-dark dark:text-white bg-pine-green/5 dark:bg-white/10 hover:bg-pine-green/10 dark:hover:bg-white/20 border border-pine-green/10 dark:border-white/10"
                                         : "text-white/80 hover:text-white bg-white/10 hover:bg-white/20 border border-white/10"
                                 )}
-                                aria-label="Przełącz motyw"
+                                aria-label={t("theme_toggle")}
                             >
                                 <AnimatePresence mode="wait" initial={false}>
                                     {!mounted ? (
@@ -464,6 +491,20 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                 </AnimatePresence>
                             </button>
 
+                            {/* Language Toggle (Mobile) */}
+                            <button
+                                onClick={toggleLocale}
+                                className={cn(
+                                    "px-2.5 py-1 text-xs font-extrabold tracking-wider transition-all duration-300 flex items-center justify-center cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sunset-orange rounded-full",
+                                    scrolled || isOpen
+                                        ? "text-pine-green-dark dark:text-stone-300 bg-pine-green/5 dark:bg-white/10 border border-pine-green/10 dark:border-white/10 hover:bg-pine-green/10 dark:hover:bg-white/20"
+                                        : "text-white border border-white/20 hover:bg-white/10"
+                                )}
+                                aria-label={locale === "pl" ? "Switch to English" : "Przełącz na język polski"}
+                            >
+                                {locale === "pl" ? "EN" : "PL"}
+                            </button>
+
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
                                 className={cn(
@@ -472,7 +513,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         ? "text-pine-green-dark dark:text-white hover:bg-pine-green/5 dark:hover:bg-white/10"
                                         : "text-white hover:bg-white/10"
                                 )}
-                                aria-label="Menu"
+                                aria-label={t("menu_toggle")}
                                 aria-expanded={isOpen}
                                 aria-controls="mobile-menu"
                                 aria-haspopup="true"
@@ -522,7 +563,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                                 style={isActive ? { color: "rgb(var(--active-glow-color, 249, 115, 22))" } : undefined}
                                                 aria-current={isActive ? "page" : undefined}
                                             >
-                                                {item.label}
+                                                {t(item.labelKey)}
                                             </TransitionLink>
                                         </motion.div>
                                     );
@@ -549,7 +590,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         className="relative overflow-hidden rounded-full px-8 py-3.5 text-lg font-bold text-white shadow-lg transition-all hover:scale-105 active:scale-95 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sunset-orange flex items-center gap-3 justify-center group btn-hero-shine"
                                         style={{ 
                                             backgroundImage: "linear-gradient(135deg, rgba(var(--active-glow-color, 249, 115, 22), 0.85) 0%, rgb(var(--active-glow-color, 249, 115, 22)) 100%)",
-                                            boxShadow: "0 10px 20px -5px rgba(var(--active-glow-color, 249, 115, 22), 0.4)"
+                                            boxShadow: "0 10px 20px -5px rgba(var(--active-glow-color, 249, 115, 22), 0.45)"
                                         }}
                                     >
                                         {/* Live indicator dot */}
@@ -558,7 +599,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
                                         </span>
                                         <Phone className="h-5 w-5 transition-transform group-hover:animate-shake shrink-0" />
-                                        <span className="relative z-10">Zadzwoń</span>
+                                        <span className="relative z-10">{tCommon("call")}</span>
                                     </a>
                                 </motion.div>
                             </motion.div>
@@ -569,4 +610,5 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
         </>
     );
 };
+
 

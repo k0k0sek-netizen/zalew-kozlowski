@@ -6,25 +6,35 @@ import { Asset } from "contentful";
 import { draftMode } from "next/headers";
 import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { AboutClient } from "@/components/features/AboutClient";
+import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-    title: "O Łowisku | Zalew Kozłowski",
-    description: "Poznaj charakterystykę Zalewu Kozłowskiego. Sprawdź jakie ryby u nas występują i dlaczego warto nas odwiedzić.",
-    openGraph: {
-        title: "O Łowisku — Zalew Kozłowski",
-        description: "Poznaj charakterystykę zalewu, gatunki ryb i dlaczego warto nas odwiedzić.",
-        url: "/o-lowisku",
-    },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    return {
+        title: locale === "en" ? "About the Fishery | Kozłowski Reservoir" : "O Łowisku | Zalew Kozłowski",
+        description: locale === "en"
+            ? "Learn about the characteristics of the Kozłowski Reservoir. Check which fish species live here and why you should visit us."
+            : "Poznaj charakterystykę Zalewu Kozłowskiego. Sprawdź jakie ryby u nas występują i dlaczego warto nas odwiedzić.",
+        openGraph: {
+            title: locale === "en" ? "About the Fishery — Kozłowski Reservoir" : "O Łowisku — Zalew Kozłowski",
+            description: locale === "en"
+                ? "Learn about the lake characteristics, fish species, and why you should visit us."
+                : "Poznaj charakterystykę zalewu, gatunki ryb i dlaczego warto nas odwiedzić.",
+            url: "/o-lowisku",
+        },
+    };
+}
 
-const fallbackFishSpecies = [
+const getFallbackFishSpecies = (locale: string) => [
     {
         sys: { id: "fallback-fish-karas" },
         fields: {
-            name: "Karaś Srebrzysty",
-            description: "Piękna, złota ryba, która cieszy oko. Idealny cel dla początkujących i miłośników metody spławikowej.",
+            name: locale === "en" ? "Crucian Carp" : "Karaś Srebrzysty",
+            description: locale === "en" 
+                ? "Beautiful, golden fish that pleases the eye. Perfect target for beginners and float fishing lovers."
+                : "Piękna, złota ryba, która cieszy oko. Idealny cel dla początkujących i miłośników metody spławikowej.",
             image: {
                 fields: {
                     file: {
@@ -37,7 +47,11 @@ const fallbackFishSpecies = [
                 strength: 4,
                 difficulty: 3
             },
-            tags: [
+            tags: locale === "en" ? [
+                "Golden",
+                "Active",
+                "Float"
+            ] : [
                 "Złoty",
                 "Aktywny",
                 "Spławik"
@@ -47,8 +61,10 @@ const fallbackFishSpecies = [
     {
         sys: { id: "fallback-fish-amur" },
         fields: {
-            name: "Amur Biały",
-            description: "Torpeda naszych wód. Po zacięciu startuje jak rakieta. Uwielbia roślinność i słoneczne dni.",
+            name: locale === "en" ? "Grass Carp" : "Amur Biały",
+            description: locale === "en"
+                ? "The torpedo of our waters. Runs like a rocket after a bite. Loves vegetation and sunny days."
+                : "Torpeda naszych wód. Po zacięciu startuje jak rakieta. Uwielbia roślinność i słoneczne dni.",
             image: {
                 fields: {
                     file: {
@@ -61,7 +77,11 @@ const fallbackFishSpecies = [
                 strength: 10,
                 difficulty: 6
             },
-            tags: [
+            tags: locale === "en" ? [
+                "Strongman",
+                "Fast",
+                "Appetite"
+            ] : [
                 "Siłacz",
                 "Szybki",
                 "Apetyt"
@@ -71,8 +91,10 @@ const fallbackFishSpecies = [
     {
         sys: { id: "fallback-fish-karp" },
         fields: {
-            name: "Karp Królewski",
-            description: "Inteligentny i silny. Nasze karpie (do 15kg) znają sztuczki wędkarzy. Wymagają cierpliwości i precyzyjnego nęcenia.",
+            name: locale === "en" ? "Mirror Carp" : "Karp Królewski",
+            description: locale === "en"
+                ? "Intelligent and strong. Our carps (up to 15kg) know anglers' tricks. Require patience and precise baiting."
+                : "Inteligentny i silny. Nasze karpie (do 15kg) znają sztuczki wędkarzy. Wymagają cierpliwości i precyzyjnego nęcenia.",
             image: {
                 fields: {
                     file: {
@@ -85,7 +107,11 @@ const fallbackFishSpecies = [
                 strength: 8,
                 difficulty: 9
             },
-            tags: [
+            tags: locale === "en" ? [
+                "Water King",
+                "Fighter",
+                "Clever"
+            ] : [
                 "Król Wód",
                 "Waleczny",
                 "Sprytny"
@@ -94,23 +120,27 @@ const fallbackFishSpecies = [
     }
 ];
 
-async function getFishSpecies(preview: boolean) {
+async function getFishSpecies(preview: boolean, locale: string) {
     try {
         const client = createContentfulClient({ preview });
         const response = await client.getEntries<FishSpeciesSkeleton>({
             content_type: "fishSpecies",
+            locale: locale === "en" ? "en-US" : "pl",
         });
         return response.items;
     } catch (err) {
         console.error("[Contentful] Failed to getFishSpecies, using fallback:", err);
-        return fallbackFishSpecies;
+        return getFallbackFishSpecies(locale);
     }
 }
 
-
-export default async function AboutPage() {
+export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const { isEnabled } = await draftMode();
-    const fishSpecies = await getFishSpecies(isEnabled);
+    const [fishSpecies, t] = await Promise.all([
+        getFishSpecies(isEnabled, locale),
+        getTranslations({ locale, namespace: "about" })
+    ]);
 
     return (
         <SubpageWrapper>
@@ -118,10 +148,10 @@ export default async function AboutPage() {
                 {/* Header */}
                 <SectionReveal className="mb-12 text-center">
                     <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
-                        O Łowisku
+                        {t("title")}
                     </h1>
                     <p className="mx-auto max-w-2xl text-lg text-earth-brown dark:text-neutral-300">
-                        Zalew Kozłowski to 100 arów czystej natury. Tutaj cisza spotyka się z adrenaliną, a wędkarz staje oko w oko z wymagającym przeciwnikiem.
+                        {t("subtitle")}
                     </p>
                 </SectionReveal>
 
@@ -130,7 +160,7 @@ export default async function AboutPage() {
                     <div className="mb-12 flex items-center gap-4">
                         <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                         <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                            Poznaj Przeciwnika
+                            {t("fish_title")}
                         </h2>
                         <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     </div>

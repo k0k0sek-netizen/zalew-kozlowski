@@ -15,8 +15,11 @@ import {
     CloudRain, 
     Snowflake 
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const AboutClient = () => {
+    const t = useTranslations("about");
+
     return (
         <>
             {/* Algorithm Explanation - LIVE Index Logic */}
@@ -24,7 +27,7 @@ export const AboutClient = () => {
                 <div className="mb-12 flex items-center gap-4">
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                        Algorytm "Indeks Brań"
+                        {t("live_index_title")}
                     </h2>
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                 </div>
@@ -42,13 +45,12 @@ export const AboutClient = () => {
                     <div className="relative z-10 grid gap-12 lg:grid-cols-2 lg:items-center">
                         <div>
                             <h3 className="mb-6 text-3xl font-bold leading-tight md:text-4xl text-transparent bg-clip-text bg-[linear-gradient(110deg,#ffffff,45%,rgb(var(--active-glow-color,249,115,22)),55%,#ffffff)] bg-size-[200%_100%] animate-shine">
-                                To nie jest losowa liczba.
+                                {t("not_random")}
                                 <br />
-                                To nauka. 🧪
+                                {t("science")}
                             </h3>
                             <p className="mb-8 text-lg text-neutral-300 leading-relaxed">
-                                Nasz system łączy się na żywo z API pogodowym i analizuje 4 kluczowe czynniki wpływające na aktywność ryb.
-                                Algorytm (oparty na teorii solunarnej) przelicza dane w czasie rzeczywistym, dając Ci przewagę nad wodą.
+                                {t("live_index_desc")}
                             </p>
                         </div>
 
@@ -71,9 +73,9 @@ export const AboutClient = () => {
                                     <div className="rounded-lg bg-blue-500/20 p-2 text-blue-400">
                                         <Gauge className="h-6 w-6" />
                                     </div>
-                                    <span className="font-bold">Ciśnienie</span>
+                                    <span className="font-bold">{t("factor_pressure")}</span>
                                 </div>
-                                <p className="text-sm text-neutral-400">Stabilne, wysokie ciśnienie (1015+ hPa) pobudza ryby do żerowania. Nagłe spadki je "usypiają".</p>
+                                <p className="text-sm text-neutral-400">{t("factor_pressure_desc")}</p>
                             </div>
 
                             {/* Factor 2 */}
@@ -94,9 +96,9 @@ export const AboutClient = () => {
                                     <div className="rounded-lg bg-purple-500/20 p-2 text-purple-400">
                                         <Moon className="h-6 w-6" />
                                     </div>
-                                    <span className="font-bold">Faza Księżyca</span>
+                                    <span className="font-bold">{t("factor_moon")}</span>
                                 </div>
-                                <p className="text-sm text-neutral-400">Pełnia i Nów to momenty szczytowej aktywności (teoria solunarna). Ryby czują grawitację.</p>
+                                <p className="text-sm text-neutral-400">{t("factor_moon_desc")}</p>
                             </div>
 
                             {/* Factor 3 */}
@@ -117,9 +119,9 @@ export const AboutClient = () => {
                                     <div className="rounded-lg bg-teal-500/20 p-2 text-teal-400">
                                         <Wind className="h-6 w-6" />
                                     </div>
-                                    <span className="font-bold">Wiatr</span>
+                                    <span className="font-bold">{t("factor_wind")}</span>
                                 </div>
-                                <p className="text-sm text-neutral-400">Lekki wiatr natlenia wodę i maskuje obecność wędkarza. Silny wiatr (&gt;30km/h) utrudnia łowy.</p>
+                                <p className="text-sm text-neutral-400">{t("factor_wind_desc")}</p>
                             </div>
 
                             {/* Factor 4 */}
@@ -140,9 +142,9 @@ export const AboutClient = () => {
                                     <div className="rounded-lg bg-orange-500/20 p-2 text-orange-400">
                                         <ThermometerSun className="h-6 w-6" />
                                     </div>
-                                    <span className="font-bold">Sezon</span>
+                                    <span className="font-bold">{t("factor_season")}</span>
                                 </div>
-                                <p className="text-sm text-neutral-400">Wiosenne przebudzenie (III-V) i jesienne żerowanie (IX-X) to bonusowe punkty do wyniku.</p>
+                                <p className="text-sm text-neutral-400">{t("factor_season_desc")}</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +156,7 @@ export const AboutClient = () => {
                 <div className="mb-12 flex items-center gap-4">
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                        Dlaczego Warto?
+                        {t("why_worth")}
                     </h2>
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                 </div>
@@ -171,9 +173,9 @@ export const AboutClient = () => {
                                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/20 shadow-xs">
                                     <Leaf className="h-6 w-6" />
                                 </div>
-                                <h3 className="text-2xl font-bold text-pine-green-dark dark:text-white">Dzika Natura i Oaza Spokoju</h3>
+                                <h3 className="text-2xl font-bold text-pine-green-dark dark:text-white">{t("card_nature_title")}</h3>
                                 <p className="text-sm text-earth-brown dark:text-neutral-300 leading-relaxed">
-                                    Zalew Kozłowski to 100 arów czystej natury otoczonej zielenią. Cisza, szum trzcin i śpiew ptaków tworzą idealne warunki na ucieczkę od miejskiego zgiełku i pełny relaks z wędką w ręku.
+                                    {t("card_nature_desc")}
                                 </p>
                             </div>
                             <div className="hidden md:flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-white/5 border border-white/10 backdrop-blur-md relative overflow-hidden">
@@ -192,9 +194,9 @@ export const AboutClient = () => {
                                 <Trophy className="h-6 w-6" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-pine-green-dark dark:text-white mb-2">Duże Okazy (No Kill)</h3>
+                                <h3 className="text-xl font-bold text-pine-green-dark dark:text-white mb-2">{t("card_trophy_title")}</h3>
                                 <p className="text-sm text-earth-brown dark:text-neutral-300 leading-relaxed">
-                                    Regularne zarybienia oraz rygorystyczna zasada "No Kill" sprawiają, że ryby rosną do imponujących rozmiarów. Spotkasz tu piękne karpie, silne amury i waleczne drapieżniki.
+                                    {t("card_trophy_desc")}
                                 </p>
                             </div>
                         </div>
@@ -211,9 +213,9 @@ export const AboutClient = () => {
                                     <ShieldCheck className="h-6 w-6" />
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-pine-green-dark dark:text-white">Bezpieczeństwo i Wygoda</h3>
+                                    <h3 className="text-xl font-bold text-pine-green-dark dark:text-white">{t("card_security_title")}</h3>
                                     <p className="text-sm text-earth-brown dark:text-neutral-300 leading-relaxed mt-1">
-                                        Cały teren łowiska jest ogrodzony i monitorowany 24/7. Oferujemy wygodne, trawiaste stanowiska wędkarskie oraz bezpieczny, zamknięty parking bezpośrednio na terenie zbiornika.
+                                        {t("card_security_desc")}
                                     </p>
                                 </div>
                             </div>
@@ -227,17 +229,17 @@ export const AboutClient = () => {
                 <div className="mb-12 flex items-center gap-4">
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                        Kalendarz Natury
+                        {t("nature_calendar")}
                     </h2>
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {[
-                        { name: "Wiosna", months: "III - V", desc: "Przebudzenie. Karaś i Leszcz biorą delikatnie.", color: "from-green-500 to-emerald-600", Icon: Sprout, iconColor: "text-green-600 dark:text-green-400", bgIcon: "bg-green-500/10 dark:bg-green-500/20" },
-                        { name: "Lato", months: "VI - VIII", desc: "Szczyt sezonu. Karp i Amur walczą najmocniej.", color: "from-yellow-500 to-amber-600", Icon: Sun, iconColor: "text-yellow-600 dark:text-yellow-400", bgIcon: "bg-yellow-500/10 dark:bg-yellow-500/20" },
-                        { name: "Jesień", months: "IX - XI", desc: "Czas drapieżnika. Szczupak żeruje przed zimą.", color: "from-orange-500 to-red-600", Icon: CloudRain, iconColor: "text-orange-600 dark:text-orange-400", bgIcon: "bg-orange-500/10 dark:bg-orange-500/20" },
-                        { name: "Zima", months: "XII - II", desc: "Cisza na wodzie. Czas na regenerację łowiska.", color: "from-blue-500 to-indigo-600", Icon: Snowflake, iconColor: "text-blue-600 dark:text-blue-400", bgIcon: "bg-blue-500/10 dark:bg-blue-500/20" }
+                        { name: t("spring"), months: t("spring_months"), desc: t("spring_desc"), color: "from-green-500 to-emerald-600", Icon: Sprout, iconColor: "text-green-600 dark:text-green-400", bgIcon: "bg-green-500/10 dark:bg-green-500/20" },
+                        { name: t("summer"), months: t("summer_months"), desc: t("summer_desc"), color: "from-yellow-500 to-amber-600", Icon: Sun, iconColor: "text-yellow-600 dark:text-yellow-400", bgIcon: "bg-yellow-500/10 dark:bg-yellow-500/20" },
+                        { name: t("autumn"), months: t("autumn_months"), desc: t("autumn_desc"), color: "from-orange-500 to-red-600", Icon: CloudRain, iconColor: "text-orange-600 dark:text-orange-400", bgIcon: "bg-orange-500/10 dark:bg-orange-500/20" },
+                        { name: t("winter"), months: t("winter_months"), desc: t("winter_desc"), color: "from-blue-500 to-indigo-600", Icon: Snowflake, iconColor: "text-blue-600 dark:text-blue-400", bgIcon: "bg-blue-500/10 dark:bg-blue-500/20" }
                     ].map((season) => (
                         <SpotlightCard 
                             key={season.name} 

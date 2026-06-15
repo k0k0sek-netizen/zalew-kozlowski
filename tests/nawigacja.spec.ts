@@ -28,6 +28,9 @@ test.describe('Navigation, Mobile Menu and Theme Toggle E2E', () => {
         const storageTheme = await page.evaluate(() => localStorage.getItem('theme'));
         expect(storageTheme).toBe(expectedNextState ? 'dark' : 'light');
 
+        // Wait for the new icon to be fully visible and animation to settle
+        await expect(themeBtn.locator(expectedNextState ? 'svg.lucide-sun' : 'svg.lucide-moon')).toBeVisible();
+
         // 5. Click again to return to initial theme
         await themeBtn.click();
 

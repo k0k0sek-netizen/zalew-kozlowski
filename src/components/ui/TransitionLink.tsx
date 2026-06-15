@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import React from "react";
 
 interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {

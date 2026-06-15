@@ -6,20 +6,32 @@ import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { ContactClient } from "@/components/features/ContactClient";
 import { getInfoBlocks } from "@/lib/contentful";
 import { draftMode } from "next/headers";
+import { getTranslations } from "next-intl/server";
 
-export const metadata: Metadata = {
-    title: "Kontakt | Zalew Kozłowski",
-    description: "Skontaktuj się z nami, sprawdź dojazd i zarezerwuj miejsce na łowisku. Telefon, adres i mapa.",
-    openGraph: {
-        title: "Kontakt — Zalew Kozłowski",
-        description: "Skontaktuj się z gospodarzem łowiska. Telefon, adres i mapa dojazdu.",
-        url: "/kontakt",
-    },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+    const { locale } = await params;
+    return {
+        title: locale === "en" ? "Contact | Kozłowski Reservoir" : "Kontakt | Zalew Kozłowski",
+        description: locale === "en"
+            ? "Get in touch with us, check directions, and book your spot. Phone, address, and map."
+            : "Skontaktuj się z nami, sprawdź dojazd i zarezerwuj miejsce na łowisku. Telefon, adres i mapa.",
+        openGraph: {
+            title: locale === "en" ? "Contact — Kozłowski Reservoir" : "Kontakt — Zalew Kozłowski",
+            description: locale === "en"
+                ? "Get in touch with the fishery host. Phone, address, and directions map."
+                : "Skontaktuj się z gospodarzem łowiska. Telefon, adres i mapa dojazdu.",
+            url: "/kontakt",
+        },
+    };
+}
 
-export default async function ContactPage() {
+export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
     const { isEnabled } = await draftMode();
-    const infoBlocks = await getInfoBlocks(isEnabled).catch(() => []);
+    const [infoBlocks, t] = await Promise.all([
+        getInfoBlocks(isEnabled, locale).catch(() => []),
+        getTranslations({ locale, namespace: "contact" })
+    ]);
 
     const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
     const email = infoBlocks.find((b: any) => b.fields.id === "email")?.fields.value || "lowiskokozlow@gmail.com";
@@ -31,10 +43,10 @@ export default async function ContactPage() {
             <div className="mx-auto max-w-7xl px-4">
                 <SectionReveal className="mb-12 text-center">
                     <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
-                        Kontakt & Dojazd
+                        {t("title")}
                     </h1>
                     <p className="mx-auto max-w-2xl text-lg text-earth-brown dark:text-neutral-300">
-                        Skontaktuj się z gospodarzem łowiska, sprawdź dojazd i zaplanuj swoją kolejną zasiadkę.
+                        {t("subtitle")}
                     </p>
                 </SectionReveal>
 
@@ -46,7 +58,7 @@ export default async function ContactPage() {
                                     className="mb-6 text-2xl font-bold text-pine-green transition-colors duration-300"
                                     style={{ ["--glow-text" as any]: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                 >
-                                    <span className="dark:text-[var(--glow-text)]">Dane Kontaktowe</span>
+                                    <span className="dark:text-[var(--glow-text)]">{t("info_title")}</span>
                                 </h2>
                                 <div className="space-y-6">
                                     <div className="flex items-start gap-4">
@@ -55,7 +67,7 @@ export default async function ContactPage() {
                                             style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                         />
                                         <div>
-                                            <p className="font-bold text-pine-green-dark dark:text-white">Adres</p>
+                                            <p className="font-bold text-pine-green-dark dark:text-white">{t("address_label")}</p>
                                             <p className="text-earth-brown dark:text-neutral-300">{address}</p>
                                         </div>
                                     </div>
@@ -65,9 +77,9 @@ export default async function ContactPage() {
                                             style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                         />
                                         <div>
-                                            <p className="font-bold text-pine-green-dark dark:text-white">Telefon</p>
+                                            <p className="font-bold text-pine-green-dark dark:text-white">{t("phone_label")}</p>
                                             <p className="text-lg text-pine-green-dark font-mono dark:text-white">{phone}</p>
-                                            <p className="text-sm text-neutral-500">Rezerwacje: 8:00 - 20:00</p>
+                                            <p className="text-sm text-neutral-500">{t("phone_hours")}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
@@ -76,7 +88,7 @@ export default async function ContactPage() {
                                             style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                         />
                                         <div>
-                                            <p className="font-bold text-pine-green-dark dark:text-white">E-mail</p>
+                                            <p className="font-bold text-pine-green-dark dark:text-white">{t("email_label")}</p>
                                             <p className="text-earth-brown dark:text-neutral-300">{email}</p>
                                         </div>
                                     </div>
@@ -86,8 +98,8 @@ export default async function ContactPage() {
                                             style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                         />
                                         <div>
-                                            <p className="font-bold text-pine-green-dark dark:text-white">Godziny otwarcia</p>
-                                            <p className="text-earth-brown dark:text-neutral-300">Świt - Zmierzch</p>
+                                            <p className="font-bold text-pine-green-dark dark:text-white">{t("hours_label")}</p>
+                                            <p className="text-earth-brown dark:text-neutral-300">{t("hours_desc")}</p>
                                         </div>
                                     </div>
                                 </div>

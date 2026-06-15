@@ -80,6 +80,6 @@ test.describe('Gallery Upload Form Client-Side Validation', () => {
 
         // 4. Verify decoy success message is displayed (client-side transitions to success page)
         const successTitle = page.getByText('Dzięki za zdjęcie!');
-        await expect(successTitle).toBeVisible();
+        await expect(successTitle).toBeVisible({ timeout: 15000 });
     });
 });

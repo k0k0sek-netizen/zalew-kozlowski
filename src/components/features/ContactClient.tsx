@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { Phone, MessageSquare, ShieldCheck, Calendar, Info } from "lucide-react";
+import { Phone, MessageSquare, Clock } from "lucide-react";
 import { Magnetic } from "@/components/ui/magnetic";
 import { cn } from "@/lib/utils";
 import { trackPhoneCall, trackSmsSend } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import { SPRING_TOKENS } from "@/lib/motion";
+import { useTranslations } from "next-intl";
 
 type TypeType = "karp" | "ogolne" | "pytanie";
 type DurationType = "1d" | "weekend" | "dluzszy";
@@ -18,6 +19,7 @@ interface ContactClientProps {
 }
 
 export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gmail.com" }: ContactClientProps) => {
+    const t = useTranslations("contact");
     const [type, setType] = useState<TypeType>("karp");
     const [duration, setDuration] = useState<DurationType>("weekend");
     const [customText, setCustomText] = useState("");
@@ -27,24 +29,26 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
     useEffect(() => {
         let text = "";
         if (type === "karp") {
-            const durText = duration === "1d" 
-                ? "jednodobową" 
-                : duration === "weekend" 
-                    ? "weekendową (2 doby)" 
-                    : "dłuższą";
-            text = `Dzień dobry, chciałbym zarezerwować stanowisko na ${durText} zasiadkę karpiową na Zalewie Kozłowskim. Proszę o potwierdzenie dostępności.`;
+            if (duration === "1d") {
+                text = t("sms_carp_1d");
+            } else if (duration === "weekend") {
+                text = t("sms_carp_weekend");
+            } else {
+                text = t("sms_carp_longer");
+            }
         } else if (type === "ogolne") {
-            const durText = duration === "1d" 
-                ? "jednodniowe" 
-                : duration === "weekend" 
-                    ? "dwudniowe" 
-                    : "kilkudniowe";
-            text = `Dzień dobry, chciałbym zarezerwować stanowisko na ${durText} wędkowanie ogólne na Zalewie Kozłowskim. Proszę o informację o dostępnych miejscach.`;
+            if (duration === "1d") {
+                text = t("sms_general_1d");
+            } else if (duration === "weekend") {
+                text = t("sms_general_weekend");
+            } else {
+                text = t("sms_general_longer");
+            }
         } else {
-            text = `Dzień dobry, piszę z pytaniem odnośnie łowiska Zalew Kozłowski: ${customText}`;
+            text = t("sms_question_prefix") + customText;
         }
         setSmsBody(text);
-    }, [type, duration, customText]);
+    }, [type, duration, customText, t]);
 
     return (
         <SpotlightCard 
@@ -55,19 +59,19 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
         >
             <div className="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                    <h2 className="mb-2 text-2xl font-bold">Interaktywna Rezerwacja</h2>
+                    <h2 className="mb-2 text-2xl font-bold">{t("form_title")}</h2>
                     <p className="text-sm opacity-80 mb-6 text-earth-brown dark:text-neutral-300">
-                        Skonfiguruj rezerwację w kilka sekund i wyślij gotowy szablon SMS lub zadzwoń.
+                        {t("form_desc")}
                     </p>
 
                     {/* Wybór typu */}
                     <div className="space-y-3 mb-5">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Co planujesz?</span>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">{t("plan_label")}</span>
                         <div className="flex flex-wrap gap-1.5 bg-neutral-100/50 dark:bg-white/5 p-1 rounded-2xl md:rounded-full border border-neutral-200/30 dark:border-white/5 relative overflow-hidden">
                             {[
-                                { id: "karp", label: "Zasiadka Karpiowa 🎣" },
-                                { id: "ogolne", label: "Wędkowanie Ogólne 🐟" },
-                                { id: "pytanie", label: "Inne Pytanie 💬" }
+                                { id: "karp", label: t("plan_carp") },
+                                { id: "ogolne", label: t("plan_general") },
+                                { id: "pytanie", label: t("plan_question") }
                             ].map((opt) => (
                                 <button
                                     key={opt.id}
@@ -101,12 +105,12 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                     {/* Wybór czasu (ukrywany, jeśli wybrane inne pytanie) */}
                     {type !== "pytanie" && (
                         <div className="space-y-3 mb-6">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Na jak długo?</span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">{t("duration_label")}</span>
                             <div className="flex flex-wrap gap-1.5 bg-neutral-100/50 dark:bg-white/5 p-1 rounded-2xl md:rounded-full border border-neutral-200/30 dark:border-white/5 relative overflow-hidden">
                                 {[
-                                    { id: "1d", label: "1 Doba" },
-                                    { id: "weekend", label: "Weekend (2 doby)" },
-                                    { id: "dluzszy", label: "Dłuższy pobyt" }
+                                    { id: "1d", label: t("duration_1d") },
+                                    { id: "weekend", label: t("duration_weekend") },
+                                    { id: "dluzszy", label: t("duration_longer") }
                                 ].map((opt) => (
                                     <button
                                         key={opt.id}
@@ -142,14 +146,14 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                     {type === "pytanie" && (
                         <div className="space-y-2 mb-6">
                             <label htmlFor="custom-question" className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                                Wpisz treść pytania
+                                {t("write_question")}
                             </label>
                             <textarea
                                 id="custom-question"
                                 rows={3}
                                 value={customText}
                                 onChange={(e) => setCustomText(e.target.value)}
-                                placeholder="Wpisz treść swojego pytania..."
+                                placeholder={t("placeholder_question")}
                                 className="w-full p-3.5 rounded-xl bg-neutral-100/50 dark:bg-black/20 border border-neutral-200 dark:border-white/10 text-sm text-pine-green-dark dark:text-white placeholder-neutral-400 dark:placeholder-neutral-600 focus:outline-hidden focus:ring-2 focus:ring-[rgb(var(--active-glow-color,249,115,22))] transition-all resize-none"
                             />
                         </div>
@@ -159,7 +163,7 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                     <div className="p-4 rounded-xl bg-neutral-100/50 dark:bg-black/30 border border-neutral-200/50 dark:border-white/5 mb-6">
                         <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-2">
                             <MessageSquare className="h-3 w-3 text-[rgb(var(--active-glow-color,249,115,22))]" />
-                            Podgląd wiadomości SMS
+                            {t("preview_sms")}
                         </div>
                         <p className="text-xs italic text-neutral-700 dark:text-neutral-300 leading-relaxed">
                             "{smsBody}"
@@ -180,7 +184,7 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                             }}
                         >
                             <MessageSquare className="h-4 w-4 shrink-0" />
-                            Wyślij SMS rezerwacyjny
+                            {t("btn_send_sms")}
                         </a>
                     </Magnetic>
 
@@ -191,7 +195,7 @@ export const ContactClient = ({ phone = "601 389 365", email = "lowiskokozlow@gm
                             className="flex items-center justify-center gap-2.5 rounded-full py-3.5 text-center font-bold text-neutral-700 hover:text-pine-green-dark dark:text-neutral-200 dark:hover:text-white transition-all bg-neutral-100 hover:bg-neutral-200 dark:bg-white/5 dark:hover:bg-white/10 border border-neutral-200 dark:border-white/10 text-sm w-full cursor-pointer hover:scale-102 active:scale-98"
                         >
                             <Phone className="h-4 w-4 shrink-0 transition-transform group-hover:animate-shake" />
-                            Zadzwoń do gospodarza
+                            {t("btn_call")}
                         </a>
                     </Magnetic>
                 </div>

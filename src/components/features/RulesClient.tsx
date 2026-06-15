@@ -18,6 +18,7 @@ import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Magnetic } from "@/components/ui/magnetic";
 import { cn } from "@/lib/utils";
 import { trackPhoneCall } from "@/lib/analytics";
+import { useTranslations } from "next-intl";
 
 interface RuleEntry {
     fields: {
@@ -37,14 +38,15 @@ interface RulesClientProps {
 type TabType = "general" | "safety" | "contact";
 
 export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesClientProps) => {
+    const t = useTranslations("rules");
     const phone = phoneNumber || "601 389 365";
     const phoneHref = `tel:${phone.replace(/\s/g, "")}`;
     const [activeTab, setActiveTab] = useState<TabType>("general");
 
     const tabs = [
-        { id: "general", label: "Zasady Ogólne", icon: FileText },
-        { id: "safety", label: "Bezpieczeństwo", icon: ShieldAlert },
-        { id: "contact", label: "Pomoc & Rezerwacje", icon: HelpCircle },
+        { id: "general", label: t("tab_general"), icon: FileText },
+        { id: "safety", label: t("tab_safety"), icon: ShieldAlert },
+        { id: "contact", label: t("tab_help"), icon: HelpCircle },
     ] as const;
 
     // Funkcja do sprawdzania czy zasada jest kluczowa (np. NO KILL, maty, odkażacze)
@@ -57,7 +59,13 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
             uppercaseRule.includes("KOŁYSK") ||
             uppercaseRule.includes("ODKAŻA") ||
             uppercaseRule.includes("ŚRODEK DEZYNFEK") ||
-            uppercaseRule.includes("ZASAD")
+            uppercaseRule.includes("ZASAD") ||
+            uppercaseRule.includes("HOOK") ||
+            uppercaseRule.includes("MAT") ||
+            uppercaseRule.includes("CRADLE") ||
+            uppercaseRule.includes("DISINFECT") ||
+            uppercaseRule.includes("ANTISEPTIC") ||
+            uppercaseRule.includes("CATCH AND RELEASE")
         );
     };
 
@@ -136,7 +144,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                     <div>
                                         <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-3 flex items-center gap-1.5">
                                             <Award className="h-3.5 w-3.5 text-[rgb(var(--active-glow-color,249,115,22))]" />
-                                            Najważniejsze wymogi łowiska
+                                            {t("highlight_title")}
                                         </h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {highlightRules.map((rule, idx) => (
@@ -150,7 +158,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                                             <CheckCircle className="h-5 w-5" />
                                                         </div>
                                                         <div className="space-y-1">
-                                                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Wymóg rybostanu</span>
+                                                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">{t("fish_requirement")}</span>
                                                             <p className="text-sm font-semibold text-pine-green-dark dark:text-neutral-100 leading-snug">
                                                                 {rule}
                                                             </p>
@@ -166,7 +174,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                 <SpotlightCard className="rounded-2xl p-6 md:p-8">
                                     <div className="relative z-10">
                                         <h3 className="text-lg font-bold text-pine-green-dark dark:text-white mb-4">
-                                            Zasady ogólne i etykieta
+                                            {t("standard_rules_title")}
                                         </h3>
                                         <ul className="space-y-4">
                                             {standardRules.map((rule, idx) => (
@@ -195,7 +203,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                             <div className="md:col-span-7">
                                                 <ul className="space-y-3">
                                                     {safetyRules.fields.rules?.map((rule, idx) => {
-                                                        const isForbidden = rule.toUpperCase().includes("ZABRONIONE");
+                                                        const isForbidden = rule.toUpperCase().includes("ZABRONIONE") || rule.toUpperCase().includes("FORBIDDEN");
                                                         return (
                                                             <li 
                                                                 key={idx} 
@@ -219,7 +227,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                                 <div className="relative z-10 flex flex-col items-center gap-2">
                                                     <Cctv className="h-16 w-16 text-[rgb(var(--active-glow-color,249,115,22))]" />
                                                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mt-2">
-                                                        Monitoring 24/7
+                                                        {t("monitoring_title")}
                                                     </span>
                                                 </div>
                                                 {/* Recording dot animation */}
@@ -243,10 +251,10 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                             <Phone className="h-8 w-8 text-[rgb(var(--active-glow-color,249,115,22))] animate-pulse" />
                                         </div>
                                         <h3 className="text-xl font-bold text-pine-green-dark dark:text-white">
-                                            Masz pytania dotyczące regulaminu?
+                                            {t("have_questions")}
                                         </h3>
                                         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-2 max-w-sm leading-relaxed">
-                                            Jeśli potrzebujesz dodatkowych informacji o zasadach panujących na łowisku lub chcesz dokonać telefonicznej rezerwacji stanowiska, skontaktuj się z nami!
+                                            {t("have_questions_desc")}
                                         </p>
                                         
                                         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-left">
@@ -267,8 +275,8 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                             >
                                                 <Calendar className="h-5 w-5 text-[rgb(var(--active-glow-color,249,115,22))] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 shrink-0" />
                                                 <div>
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Rezerwacje</span>
-                                                    <p className="text-sm font-semibold text-pine-green-dark dark:text-white">Zadzwoń przed przyjazdem</p>
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">{t("card_bookings")}</span>
+                                                    <p className="text-sm font-semibold text-pine-green-dark dark:text-white">{t("card_bookings_desc")}</p>
                                                 </div>
                                             </div>
                                             <div 
@@ -288,8 +296,8 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                             >
                                                 <ShieldAlert className="h-5 w-5 text-[rgb(var(--active-glow-color,249,115,22))] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 shrink-0" />
                                                 <div>
-                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">Bezpieczeństwo</span>
-                                                    <p className="text-sm font-semibold text-pine-green-dark dark:text-white">Gospodarz dostępny 24/7</p>
+                                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">{t("card_safety")}</span>
+                                                    <p className="text-sm font-semibold text-pine-green-dark dark:text-white">{t("card_safety_desc")}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,7 +317,7 @@ export const RulesClient = ({ generalRules, safetyRules, phoneNumber }: RulesCli
                                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                                                 </span>
                                                 <Phone className="h-4 w-4 transition-transform group-hover:animate-shake shrink-0" />
-                                                <span>Zadzwoń: {phone}</span>
+                                                <span>{t("btn_call_host", { phone })}</span>
                                             </a>
                                         </Magnetic>
                                     </div>

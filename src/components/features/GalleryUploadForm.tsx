@@ -5,12 +5,14 @@ import { Upload, Loader2, CheckCircle, XCircle } from "lucide-react";
 import { uploadGalleryPhoto } from "@/app/actions/upload-gallery-photo";
 import { cn } from "@/lib/utils";
 import { GalleryImage } from "./GalleryGrid";
+import { useTranslations } from "next-intl";
 
 interface GalleryUploadFormProps {
     onOptimisticAdd: (image: GalleryImage) => void;
 }
 
 export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) => {
+    const t = useTranslations("gallery");
     const [isSuccess, setIsSuccess] = useState(false);
     const [fileName, setFileName] = useState<string>("");
     const [isDragging, setIsDragging] = useState(false);
@@ -20,22 +22,22 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
         async (prevState: any, formData: FormData) => {
             const file = formData.get("file") as File;
             const title = formData.get("title") as string;
-            const author = (formData.get("author") as string) || "Anonim";
+            const author = (formData.get("author") as string) || t("anonymous");
 
             setClientError(null);
 
             // Double check file validation on submit
             if (!file || file.size === 0) {
-                return { success: false, error: "Wybierz plik graficzny przed wysłaniem" };
+                return { success: false, error: t("select_file") };
             }
 
             const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
             if (!allowedTypes.includes(file.type)) {
-                return { success: false, error: "Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF" };
+                return { success: false, error: t("invalid_type") };
             }
 
             if (file.size > 5 * 1024 * 1024) {
-                return { success: false, error: "Plik jest za duży (max 5MB)" };
+                return { success: false, error: t("file_too_large") };
             }
 
             // Trigger optimistic UI update immediately
@@ -71,7 +73,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
             // Client-side validation: image type
             const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
             if (!allowedTypes.includes(file.type)) {
-                setClientError("Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF.");
+                setClientError(t("invalid_type"));
                 e.target.value = ""; // Reset
                 setFileName("");
                 return;
@@ -79,7 +81,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
 
             // Client-side validation: file size
             if (file.size > 5 * 1024 * 1024) {
-                setClientError("Plik jest za duży. Maksymalny rozmiar to 5MB.");
+                setClientError(t("file_too_large"));
                 e.target.value = ""; // Reset
                 setFileName("");
                 return;
@@ -114,13 +116,13 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
             // Client-side validation: image type
             const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
             if (!allowedTypes.includes(file.type)) {
-                setClientError("Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF.");
+                setClientError(t("invalid_type"));
                 return;
             }
 
             // Client-side validation: file size
             if (file.size > 5 * 1024 * 1024) {
-                setClientError("Plik jest za duży. Maksymalny rozmiar to 5MB.");
+                setClientError(t("file_too_large"));
                 return;
             }
 
@@ -143,15 +145,15 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
                     <CheckCircle className="h-8 w-8" />
                 </div>
-                <h3 className="mb-2 text-xl font-bold text-pine-green dark:text-white">Dzięki za zdjęcie!</h3>
+                <h3 className="mb-2 text-xl font-bold text-pine-green dark:text-white">{t("success_title")}</h3>
                 <p className="text-earth-brown dark:text-gray-300">
-                    Trafiło do naszej poczekalni. Pojawi się w galerii po zatwierdzeniu przez administratora.
+                    {t("success_desc")}
                 </p>
                 <button
                     onClick={() => setIsSuccess(false)}
                     className="mt-6 text-sm font-semibold text-sunset-orange hover:underline focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-sunset-orange rounded"
                 >
-                    Wyślij kolejne
+                    {t("send_another")}
                 </button>
             </div>
         );
@@ -160,13 +162,13 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
     return (
         <form action={formAction} className="mx-auto max-w-lg rounded-xl border border-pine-green/10 bg-white/50 p-6 shadow-xl backdrop-blur-sm dark:border-white/5 dark:bg-black/20">
             <h3 className="mb-6 text-center text-xl font-bold text-pine-green-dark dark:text-white">
-                Pochwal się swoim okazem! 🐟
+                {t("form_title_accent")}
             </h3>
 
             <div className="space-y-4">
                 {/* File Input and visual Dropzone wrapper */}
                 <div className="relative group">
-                    <label htmlFor="file-upload" className="sr-only">Wybierz zdjęcie z dysku (maksymalnie 5MB)</label>
+                    <label htmlFor="file-upload" className="sr-only">{t("file_aria_label")}</label>
                     <input
                         type="file"
                         name="file"
@@ -195,7 +197,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                     >
                         <Upload className={cn("mb-2 h-8 w-8 text-gray-400 dark:text-gray-500 transition-colors", (fileName || isDragging) && "text-pine-green dark:text-emerald-500")} />
                         <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                            {fileName ? fileName : isDragging ? "Upuść zdjęcie tutaj!" : "Kliknij lub upuść zdjęcie tutaj"}
+                            {fileName ? fileName : isDragging ? t("drop_file") : t("click_drop_file")}
                         </span>
                         <span className="mt-1 text-xs text-gray-400">Max 5MB</span>
                     </div>
@@ -203,7 +205,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
 
                 {/* Honeypot Spam Protection Field - Hidden from real users/screen readers, filled by bots */}
                 <div className="hidden" aria-hidden="true">
-                    <label htmlFor="website">Nie wpisuj nic w tym polu</label>
+                    <label htmlFor="website">{t("honeypot_label")}</label>
                     <input
                         type="text"
                         name="website"
@@ -217,13 +219,13 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                         <label htmlFor="title" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Co złowiłeś? (Tytuł)
+                            {t("title_label")}
                         </label>
                         <input
                             type="text"
                             name="title"
                             id="title"
-                            placeholder="np. Karp 15kg"
+                            placeholder={t("title_placeholder")}
                             required
                             disabled={isPending}
                             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-sunset-orange focus:ring-sunset-orange dark:border-white/10 dark:bg-black/40 dark:text-white"
@@ -231,13 +233,13 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                     </div>
                     <div>
                         <label htmlFor="author" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Twoje Imię/Ksywka
+                            {t("author_label")}
                         </label>
                         <input
                             type="text"
                             name="author"
                             id="author"
-                            placeholder="np. Janek"
+                            placeholder={t("author_placeholder")}
                             disabled={isPending}
                             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-900 focus:border-sunset-orange focus:ring-sunset-orange dark:border-white/10 dark:bg-black/40 dark:text-white"
                         />
@@ -265,14 +267,13 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                     {isPending ? (
                         <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            Wysyłanie...
+                            {t("sending")}
                         </>
                     ) : (
-                        "Wyślij do Galerii"
+                        t("btn_submit")
                     )}
                 </button>
             </div>
         </form>
     );
 };
-

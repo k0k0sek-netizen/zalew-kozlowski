@@ -20,15 +20,27 @@ import { getGlowColorForScore } from "@/lib/bite-index-theme";
 export const revalidate = 3600;
 
 
-export const metadata: Metadata = {
-  title: "Zalew Kozłowski | Prywatne Łowisko i Wypoczynek",
-  description: "Odkryj spokój nad Zalewem Kozłowskim. Prywatne łowisko No Kill, piękne karpie, amury i drapieżniki. Idealne miejsce na wędkowanie i wypoczynek blisko Dębicy.",
-};
+import { getTranslations } from "next-intl/server";
 
-export default async function Home() {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: locale === "en" ? "Kozłowski Reservoir | Private Fishery & Relaxation" : "Zalew Kozłowski | Prywatne Łowisko i Wypoczynek",
+    description: locale === "en"
+      ? "Discover peace at Kozłowski Reservoir. Private No Kill fishery, beautiful carp, grass carp, and predators. Ideal place for fishing and relaxation near Dębica."
+      : "Odkryj spokój nad Zalewem Kozłowskim. Prywatne łowisko No Kill, piękne karpie, amury i drapieżniki. Idealne miejsce na wędkowanie i wypoczynek blisko Dębicy.",
+  };
+}
+
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const tHero = await getTranslations("hero");
+  const tBento = await getTranslations("bento");
+  const tChar = await getTranslations("characteristics");
+
   const { isEnabled } = await draftMode();
   const [infoBlocks, weatherData] = await Promise.all([
-    getInfoBlocks(isEnabled),
+    getInfoBlocks(isEnabled, locale),
     getWeatherAction(),
   ]);
 
@@ -45,18 +57,24 @@ export default async function Home() {
   const hoursBlock = getBlock('hours') || getBlock('godziny');
   const noKillBlock = getBlock('no-kill') || getBlock('no kill');
 
-  const characteristicsDesc = getBlock('characteristics-description')?.fields.value || "Zalew Kozłowski to popularne łowisko prywatne o powierzchni ok. 1 hektara. Średnia głębokość wynosi 1 - 1.5 metra, co zapewnia optymalne warunki dla ryb spokojnego żeru.\nW zalewie regularnie łowione są piękne okazy. Dominują przede wszystkim: Karp, Amur, Szczupak.";
+  // Fallbacks with language check
+  const characteristicsDesc = getBlock('characteristics-description')?.fields.value || (
+    locale === "en"
+      ? "Kozłowski Reservoir is a popular private fishery covering approx. 1 hectare. The average depth is 1 - 1.5 meters, providing optimal conditions for coarse fish.\nBeautiful specimens are regularly caught here. Dominating species: Carp, Grass Carp, Pike."
+      : "Zalew Kozłowski to popularne łowisko prywatne o powierzchni ok. 1 hektara. Średnia głębokość wynosi 1 - 1.5 metra, co zapewnia optymalne warunki dla ryb spokojnego żeru.\nW zalewie regularnie łowione są piękne okazy. Dominują przede wszystkim: Karp, Amur, Szczupak."
+  );
   
-  const shorelineTitle = getBlock('characteristics-shoreline')?.fields.title || "Linia brzegowa";
-  const shorelineValue = getBlock('characteristics-shoreline')?.fields.value || "Szeroki i swobodny dostęp do wody na całej długości.";
+  const shorelineTitle = getBlock('characteristics-shoreline')?.fields.title || (locale === "en" ? "Shoreline" : "Linia brzegowa");
+  const shorelineValue = getBlock('characteristics-shoreline')?.fields.value || (locale === "en" ? "Wide and easy access to the water along the entire length." : "Szeroki i swobodny dostęp do wody na całej długości.");
   
-  const spotsTitle = getBlock('characteristics-spots')?.fields.title || "Stanowiska";
-  const spotsValue = getBlock('characteristics-spots')?.fields.value || "Naturalne, trawiaste i zadbane miejsca.";
+  const spotsTitle = getBlock('characteristics-spots')?.fields.title || (locale === "en" ? "Fishing spots" : "Stanowiska");
+  const spotsValue = getBlock('characteristics-spots')?.fields.value || (locale === "en" ? "Natural, grassy and well-kept areas." : "Naturalne, trawiaste i zadbane miejsca.");
   
-  const securityTitle = getBlock('characteristics-security')?.fields.title || "Ochrona i monitoring";
-  const securityValue = getBlock('characteristics-security')?.fields.value || "Bezpieczeństwo i spokój podczas wypoczynku.";
+  const securityTitle = getBlock('characteristics-security')?.fields.title || (locale === "en" ? "Security & monitoring" : "Ochrona i monitoring");
+  const securityValue = getBlock('characteristics-security')?.fields.value || (locale === "en" ? "Safety and peace of mind during your stay." : "Bezpieczeństwo i spokój podczas wypoczynku.");
 
   const mapUrl = getBlock('map-url')?.fields.value || "https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w";
+
 
   return (
     <>
@@ -72,13 +90,11 @@ export default async function Home() {
         <SectionReveal className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center hero-content-scroll">
           <div className="overflow-hidden py-2">
             <h1 className="mb-4 text-5xl font-bold tracking-tight text-transparent bg-clip-text bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-7xl lg:text-8xl drop-shadow-lg animate-title-reveal">
-              Zalew Kozłowski
+              {tHero("title")}
             </h1>
           </div>
           <p className="max-w-2xl text-lg font-medium text-white md:text-xl drop-shadow-xl shadow-black">
-            Witaj na stronie informacyjnej prywatnego łowiska Zalew Kozłowski!
-            Nasz piękny zbiornik, położony w malowniczej okolicy tuż obok Dębicy,
-            to wyjątkowe miejsce wypoczynku i spotkań z wędką, dom dla karpi, amurów i szczupaków.
+            {tHero("subtitle")}
           </p>
 
           <div className="mt-6 flex justify-center z-10">
@@ -98,7 +114,7 @@ export default async function Home() {
                   borderColor: "rgba(var(--active-glow-color, 249, 115, 22), 0.25)"
                 }}
               >
-                Zobacz Regulamin
+                {tHero("cta_rules")}
               </Link>
             </Magnetic>
             <Magnetic strength={0.15}>
@@ -106,7 +122,7 @@ export default async function Home() {
                 href="/cennik"
                 className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 py-3 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105 active:scale-95 duration-300 btn-hero-glass-glow"
               >
-                Sprawdź Cennik
+                {tHero("cta_pricing")}
               </Link>
             </Magnetic>
           </div>
@@ -115,7 +131,7 @@ export default async function Home() {
         {/* Scroll Indicator */}
         <a
           href="#info-section"
-          aria-label="Przewiń do sekcji informacyjnej"
+          aria-label={tHero("scroll_aria")}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 hover:text-white transition-colors scroll-indicator-fade cursor-pointer z-20"
         >
           <div className="h-10 w-6 rounded-full border-2 border-white/50 p-1 flex justify-center">
@@ -123,7 +139,7 @@ export default async function Home() {
           </div>
         </a>
 
-        {/* Bottom Fade-out transition to smooth exit from wideo to content bg */}
+        {/* Bottom Fade-out transition to smooth exit from video to content bg */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-sand-beige dark:from-[#071610] to-transparent z-[2] pointer-events-none" />
       </section>
 
@@ -137,21 +153,21 @@ export default async function Home() {
           <SectionReveal className="mx-auto max-w-7xl">
             <div className="mb-12 text-center">
               <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-5xl">
-                Najważniejsze Informacje
+                {tBento("title")}
               </h2>
               <p className="mt-4 text-earth-brown dark:text-neutral-400">
-                Wszystko, co musisz wiedzieć zanim zarzucisz wędkę.
+                {tBento("subtitle")}
               </p>
             </div>
 
             <BentoGrid>
               <BentoCard
-                name={hoursBlock?.fields.title || "Godziny Otwarcia"}
+                name={hoursBlock?.fields.title || tBento("hours_title")}
                 className="md:col-span-2 bg-transparent!"
                 Icon={Clock}
-                description={hoursBlock?.fields.value || "Czynne od świtu do zmierzchu. Wędkowanie nocne możliwe po wcześniejszym uzgodnieniu telefonicznym."}
+                description={hoursBlock?.fields.value || tBento("hours_desc")}
                 href="/regulamin"
-                cta="Sprawdź"
+                cta={tBento("hours_cta")}
                 glowColor={activeGlowColor}
                 background={
                   <>
@@ -167,12 +183,12 @@ export default async function Home() {
                 }
               />
               <BentoCard
-                name={noKillBlock?.fields.title || "No Kill"}
+                name={noKillBlock?.fields.title || tBento("nokill_title")}
                 className="md:col-span-1 bg-transparent!"
                 Icon={Fish}
-                description={noKillBlock?.fields.value || "Obowiązuje całkowity zakaz zabierania ryb. Każda złowiona sztuka wraca do wody."}
+                description={noKillBlock?.fields.value || tBento("nokill_desc")}
                 href="/regulamin"
-                cta="Zasady"
+                cta={tBento("nokill_cta")}
                 glowColor={activeGlowColor}
                 background={
                   <>
@@ -188,12 +204,12 @@ export default async function Home() {
                 }
               />
               <BentoCard
-                name="Dojazd"
+                name={tBento("directions_title")}
                 className="md:col-span-1 bg-transparent!"
                 Icon={MapPin}
-                description="Łatwy dojazd z Dębicy (ok. 10 min). Parking dostępny tuż przy łowisku."
+                description={tBento("directions_desc")}
                 href="/kontakt"
-                cta="Mapa"
+                cta={tBento("directions_cta")}
                 glowColor={activeGlowColor}
                 background={
                   <>
@@ -219,16 +235,17 @@ export default async function Home() {
             <SpotlightCard className="p-8 md:p-10 rounded-2xl flex flex-col justify-between h-full">
               <div className="space-y-6">
                 <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-4xl">
-                  Charakterystyka Zalewu
+                  {tChar("title")}
                 </h2>
                 <div className="text-earth-brown dark:text-neutral-300 space-y-4">
                   {characteristicsDesc.split('\n').map((paragraph, index) => {
-                    if (paragraph.includes("Karp, Amur, Szczupak")) {
-                      const parts = paragraph.split("Karp, Amur, Szczupak");
+                    const strongText = tChar("strong_text");
+                    if (paragraph.includes(strongText)) {
+                      const parts = paragraph.split(strongText);
                       return (
                         <p key={index} className="text-lg leading-relaxed">
                           {parts[0]}
-                          <strong className="text-pine-green dark:text-sunset-orange font-bold">Karp, Amur, Szczupak</strong>
+                          <strong className="text-pine-green dark:text-sunset-orange font-bold">{strongText}</strong>
                           {parts[1]}
                         </p>
                       );
@@ -287,7 +304,7 @@ export default async function Home() {
                   href="/o-lowisku"
                   className="group/link inline-flex items-center gap-2 text-sunset-orange font-bold text-lg relative pb-1"
                 >
-                  Więcej o łowisku
+                  {tChar("cta_more")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1.5" />
                   <span className="absolute bottom-0 left-0 w-full h-[2px] bg-sunset-orange transform scale-x-0 origin-left transition-transform duration-300 group-hover/link:scale-x-100" />
                 </TransitionLink>
@@ -314,10 +331,10 @@ export default async function Home() {
               {/* Content text overlay (Floating Glassmorphic Card) */}
               <div className="absolute bottom-6 left-6 right-6 z-20 p-5 rounded-xl border border-white/10 bg-white/10 dark:bg-black/20 backdrop-blur-md text-white transition-all duration-300 group-hover/image-card:border-sunset-orange/30 group-hover/image-card:-translate-y-1">
                 <p className="font-bold text-2xl tracking-tight shadow-black/20 drop-shadow-md">
-                  Spokój i Natura
+                  {tChar("card_title")}
                 </p>
                 <p className="text-sm text-white/80 font-medium mt-1">
-                  Idealne miejsce na weekend
+                  {tChar("card_subtitle")}
                 </p>
               </div>
             </TiltCard>

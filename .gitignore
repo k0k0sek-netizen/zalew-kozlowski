@@ -51,3 +51,7 @@ node_modules/
 # Original uncompressed hero videos (backup)
 hero-hq-original.mp4
 hero-mobile-hq-original.mp4
+
+# Temporary scratch folder
+scratch/
+

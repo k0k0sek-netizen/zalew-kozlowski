@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { trackPhoneCall } from "@/lib/analytics";
 import { SPRING_TOKENS } from "@/lib/motion";
+import { useTranslations } from "next-intl";
 
 interface PriceItem {
     sys: { id: string };
@@ -38,6 +39,7 @@ export const PricingClient = ({
     price2Rods,
     priceSpinning
 }: PricingClientProps) => {
+    const t = useTranslations("pricing");
     const mainPrice = initialPrices.find(p => p.fields.category === 'Główne');
     const infoPrice = initialPrices.find(p => p.fields.category === 'Info');
 
@@ -76,12 +78,6 @@ export const PricingClient = ({
         setCalculatedPrice(perDayPrice * days);
     }, [method, rods, days, basePrice, doubleRodPrice, spinningPrice]);
 
-    const getDaysLabel = (num: number) => {
-        if (num === 1) return "doba";
-        if (num > 1 && num < 5) return "doby";
-        return "dób";
-    };
-
     return (
         <div className="space-y-12">
             <div className="grid gap-6 md:grid-cols-2 items-stretch">
@@ -100,11 +96,11 @@ export const PricingClient = ({
                                 
                                 {/* Zaawansowany Kalkulator Zasiadki */}
                                 <div className="mt-6 p-5 rounded-2xl bg-pine-green/5 dark:bg-white/5 border border-pine-green/10 dark:border-white/10 text-left space-y-4">
-                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-1">Interaktywny Kalkulator Zasiadki</span>
+                                    <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 block mb-1">{t("calculator_title")}</span>
                                     
                                     {/* Wybór Metody */}
                                     <div className="space-y-2">
-                                        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">Metoda łowienia</span>
+                                        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">{t("method_label")}</span>
                                         <div className="flex gap-1.5 bg-neutral-100/50 dark:bg-white/5 p-1 rounded-full border border-neutral-200/30 dark:border-white/5 relative overflow-hidden">
                                             <button
                                                 onClick={() => setMethod("grunt")}
@@ -127,7 +123,7 @@ export const PricingClient = ({
                                                         transition={{ type: "spring", ...SPRING_TOKENS.snappy }}
                                                     />
                                                 )}
-                                                <span className="relative z-10">Grunt / Spławik</span>
+                                                <span className="relative z-10">{t("method_ground")}</span>
                                             </button>
                                             <button
                                                 onClick={() => setMethod("spinning")}
@@ -150,14 +146,14 @@ export const PricingClient = ({
                                                         transition={{ type: "spring", ...SPRING_TOKENS.snappy }}
                                                     />
                                                 )}
-                                                <span className="relative z-10">Spinning</span>
+                                                <span className="relative z-10">{t("method_spinning")}</span>
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Wybór Wędzisk */}
                                     <div className="space-y-2">
-                                        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">Liczba wędzisk</span>
+                                        <span className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500">{t("rods_label")}</span>
                                         <div className={cn(
                                             "flex gap-1.5 bg-neutral-100/50 dark:bg-white/5 p-1 rounded-full border border-neutral-200/30 dark:border-white/5 relative overflow-hidden transition-opacity duration-300",
                                             method === "spinning" && "opacity-50 pointer-events-none"
@@ -184,7 +180,7 @@ export const PricingClient = ({
                                                         transition={{ type: "spring", ...SPRING_TOKENS.snappy }}
                                                     />
                                                 )}
-                                                <span className="relative z-10">1 Wędka</span>
+                                                <span className="relative z-10">{t("rod_one")}</span>
                                             </button>
                                             <button
                                                 disabled={method === "spinning"}
@@ -208,14 +204,14 @@ export const PricingClient = ({
                                                         transition={{ type: "spring", ...SPRING_TOKENS.snappy }}
                                                     />
                                                 )}
-                                                <span className="relative z-10">2 Wędki</span>
+                                                <span className="relative z-10">{t("rod_two")}</span>
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Suwak (Slider) */}
                                     <div className="space-y-2">
-                                        <label htmlFor="zasiadka-duration-slider" className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 block">Czas trwania ({days} {getDaysLabel(days)})</label>
+                                        <label htmlFor="zasiadka-duration-slider" className="text-[10px] font-semibold text-neutral-400 dark:text-neutral-500 block">{t("duration_label")} ({t("duration_days", { count: days })})</label>
                                         <div className="px-1">
                                             <input 
                                                 type="range" 
@@ -228,10 +224,10 @@ export const PricingClient = ({
                                                 aria-label="Liczba dób zasiadki"
                                             />
                                             <div className="flex justify-between text-[10px] font-bold text-neutral-400 dark:text-neutral-500 mt-2 px-1">
-                                                <span>1 doba</span>
-                                                <span>3 doby</span>
-                                                <span>5 dób</span>
-                                                <span>7 dób</span>
+                                                <span>{t("duration_days", { count: 1 })}</span>
+                                                <span>{t("duration_days", { count: 3 })}</span>
+                                                <span>{t("duration_days", { count: 5 })}</span>
+                                                <span>{t("duration_days", { count: 7 })}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -246,7 +242,7 @@ export const PricingClient = ({
                                             className="text-4xl font-black transition-colors duration-300"
                                             style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                         >
-                                            {calculatedPrice} zł
+                                            {calculatedPrice} {t("currency")}
                                         </motion.div>
                                     </div>
                                 </div>
@@ -259,8 +255,8 @@ export const PricingClient = ({
                                         .replace(/\{\{price-2-rods\}\}/g, String(doubleRodPrice))
                                         .replace(/\{\{price-spinning\}\}/g, String(spinningPrice));
                                     
-                                    const isResidents = detail.includes("Mieszkańcy Kozłowa");
-                                    const isCash = detail.includes("Tylko gotówka");
+                                    const isResidents = detail.toLowerCase().includes("mieszkańcy kozłowa") || detail.toLowerCase().includes("kozłów residents") || detail.toLowerCase().includes("kozlow residents");
+                                    const isCash = detail.toLowerCase().includes("tylko gotówka") || detail.toLowerCase().includes("cash only");
 
                                     return (
                                         <li key={idx} className={`flex items-center gap-2 ${isResidents ? 'pt-2 text-pine-green font-bold dark:text-green-400' : 'text-pine-green-dark dark:text-neutral-200'}`}>
@@ -295,7 +291,7 @@ export const PricingClient = ({
                             <div>
                                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                                     <Clock className="h-5 w-5 text-[rgb(var(--active-glow-color,249,115,22))]" />
-                                    {infoPrice.fields.title}
+                                    {infoPrice.fields.title || t("info_title")}
                                 </h3>
                                 
                                 {/* Nowoczesny Asymetryczny Układ Informacji */}
@@ -306,8 +302,8 @@ export const PricingClient = ({
                                             <Calendar className="h-5 w-5" />
                                         </div>
                                         <div className="space-y-0.5">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Weekend</span>
-                                            <p className="text-sm font-semibold text-pine-green-dark dark:text-neutral-100">Sobota - Niedziela (Świt - Zmierzch)</p>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">{t("weekend_label")}</span>
+                                            <p className="text-sm font-semibold text-pine-green-dark dark:text-neutral-100">{t("weekend_desc")}</p>
                                         </div>
                                     </div>
 
@@ -317,8 +313,8 @@ export const PricingClient = ({
                                             <Phone className="h-5 w-5" />
                                         </div>
                                         <div className="space-y-0.5">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Poniedziałek - Piątek</span>
-                                            <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">Możliwe wyłącznie po uzgodnieniu telefonicznym.</p>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">{t("weekday_label")}</span>
+                                            <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">{t("weekday_desc")}</p>
                                         </div>
                                     </div>
 
@@ -328,8 +324,8 @@ export const PricingClient = ({
                                             <Users className="h-5 w-5" />
                                         </div>
                                         <div className="space-y-0.5">
-                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Osoby towarzyszące (Goście)</span>
-                                            <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">Wymagany wcześniejszy kontakt i zgoda gospodarza.</p>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">{t("guests_label")}</span>
+                                            <p className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">{t("guests_desc")}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -337,7 +333,7 @@ export const PricingClient = ({
                             
                             <div className="mt-8 pt-5 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between">
                                 <div>
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-0.5">Rezerwacje & Kontakt</div>
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-0.5">{t("reservation_contact")}</div>
                                     <a 
                                         href={`tel:${phone.replace(/\s+/g, "")}`}
                                         onClick={() => trackPhoneCall("pricing_page", phone)}
@@ -393,17 +389,17 @@ export const PricingClient = ({
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-pine-green-dark dark:text-white">
-                                Brak ukrytych opłat
+                                {t("no_hidden_fees")}
                             </h3>
                             <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                                100% transparentności i proste zasady
+                                {t("transparency_rules")}
                             </p>
                         </div>
                     </div>
                     
                     <div className="max-w-xl md:border-l md:border-earth-brown/10 md:dark:border-white/10 md:pl-8">
                         <p className="text-earth-brown dark:text-neutral-300 leading-relaxed text-sm md:text-base">
-                            Nie oferujemy skomplikowanych karnetów, pakietów sezonowych ani rezerwacji konkretnych stanowisk. U nas panują przejrzyste warunki: przyjeżdżasz na łowisko, uzgadniasz szczegóły na miejscu i cieszysz się wędkowaniem.
+                            {t("no_hidden_fees_desc")}
                         </p>
                     </div>
                 </div>

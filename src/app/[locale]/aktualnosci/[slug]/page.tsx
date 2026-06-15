@@ -1,9 +1,9 @@
 import { SectionReveal } from "@/components/ui/section-reveal";
-import { ArrowLeft, Calendar, Fish } from "lucide-react";
+import { ArrowLeft, Calendar } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { notFound } from "next/navigation";
-import { contentfulClient, createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
+import { createContentfulClient, ArticleSkeleton } from "@/lib/contentful";
 import { draftMode } from "next/headers";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
 import { BLOCKS, MARKS } from '@contentful/rich-text-types';
@@ -12,6 +12,7 @@ import { Metadata } from "next";
 import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { ContentfulImage } from "@/components/ui/ContentfulImage";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { getTranslations } from "next-intl/server";
 
 export async function generateStaticParams() {
     try {
@@ -21,32 +22,43 @@ export async function generateStaticParams() {
             select: ["fields.slug" as any],
         });
 
-        return response.items
-            .filter(item => item.fields.slug)
-            .map((item) => ({
-                slug: item.fields.slug,
-            }));
+        const locales = ["pl", "en"];
+        const params: Array<{ locale: string; slug: string }> = [];
+
+        response.items.forEach(item => {
+            if (item.fields.slug) {
+                locales.forEach(locale => {
+                    params.push({
+                        locale,
+                        slug: item.fields.slug
+                    });
+                });
+            }
+        });
+
+        return params;
     } catch (err) {
         console.error("[Contentful] generateStaticParams failed:", err);
         return [];
     }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-    const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }): Promise<Metadata> {
+    const { slug, locale } = await params;
     try {
-        const { isEnabled } = await draftMode(); // Check draft mode in metadata
+        const { isEnabled } = await draftMode();
         const client = createContentfulClient({ preview: isEnabled });
 
         const entries = await client.getEntries<ArticleSkeleton>({
             content_type: "article",
             "fields.slug": slug,
             limit: 1,
+            locale: locale === "en" ? "en-US" : "pl",
         });
         const post = entries.items[0];
-        if (!post) return { title: "Nie znaleziono artykułu (404)" };
+        if (!post) return { title: locale === "en" ? "Article not found (404)" : "Nie znaleziono artykułu (404)" };
 
-        const title = `${post.fields.title} | Zalew Kozłowski`;
+        const title = `${post.fields.title} | ${locale === "en" ? "Kozłowski Reservoir" : "Zalew Kozłowski"}`;
         const description = post.fields.excerpt || "";
         const coverImage = post.fields.coverImage as Asset | undefined;
         const imageUrl = coverImage?.fields?.file?.url
@@ -74,14 +86,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         };
     } catch (err) {
         console.error("[Contentful] generateMetadata failed:", err);
-        return { title: "Aktualności | Zalew Kozłowski" };
+        return { title: locale === "en" ? "News | Kozłowski Reservoir" : "Aktualności | Zalew Kozłowski" };
     }
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params;
+export default async function ArticlePage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+    const { slug, locale } = await params;
     const { isEnabled } = await draftMode();
     const client = createContentfulClient({ preview: isEnabled });
+    const t = await getTranslations({ locale, namespace: "news" });
+    const tCommon = await getTranslations({ locale, namespace: "common" });
 
     let post = null;
     try {
@@ -89,6 +103,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             content_type: "article",
             "fields.slug": slug,
             limit: 1,
+            locale: locale === "en" ? "en-US" : "pl",
         });
         post = entries.items[0];
     } catch (err) {
@@ -149,7 +164,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <SectionReveal>
                             <Link href="/aktualnosci" className="mb-6 inline-flex items-center gap-2 text-sm font-bold text-white/80 hover:text-white transition-colors">
                                 <ArrowLeft className="h-4 w-4" />
-                                Wróć do aktualności
+                                {t("back_to_news")}
                             </Link>
 
                             <div className="mb-4 flex items-center gap-4 text-sm font-bold">
@@ -157,12 +172,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                     className="uppercase tracking-wider"
                                     style={{ color: "rgb(var(--active-glow-color, 249, 115, 22))" }}
                                 >
-                                    {category || "Aktualności"}
+                                    {category || (locale === "en" ? "News" : "Aktualności")}
                                 </span>
                                 <span className="h-1 w-1 rounded-full bg-white/50" />
                                 <span className="flex items-center gap-2 text-white/80">
                                     <Calendar className="h-4 w-4" />
-                                    {new Date(date).toLocaleDateString("pl-PL")}
+                                    {new Date(date).toLocaleDateString(locale === "en" ? "en-US" : "pl-PL")}
                                 </span>
                             </div>
 
@@ -194,13 +209,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                     </div>
                                     <div className="flex flex-col select-none text-pine-green dark:text-white transition-colors duration-300">
                                         <span className="font-display font-bold text-[13px] leading-tight tracking-wide group-hover:text-sunset-orange dark:group-hover:text-sunset-orange transition-colors duration-300">
-                                            Zalew
+                                            {tCommon("logo_text_1")}
                                         </span>
                                         <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-sunset-orange -mt-0.5">
-                                            Kozłowski
+                                            {tCommon("logo_text_2")}
                                         </span>
                                         <span className="text-[0.7rem] uppercase tracking-wider opacity-85 font-bold mt-1.5 leading-none group-hover:text-sunset-orange dark:group-hover:text-sunset-orange transition-colors duration-300">
-                                            Gospodarz Łowiska
+                                            {locale === "en" ? "Fishery Host" : "Gospodarz Łowiska"}
                                         </span>
                                     </div>
                                 </Link>
