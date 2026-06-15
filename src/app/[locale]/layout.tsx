@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CookieConsent } from "@/components/features/CookieConsent";
 import Script from "next/script";
+import { JsonLd } from "@/components/layout/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import DraftModeBanner from "@/components/features/DraftModeBanner";
 import { getWeatherAction } from "@/app/actions/weather";
@@ -127,42 +128,37 @@ export default async function RootLayout({
           </a>
 
           {/* JSON-LD for Business Context */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "LocalBusiness",
-                "name": "Zalew Kozłowski",
-                "image": "https://zalew-kozlowski.pl/hero.mp4",
-                "telephone": phone.replace(/\s+/g, ""),
-                "email": email,
-                "address": {
-                  "@type": "PostalAddress",
-                  "streetAddress": streetAddress,
-                  "addressLocality": addressLocality,
-                  "postalCode": postalCode,
-                  "addressCountry": "PL"
-                },
-                "geo": {
-                  "@type": "GeoCoordinates",
-                  "latitude": 50.0944,
-                  "longitude": 21.4362
-                },
-                "url": "https://zalew-kozlowski.pl",
-                "priceRange": "$$",
-                "openingHoursSpecification": [
-                  {
-                    "@type": "OpeningHoursSpecification",
-                    "dayOfWeek": ["Saturday", "Sunday"],
-                    "opens": "06:00",
-                    "closes": "20:00"
-                  }
-                ],
-                "description": "Prywatne łowisko No Kill w Kozłowie. Karpie, Amury, Szczupaki. Cisza i spokój."
-              }),
-            }}
-          />
+          <JsonLd data={{
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Zalew Kozłowski",
+            "image": "https://zalew-kozlowski.pl/hero.mp4",
+            "telephone": phone.replace(/\s+/g, ""),
+            "email": email,
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": streetAddress,
+              "addressLocality": addressLocality,
+              "postalCode": postalCode,
+              "addressCountry": "PL"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 50.0944,
+              "longitude": 21.4362
+            },
+            "url": "https://zalew-kozlowski.pl",
+            "priceRange": "$$",
+            "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Saturday", "Sunday"],
+                "opens": "06:00",
+                "closes": "20:00"
+              }
+            ],
+            "description": "Prywatne łowisko No Kill w Kozłowie. Karpie, Amury, Szczupaki. Cisza i spokój."
+          }} />
 
           <Navbar />
           <main id="main-content" className="min-h-screen relative flex flex-col">

@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
   // @ts-ignore
   reactCompiler: true,
   images: {
-    qualities: [75, 80],
+    qualities: [60, 70, 75, 80],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {

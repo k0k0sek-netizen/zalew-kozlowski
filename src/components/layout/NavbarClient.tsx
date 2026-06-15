@@ -248,6 +248,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         alt="Zalew Kozłowski Logo"
                                         fill
                                         priority
+                                        loading="eager"
                                         className={cn(
                                             "object-contain scale-[1.45] transition-all duration-300",
                                             (!scrolled || isOpen || theme === "dark") ? "brightness-110 saturate-[1.05] drop-shadow-[0_0_8px_rgba(249,115,22,0.2)]" : ""
@@ -283,6 +284,7 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
                                         alt="Zalew Kozłowski Logo"
                                         fill
                                         priority
+                                        loading="eager"
                                         className={cn(
                                             "object-contain scale-[1.45] transition-all duration-300",
                                             (!scrolled || isOpen || theme === "dark") ? "brightness-110 saturate-[1.05] drop-shadow-[0_0_8px_rgba(249,115,22,0.2)]" : ""

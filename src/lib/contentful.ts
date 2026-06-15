@@ -37,7 +37,6 @@ export const createContentfulClient = ({ preview }: { preview?: boolean } = {}):
                 return await rawClient.getEntries(query);
             } catch (err: any) {
                 if (err && err.message && err.message.includes("Unknown locale")) {
-                    console.debug(`[Contentful] Unknown locale "${query.locale}". Retrying request without locale parameter.`);
                     const { locale, ...restQuery } = query;
                     return await rawClient.getEntries(restQuery);
                 }
@@ -49,7 +48,6 @@ export const createContentfulClient = ({ preview }: { preview?: boolean } = {}):
                 return await rawClient.getEntry(id, query);
             } catch (err: any) {
                 if (err && err.message && err.message.includes("Unknown locale")) {
-                    console.debug(`[Contentful] Unknown locale "${query?.locale}". Retrying request without locale parameter.`);
                     const { locale, ...restQuery } = query || {};
                     return await rawClient.getEntry(id, restQuery);
                 }
