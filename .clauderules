@@ -44,7 +44,14 @@ Plik ten definiuje reguły pracy dla agentów AI w tym projekcie. Przestrzegaj i
 *   Wszystkie interaktywne komponenty (menu mobilne, lightboxy, zakładki) muszą obsługiwać nawigację klawiaturą, posiadać odpowiednie role ARIA (np. `role="dialog"`, `role="tablist"`) oraz poprawnie zarządzać focusem (pułapka focusu i przywracanie focusu po zamknięciu modalu).
 *   Teksty i przyciski muszą spełniać kryteria kontrastu WCAG AA (kontrast co najmniej 4.5:1, a dla dużego tekstu 3:1).
 
+### 6. Dokumentacja i Logowanie Zmian (Markdown-First)
+*   Każde wdrożenie nowej funkcjonalności, audyt bezpieczeństwa/dostępności lub istotna zmiana architektoniczna **musi** być niezwłocznie odnotowana w dzienniku zmian: [DEVELOPMENT_JOURNAL.md](file:///home/h4q/Dokumenty/PlatformIO/Projects/ProjektyWebowe/zalew-kozlowski/DEVELOPMENT_JOURNAL.md).
+*   Wszelkie pomysły, plany rozwoju i stan realizacji kolejnych etapów prac należy prowadzić i aktualizować w plikach planu drogowego: [kb/roadmap.md](file:///home/h4q/Dokumenty/PlatformIO/Projects/ProjektyWebowe/zalew-kozlowski/kb/roadmap.md).
+*   Zasady deweloperskie, standardy kodu oraz architektura muszą być opisywane w plikach `.md` w katalogu [kb/](file:///home/h4q/Dokumenty/PlatformIO/Projects/ProjektyWebowe/zalew-kozlowski/kb/).
+*   Opisując kody źródłowe w plikach `.md`, zawsze stosuj klikalne linki Markdown o schemacie `file://` (np. `[Footer.tsx](file:///absolute/path/to/Footer.tsx)`).
+
 ---
+
 
 ## 🧪 Walidacja i Weryfikacja
 *   Przed zakończeniem każdego zadania deweloperskiego **musisz** uruchomić lokalnie testy Playwright komendą:
