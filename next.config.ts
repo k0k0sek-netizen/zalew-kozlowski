@@ -5,11 +5,11 @@ const withNextIntl = createNextIntlPlugin();
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://maps.googleapis.com https://*.googleapis.com;
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://maps.googleapis.com https://*.googleapis.com https://va.vercel-scripts.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' blob: data: https://images.ctfassets.net https://downloads.ctfassets.net *.contentful.com https://images.unsplash.com https://*.googleapis.com https://*.gstatic.com;
   font-src 'self' data:;
-  connect-src 'self' https://api.open-meteo.com https://*.googleapis.com https://*.google.com https://*.gstatic.com https://www.google-analytics.com https://analytics.google.com;
+  connect-src 'self' https://api.open-meteo.com https://*.googleapis.com https://*.google.com https://*.gstatic.com https://www.google-analytics.com https://analytics.google.com https://va.vercel-scripts.com https://vitals.vercel-insights.com;
   frame-src 'self' https://*.google.com;
   media-src 'self' data: blob:;
   object-src 'none';
