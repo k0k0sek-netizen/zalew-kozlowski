@@ -10,7 +10,7 @@ import DraftModeBanner from "@/components/features/DraftModeBanner";
 import { getWeatherAction } from "@/app/actions/weather";
 import { getInfoBlocks } from "@/lib/contentful";
 import { getGlowColorForScore } from "@/lib/bite-index-theme";
-import { draftMode } from "next/headers";
+import { cookies, draftMode } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -105,28 +105,13 @@ export default async function RootLayout({
 
   const activeGlowColor = weatherData ? getGlowColorForScore(weatherData.score) : "249, 115, 22";
 
+  // Server-side theme detection from cookie (avoids inline <script> + React 19 warning)
+  const cookieStore = await cookies();
+  const themeCookie = cookieStore.get("theme")?.value;
+  const isDarkTheme = themeCookie === "dark" || (!themeCookie && true); // default to dark
+
   return (
-    <html lang={locale} data-scroll-behavior="smooth" suppressHydrationWarning>
-      <head>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                  }
-                } catch (_) {}
-              })()
-            `,
-          }}
-        />
-      </head>
+    <html lang={locale} className={isDarkTheme ? "dark" : ""} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
         className={`${outfit.variable} ${syne.variable} antialiased bg-background text-foreground selection:bg-sunset-orange selection:text-white`}
         style={{ "--active-glow-color": activeGlowColor } as React.CSSProperties}

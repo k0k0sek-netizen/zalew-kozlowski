@@ -117,6 +117,11 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
         setMounted(true);
         const isDark = document.documentElement.classList.contains("dark");
         setTheme(isDark ? "dark" : "light");
+        // Sync localStorage theme to cookie for server-side rendering
+        const stored = localStorage.getItem("theme");
+        if (stored) {
+            document.cookie = `theme=${stored};path=/;max-age=31536000;SameSite=Lax`;
+        }
     }, []);
 
     const toggleTheme = () => {
@@ -125,9 +130,11 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
         if (nextTheme === "dark") {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
+            document.cookie = "theme=dark;path=/;max-age=31536000;SameSite=Lax";
         } else {
             document.documentElement.classList.remove("dark");
             localStorage.setItem("theme", "light");
+            document.cookie = "theme=light;path=/;max-age=31536000;SameSite=Lax";
         }
     };
 
