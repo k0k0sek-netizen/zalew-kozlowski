@@ -1,0 +1,63 @@
+# Reguły Projektu (Gemini / Antigravity Rules) — Zalew Kozłowski 🎣
+
+Plik ten definiuje reguły pracy dla agentów AI w tym projekcie. Przestrzegaj ich bezwzględnie przy każdej modyfikacji kodu.
+
+---
+
+## 🛠️ Stos Technologiczny i Ograniczenia
+*   **Framework:** Next.js 16 (App Router) z wymuszonym **Edge Runtime** na krytycznych stronach.
+*   **React Compiler:** Włączony i aktywny. Unikaj ręcznego dodawania `useMemo` i `useCallback`, chyba że jest to bezwzględnie konieczne ze względu na referencje zewnętrzne (pozwól kompilatorowi Reacta na automatyczną optymalizację).
+*   **Stylizacja:** Tailwind CSS v4. Zmienne CSS i tokeny kolorów/ruchów są zdefiniowane w `src/app/globals.css`.
+*   **CMS:** Contentful CMS.
+*   **Testy:** Playwright E2E (`npm run test:e2e`).
+
+---
+
+## 🛑 Kluczowe Zasady Projektowe (Nigdy nie łam tych zasad)
+
+### 1. Dynamiczne Dane Kontaktowe (CMS-First)
+*   **Absolutny zakaz hardkodowania** fizycznego adresu łowiska (`Kozłów 4A...`), numeru telefonu, e-maila oraz linków/iframe Google Maps w kodzie stron i komponentów.
+*   Wszystkie te dane muszą być pobierane dynamicznie z Contentful za pomocą bloków `infoBlock` (kolekcja `infoBlocks` w CMS).
+*   Kluczowe identyfikatory ID (Entry ID / `sys.id`) z CMS:
+    *   `address` – pełny adres fizyczny.
+    *   `map-url` – link kierujący do Google Maps.
+    *   `map-embed` – kod embed/iframe mapy Google.
+*   Jeśli modyfikujesz miejsce wyświetlania danych kontaktowych, upewnij się, że korzystasz z parsera lub pobierasz odpowiedni blok z CMS.
+
+### 2. Odporność na awarie CMS (Graceful Degradation)
+*   Aplikacja musi być w 100% odporna na brak połączenia z CMS, brak tokenów w `.env` lub limity API.
+*   Każde zapytanie do Contentful API w komponentach serwerowych (`src/app/*`) **musi** być zabezpieczone blokiem `try-catch`.
+*   W przypadku błędu API, system **musi** załadować kompletne, lokalne dane zapasowe (fallback data) zdefiniowane w kodzie, aby strona nigdy nie zwróciła błędu 500.
+
+### 3. Zabezpieczenie przed spamem (Honeypot)
+*   Wszystkie formularze przesyłania danych (np. formularz przesyłania zdjęć do galerii) muszą posiadać ukryte przed użytkownikiem pole Honeypot o nazwie `website` (z klasą `hidden`, `aria-hidden="true"`, `tabIndex={-1}`).
+*   W akcjach serwerowych (Server Actions) należy weryfikować to pole. Jeśli jest wypełnione, serwer musi natychmiast przerwać przetwarzanie i zwrócić pozorowany sukces (`{ success: true, id: "decoy-success" }`), aby zmylić bota bez obciążania zasobów i API.
+
+### 4. Wydajność i Kompresja Obrazów
+*   Dla wszystkich obrazów z Contentful lub lokalnych należy stosować dedykowany loader `src/lib/contentful-loader.ts`.
+*   Obrazy z galerii muszą być ładowane w formacie **AVIF** (zmniejszenie wagi o 30-50% względem WebP).
+*   Obrazy znajdujące się powyżej linii zgięcia (above-the-fold) na stronie głównej oraz w galerii (pierwsze 4 miniatury) muszą mieć włączony priorytet ładowania (`priority={true}`).
+*   Zawsze definiuj precyzyjne atrybuty `sizes` w komponentach `<Image>` Next.js, dopasowane do szerokości kolumn (np. w bento grid) na różnych ekranach, aby uniknąć pobierania zbyt dużych plików.
+*   W lightboxie galerii stosuj inteligentny prefetching sąsiednich zdjęć (poprzedniego i następnego) o niskim priorytecie sieciowym (`fetchPriority="low"`), aby przełączanie zdjęć było natychmiastowe.
+
+### 5. Dostępność (WCAG 2.2 AA)
+*   Wszystkie interaktywne komponenty (menu mobilne, lightboxy, zakładki) muszą obsługiwać nawigację klawiaturą, posiadać odpowiednie role ARIA (np. `role="dialog"`, `role="tablist"`) oraz poprawnie zarządzać focusem (pułapka focusu i przywracanie focusu po zamknięciu modalu).
+*   Teksty i przyciski muszą spełniać kryteria kontrastu WCAG AA (kontrast co najmniej 4.5:1, a dla dużego tekstu 3:1).
+
+---
+
+## 🧪 Walidacja i Weryfikacja
+*   Przed zakończeniem każdego zadania deweloperskiego **musisz** uruchomić lokalnie testy Playwright komendą:
+    `npm run test:e2e`
+*   Sukces można ogłosić **tylko wtedy**, gdy wszystkie 32 testy przechodzą pomyślnie.
+*   W testach Playwright symulujących Honeypot nie używaj metody `.fill()` na ukrytych polach (ponieważ Playwright oczekuje na widoczność elementu i test zawiesi się). Użyj bezpośredniej modyfikacji DOM przez `.evaluate()`:
+    ```typescript
+    await honeypotInput.evaluate((el: HTMLInputElement) => el.value = 'http://spam.com');
+    ```
+
+---
+
+## 📚 Więcej Szczegółów
+Więcej informacji o architekturze projektu oraz standardach technicznych znajdziesz w bazie wiedzy w folderze `kb/`:
+*   [Struktura i Architektura](file:///home/h4q/Dokumenty/PlatformIO/Projects/ProjektyWebowe/zalew-kozlowski/kb/architecture.md)
+*   [Standardy Kodowania i Optymalizacji](file:///home/h4q/Dokumenty/PlatformIO/Projects/ProjektyWebowe/zalew-kozlowski/kb/standards.md)
