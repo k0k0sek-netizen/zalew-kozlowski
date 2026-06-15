@@ -156,7 +156,12 @@
     "bento_nature_title": "Szacunek do Przyrody",
     "bento_nature_desc": "Utrzymuj porządek na stanowisku, zabieraj śmieci ze sobą i szanuj ciszę nad wodą.",
     "search_placeholder": "Wyszukaj w regulaminie...",
-    "no_results": "Nie znaleziono pasujących zasad. Spróbuj wpisać inne słowo kluczowe."
+    "search_results_label": "Wyniki wyszukiwania dla",
+    "no_results": "Nie znaleziono pasujących zasad. Spróbuj wpisać inne słowo kluczowe.",
+    "accordion_general_tagline": "Zasady No Kill, limity wędek, etykieta i rezerwacje stanowisk",
+    "accordion_safety_tagline": "Godziny pobytu, zakazy i monitoring terenu",
+    "accordion_contact_tagline": "Rezerwacje telefoniczne i kontakt z gospodarzem",
+    "monitoring_desc": "Teren łowiska jest monitorowany przez system kamer 24h na dobę, 7 dni w tygodniu."
   },
   "about": {
     "title": "O Łowisku",

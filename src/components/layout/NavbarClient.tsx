@@ -44,7 +44,17 @@ export const NavbarClient = ({ initialWeather, phone = "601 389 365" }: NavbarCl
 
     const [hoveredPath, setHoveredPath] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
-    const [theme, setTheme] = useState<"light" | "dark">("dark");
+    const [theme, setTheme] = useState<"light" | "dark">(() => {
+        // Synchronous read from localStorage to prevent theme flash on locale switch
+        if (typeof window !== "undefined") {
+            const stored = localStorage.getItem("theme");
+            if (stored === "light") return "light";
+            if (stored === "dark") return "dark";
+            // Fallback: check DOM class (set by inline script in layout.tsx)
+            return document.documentElement.classList.contains("dark") ? "dark" : "light";
+        }
+        return "dark"; // SSR default
+    });
 
     const navRef = useRef<HTMLElement>(null);
 

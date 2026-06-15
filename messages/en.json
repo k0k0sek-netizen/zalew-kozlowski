@@ -156,7 +156,12 @@
     "bento_nature_title": "Respect for Nature",
     "bento_nature_desc": "Keep your fishing spot clean, take all garbage with you, and respect the quiet surroundings.",
     "search_placeholder": "Search in the rules...",
-    "no_results": "No matching rules found. Try entering another keyword."
+    "search_results_label": "Search results for",
+    "no_results": "No matching rules found. Try entering another keyword.",
+    "accordion_general_tagline": "No Kill rules, rod limits, etiquette and spot booking",
+    "accordion_safety_tagline": "Visiting hours, restrictions and site monitoring",
+    "accordion_contact_tagline": "Phone reservations and contacting the host",
+    "monitoring_desc": "The fishery grounds are monitored by a CCTV camera system 24 hours a day, 7 days a week."
   },
   "about": {
     "title": "About the Fishery",
