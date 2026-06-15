@@ -58,11 +58,11 @@
     "strong_text": "Carp, Grass Carp, Pike",
     "cta_more": "More about the lake",
     "shoreline_title": "Shoreline",
-    "shoreline_desc": "Wide and easy access to the water along the entire length.",
+    "shoreline_desc": "Wide and easy access to the water along the entire length of the reservoir. The shoreline has been carefully prepared, offering anglers comfortable conditions for both bait boat casting and shore casting, free from obstructing weeds.",
     "spots_title": "Fishing Spots",
-    "spots_desc": "Natural, grassy, and well-maintained spots.",
+    "spots_desc": "Natural, grassy, and well-maintained spots, regularly mowed and prepared for anglers. Each spot offers ample working space to pitch a carp bivvy, park a vehicle, and handle fishing gear comfortably.",
     "security_title": "Security & Monitoring",
-    "security_desc": "Safety and peace during your relaxation.",
+    "security_desc": "Safety and peace of mind during multi-day sessions. The entire fishery area is fenced, and a modern 24/7 video monitoring system ensures full protection of your property and vehicles.",
     "card_title": "Peace & Nature",
     "card_subtitle": "An ideal place for a weekend"
   },
@@ -146,7 +146,17 @@
     "card_bookings_desc": "Call before arrival",
     "card_safety": "Safety",
     "card_safety_desc": "Host available 24/7",
-    "btn_call_host": "Call: {phone}"
+    "btn_call_host": "Call: {phone}",
+    "bento_nokill_title": "Strict No Kill",
+    "bento_nokill_desc": "Every caught fish must immediately return to the water in good condition.",
+    "bento_gear_title": "Mat & Protection Gear",
+    "bento_gear_desc": "Compulsory cradle unhooking mat, large landing net, and fish wound antiseptic spray.",
+    "bento_booking_title": "Prior Contact Required",
+    "bento_booking_desc": "Anglers from outside Kozłów must contact the host by phone to book a spot before arrival.",
+    "bento_nature_title": "Respect for Nature",
+    "bento_nature_desc": "Keep your fishing spot clean, take all garbage with you, and respect the quiet surroundings.",
+    "search_placeholder": "Search in the rules...",
+    "no_results": "No matching rules found. Try entering another keyword."
   },
   "about": {
     "title": "About the Fishery",
@@ -166,11 +176,11 @@
     "factor_season_desc": "Spring awakening (III-V) and autumn feeding (IX-X) are bonus points for the score.",
     "why_worth": "Why Kozłowski?",
     "card_nature_title": "Wild Nature & Oasis of Peace",
-    "card_nature_desc": "Kozłowski Reservoir is 100 ares of pure nature surrounded by greenery. Silence, the rustle of reeds, and singing birds create perfect conditions to escape from city noise and fully relax with a rod in hand.",
+    "card_nature_desc": "Kozłowski Reservoir is a charming 100-are water body, surrounded by a picturesque wall of trees and natural vegetation. The silence, interrupted only by the rustle of reeds, birdsong, and spectacular fish splashes, creates a perfect enclave to escape from city noise, find peace, and deeply relax in the lap of nature.",
     "card_trophy_title": "Large Specimens (No Kill)",
-    "card_trophy_desc": "Regular stocking and strict \"No Kill\" rule make the fish grow to impressive sizes. You will meet beautiful carps, strong grass carps, and fighting predators.",
+    "card_trophy_desc": "Thanks to regular and thoughtful stocking and strict compliance with the 'Catch and Release' (No Kill) policy, our lake has become a sanctuary for true specimens. Anglers can count on encountering huge, hard-fighting carp, grass carp with incredible runs of strength, and clever pike hunting along the reed beds.",
     "card_security_title": "Security & Convenience",
-    "card_security_desc": "The entire fishery area is fenced and monitored 24/7. We offer comfortable, grassy fishing spots and safe, locked parking directly on the premises.",
+    "card_security_desc": "We care about the maximum comfort of our guests. The fishery area is completely fenced, lit, and monitored around the clock. We provide convenient access directly to the spots, secure parking in the closed area of the lake, and 24/7 assistance from the host in any situation.",
     "nature_calendar": "Nature's Calendar",
     "spring": "Spring",
     "spring_months": "Mar - May",
@@ -278,7 +288,10 @@
     "pressure": "Pressure",
     "temp": "Temp.",
     "kmh": "km/h",
-    "hpa": "hPa"
+    "hpa": "hPa",
+    "idx_general": "General",
+    "idx_carp": "Carp / Grass Carp",
+    "idx_predator": "Pike"
   }
 }
 

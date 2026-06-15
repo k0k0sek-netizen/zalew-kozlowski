@@ -7,12 +7,16 @@ export interface WeatherData {
     cloudCover: number;
     rain: number;
     humidity: number;
-    score: number; // 0-100
-    label: string;
+    score: number; // General score
+    label: string;  // General label
     isDay: boolean;
     sunrise: string;
     sunset: string;
     moonPhase: string;
+    carpScore: number;
+    carpLabel: string;
+    predatorScore: number;
+    predatorLabel: string;
 }
 
 import { unstable_cache } from "next/cache";
@@ -46,12 +50,12 @@ const getMoonPhase = (date: Date) => {
     return b;
 };
 
-// Raw fetching function to be cached
 async function fetchWeatherData(): Promise<WeatherData> {
+    const lat = 50.0511; // Kozłów coords
+    const lon = 21.4111;
     const now = new Date();
-    const lat = 50.0944;
-    const lon = 21.4362;
     const moonPhaseVal = getMoonPhase(now);
+
     const MOON_PHASES = [
         "Nów",
         "Przybywający Półksiężyc",
@@ -68,9 +72,9 @@ async function fetchWeatherData(): Promise<WeatherData> {
     const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 seconds timeout
 
     try {
-        // Fetch current + daily weather from Open-Meteo with UNIX timestamps
+        // Fetch current + hourly + daily weather from Open-Meteo with UNIX timestamps & 1 past day
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,wind_speed_10m,is_day,cloud_cover,rain,showers&daily=sunrise,sunset&timezone=auto&timeformat=unixtime`,
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,is_day,cloud_cover,rain,showers&hourly=pressure_msl&daily=sunrise,sunset&timezone=auto&timeformat=unixtime&past_days=1`,
             {
                 signal: controller.signal,
                 next: { revalidate: 900 },
@@ -87,83 +91,170 @@ async function fetchWeatherData(): Promise<WeatherData> {
         const data = await response.json();
         const current = data.current;
         const daily = data.daily;
+        const hourly = data.hourly;
 
-        // --- FISHING SCORE ALGORITHM (0-100) ---
-        let score = 50; // Base score (Neutral)
+        const currentPressure = current.pressure_msl;
+        const currentTime = current.time;
 
-        // 1. Pressure
-        const pressure = current.surface_pressure;
-        if (pressure > 1015) score += 15;
-        else if (pressure > 1005) score += 5;
-        else if (pressure < 1000) score -= 10;
-        else if (pressure < 990) score -= 20;
+        // Calculate 3-hour pressure trend (deltaPressure)
+        let deltaPressure = 0;
+        if (hourly && hourly.time && hourly.pressure_msl) {
+            let nearestIdx = 0;
+            let minDiff = Infinity;
+            for (let i = 0; i < hourly.time.length; i++) {
+                const diff = Math.abs(hourly.time[i] - currentTime);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nearestIdx = i;
+                }
+            }
+            const pastIdx = nearestIdx - 3;
+            if (pastIdx >= 0) {
+                deltaPressure = currentPressure - hourly.pressure_msl[pastIdx];
+            }
+        }
 
-        // 2. Wind (Biologically optimized for carp/amur feeding patterns)
+        const temp = current.temperature_2m;
         const wind = current.wind_speed_10m;
-        if (wind >= 6 && wind <= 20) score += 20; // Moderate wind (ideal oxygenation & thermal mixing)
-        else if (wind > 20 && wind <= 30) score += 10; // Umiarkowany wiatr
-        else if (wind < 6) score -= 5; // Flauta (water stands, fish are highly suspicious/inactive)
-        else if (wind > 30 && wind <= 45) score -= 20; // Silny wiatr
-        else if (wind > 45) score -= 40; // Wichura / Sztorm
-
-        // 3. Cloud Cover
         const clouds = current.cloud_cover;
-        if (clouds > 80) score += 10;
-        else if (clouds < 20) score -= 5;
-
-        // 4. Rain
         const rain = current.rain + current.showers;
-        if (rain > 0 && rain < 2) score += 10;
-        if (rain >= 5) score -= 20;
+        const humidity = current.relative_humidity_2m;
 
-        // 5. Time of Day (Solunar - timezone neutral unix calculations)
+        // Dawn and Dusk Calculations
         const sunriseTime = new Date(daily.sunrise[0] * 1000);
         const sunsetTime = new Date(daily.sunset[0] * 1000);
         const isDawn = Math.abs(now.getTime() - sunriseTime.getTime()) < 3600000;
         const isDusk = Math.abs(now.getTime() - sunsetTime.getTime()) < 3600000;
+        const solunarBonus = (isDawn || isDusk) ? 15 : 0;
 
-        if (isDawn || isDusk) score += 15;
-
-        // 6. Moon Phase Modifiers
-        if (moonPhaseVal === 4) {
-            score += 15; // Full Moon (peak feeding)
-        } else if (moonPhaseVal === 0) {
-            score += 15; // New Moon (peak feeding)
+        // Moon Phase Bonus
+        let moonBonus = 0;
+        if (moonPhaseVal === 4 || moonPhaseVal === 0) {
+            moonBonus = 15; // Full/New Moon
         } else if (moonPhaseVal === 3 || moonPhaseVal === 5) {
-            score += 8;  // Gibbous phases
+            moonBonus = 8;  // Gibbous
         } else if (moonPhaseVal === 1 || moonPhaseVal === 7) {
-            score += 5;  // Crescent phases
+            moonBonus = 5;  // Crescent
         }
 
-        // 7. Season Modifier
+        // Season Calculations
         const month = now.getMonth(); // 0-11
-        if (month === 11 || month === 0 || month === 1) score -= 20; // Winter
-        else if (month >= 2 && month <= 4) score += 10; // Spring
-        else if (month >= 5 && month <= 7) score += 5; // Summer
-        else if (month >= 8 && month <= 10) score += 15; // Autumn
+        let carpSeasonBonus = 0;
+        let predatorSeasonBonus = 0;
 
-        // Clamp score
-        score = Math.max(1, Math.min(100, score));
+        if (month === 11 || month === 0 || month === 1) { // Winter
+            carpSeasonBonus = -25;
+            predatorSeasonBonus = 5;
+        } else if (month >= 2 && month <= 4) { // Spring
+            carpSeasonBonus = 10;
+            predatorSeasonBonus = 15;
+        } else if (month >= 5 && month <= 7) { // Summer
+            carpSeasonBonus = 15;
+            predatorSeasonBonus = -15;
+        } else if (month >= 8 && month <= 10) { // Autumn
+            carpSeasonBonus = 5;
+            predatorSeasonBonus = 20;
+        }
 
-        // Determine Label
-        let label = "Średnia Aktywność";
-        if (score >= 80) label = "🔥 REWELACYJNE BRANIA";
-        else if (score >= 60) label = "Dobre Warunki";
-        else if (score <= 35) label = "Słaba Aktywność";
+        // --- 1. CARP / AMUR INDEX ALGORITHM ---
+        let carpScore = 50; // Base
+
+        // Temperature optimum: 18°C - 24°C
+        if (temp >= 18 && temp <= 24) carpScore += 20;
+        else if ((temp >= 14 && temp < 18) || (temp > 24 && temp <= 28)) carpScore += 10;
+        else if (temp >= 8 && temp < 14) carpScore -= 10;
+        else if (temp < 8) carpScore -= 25;
+        else if (temp > 28) carpScore -= 20;
+
+        // Wind speed: optimum 6 - 18 km/h
+        if (wind >= 6 && wind <= 18) carpScore += 20;
+        else if (wind > 18 && wind <= 28) carpScore += 10;
+        else if (wind < 6) carpScore -= 10; // Calm/flat water is bad
+        else if (wind > 28) carpScore -= 20;
+
+        // Pressure absolute and trend
+        if (deltaPressure >= -2 && deltaPressure <= -0.5) carpScore += 15; // Slowly falling (ideal)
+        else if (Math.abs(deltaPressure) < 0.5) carpScore += 5; // Stable
+        else if (deltaPressure > 0.5 && deltaPressure <= 2) carpScore -= 5; // Rising
+        else if (deltaPressure < -2) carpScore -= 15; // Rapid drop (stormy)
+        else if (deltaPressure > 2) carpScore -= 15; // Rapid rise
+
+        if (currentPressure > 1020) carpScore -= 10; // Very high pressure
+        else if (currentPressure < 995) carpScore -= 15; // Very low pressure
+
+        // Humidity
+        if (humidity > 80) carpScore += 10;
+
+        // Clouds & rain
+        if (clouds > 60) carpScore += 8;
+        if (rain > 0 && rain < 2) carpScore += 10;
+        else if (rain >= 5) carpScore -= 20;
+
+        carpScore += solunarBonus + moonBonus + carpSeasonBonus;
+        carpScore = Math.max(1, Math.min(100, carpScore));
+
+        // --- 2. PREDATOR (PIKE) INDEX ALGORITHM ---
+        let predatorScore = 50;
+
+        // Temperature optimum: 11°C - 17°C
+        if (temp >= 11 && temp <= 17) predatorScore += 20;
+        else if ((temp >= 7 && temp < 11) || (temp > 17 && temp <= 21)) predatorScore += 10;
+        else if (temp >= 21 && temp <= 25) predatorScore -= 10;
+        else if (temp > 25) predatorScore -= 25;
+        else if (temp < 7) predatorScore -= 15;
+
+        // Wind: medium-strong ("pike chop" wave action)
+        if (wind >= 12 && wind <= 25) predatorScore += 20;
+        else if (wind > 25 && wind <= 35) predatorScore += 10;
+        else if (wind < 8) predatorScore -= 10;
+        else if (wind > 35) predatorScore -= 20;
+
+        // Pressure absolute and trend
+        if (deltaPressure < -0.5) predatorScore += 15; // Falling pressure triggers feeding
+        else if (Math.abs(deltaPressure) <= 0.5) predatorScore += 5;
+        else if (deltaPressure > 0.5) predatorScore -= 10;
+
+        if (currentPressure < 1000) predatorScore += 10; // Low pressure overcast
+        else if (currentPressure > 1020) predatorScore -= 15; // Clear sky high pressure
+
+        // Clouds & rain: Pike love cloudy days (ambush hunting)
+        if (clouds > 70) predatorScore += 20;
+        else if (clouds < 30) predatorScore -= 10;
+
+        if (rain > 0 && rain < 3) predatorScore += 10;
+        else if (rain >= 5) predatorScore -= 15;
+
+        predatorScore += solunarBonus + (moonBonus * 0.8) + predatorSeasonBonus;
+        predatorScore = Math.max(1, Math.min(100, predatorScore));
+
+        // --- 3. GENERAL SCORE ---
+        const score = Math.round((carpScore + predatorScore) / 2);
+
+        // Helper to map scores to Polish label strings matching translations
+        const getLabel = (s: number) => {
+            if (s >= 80) return "🔥 REWELACYJNE BRANIA";
+            if (s >= 60) return "Dobre Warunki";
+            if (s <= 35) return "Słaba Aktywność";
+            return "Średnia Aktywność";
+        };
 
         const result: WeatherData = {
-            temperature: Math.round(current.temperature_2m),
-            pressure: Math.round(current.surface_pressure),
-            windSpeed: Math.round(current.wind_speed_10m),
+            temperature: Math.round(temp),
+            pressure: Math.round(currentPressure),
+            windSpeed: Math.round(wind),
             cloudCover: clouds,
             rain,
-            humidity: current.relative_humidity_2m,
+            humidity,
             score,
-            label,
+            label: getLabel(score),
             isDay: current.is_day === 1,
             sunrise: sunriseTime.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" }),
             sunset: sunsetTime.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" }),
-            moonPhase: moonLabel
+            moonPhase: moonLabel,
+            carpScore,
+            carpLabel: getLabel(carpScore),
+            predatorScore,
+            predatorLabel: getLabel(predatorScore)
         };
 
         // Cache the successful result in memory as dynamic fallback
@@ -192,7 +283,11 @@ async function fetchWeatherData(): Promise<WeatherData> {
             isDay: true,
             sunrise: "04:35",
             sunset: "21:15",
-            moonPhase: moonLabel
+            moonPhase: moonLabel,
+            carpScore: 75,
+            carpLabel: "Dobre Warunki",
+            predatorScore: 68,
+            predatorLabel: "Dobre Warunki"
         };
     } finally {
         clearTimeout(timeoutId);

@@ -58,11 +58,11 @@
     "strong_text": "Karp, Amur, Szczupak",
     "cta_more": "Więcej o łowisku",
     "shoreline_title": "Linia brzegowa",
-    "shoreline_desc": "Szeroki i swobodny dostęp do wody na całej długości.",
+    "shoreline_desc": "Szeroki i swobodny dostęp do wody na całej długości zbiornika. Linia brzegowa została starannie przygotowana, oferując wędkarzom komfortowe warunki zarówno do wywózki, jak i rzutów z brzegu, bez przeszkadzających zarośli.",
     "spots_title": "Stanowiska",
-    "spots_desc": "Naturalne, trawiaste i zadbane miejsca.",
+    "spots_desc": "Naturalne, trawiaste i zadbane miejsca, regularnie koszone i przygotowywane dla wędkarzy. Każde stanowisko zapewnia dużą przestrzeń roboczą na rozbicie namiotu karpiowego, zaparkowanie samochodu oraz swobodne operowanie sprzętem wędkarskim.",
     "security_title": "Ochrona i monitoring",
-    "security_desc": "Bezpieczeństwo i spokój podczas wypoczynku.",
+    "security_desc": "Bezpieczeństwo i spokój podczas wielodniowych zasiadek. Cały obszar łowiska jest ogrodzony, a nowoczesny system monitoringu wizyjnego 24/7 zapewnia pełną ochronę Twojego mienia i pojazdów.",
     "card_title": "Spokój i Natura",
     "card_subtitle": "Idealne miejsce na weekend"
   },
@@ -146,7 +146,17 @@
     "card_bookings_desc": "Zadzwoń przed przyjazdem",
     "card_safety": "Bezpieczeństwo",
     "card_safety_desc": "Gospodarz dostępny 24/7",
-    "btn_call_host": "Zadzwoń: {phone}"
+    "btn_call_host": "Zadzwoń: {phone}",
+    "bento_nokill_title": "Bezwzględne No Kill",
+    "bento_nokill_desc": "Każda złowiona ryba musi natychmiast wrócić do wody w dobrej kondycji.",
+    "bento_gear_title": "Mata i Środki Ochrony",
+    "bento_gear_desc": "Obowiązkowa mata kołyskowa, podbierak o dużym rozstawie i środek do odkażania ran ryb.",
+    "bento_booking_title": "Kontakt przed Przyjazdem",
+    "bento_booking_desc": "Osoby spoza Kozłowa zobowiązane są do wcześniejszego kontaktu w celu rezerwacji stanowiska.",
+    "bento_nature_title": "Szacunek do Przyrody",
+    "bento_nature_desc": "Utrzymuj porządek na stanowisku, zabieraj śmieci ze sobą i szanuj ciszę nad wodą.",
+    "search_placeholder": "Wyszukaj w regulaminie...",
+    "no_results": "Nie znaleziono pasujących zasad. Spróbuj wpisać inne słowo kluczowe."
   },
   "about": {
     "title": "O Łowisku",
@@ -166,11 +176,11 @@
     "factor_season_desc": "Wiosenne przebudzenie (III-V) i jesienne żerowanie (IX-X) to bonusowe punkty do wyniku.",
     "why_worth": "Dlaczego Warto?",
     "card_nature_title": "Dzika Natura i Oaza Spokoju",
-    "card_nature_desc": "Zalew Kozłowski to 100 arów czystej natury otoczonej zielenią. Cisza, szum trzcin i śpiew ptaków tworzą idealne warunki na ucieczkę od miejskiego zgiełku i pełny relaks z wędką w ręku.",
+    "card_nature_desc": "Zalew Kozłowski to urokliwy akwen o powierzchni 100 arów, otoczony malowniczą ścianą drzew i naturalną roślinnością. Cisza przerywana jedynie szumem trzcin, śpiewem ptaków oraz widowiskowymi spławami ryb tworzy idealną enklawę do ucieczki od miejskiego zgiełku, wyciszenia i głębokiego relaksu na łonie natury.",
     "card_trophy_title": "Duże Okazy (No Kill)",
-    "card_trophy_desc": "Regularne zarybienia oraz rygorystyczna zasada \"No Kill\" sprawiają, że ryby rosną do imponujących rozmiarów. Spotkasz tu piękne karpie, silne amury i waleczne drapieżniki.",
+    "card_trophy_desc": "Dzięki regularnemu i przemyślanemu zarybianiu oraz bezwzględnemu przestrzeganiu zasady „Złów i Wypuść” (No Kill), nasz zbiornik stał się ostoją dla prawdziwych okazów. Wędkarze mogą liczyć na spotkanie z potężnymi, walecznymi karpiami, amurami o niesamowitej sile ucieczki oraz sprytnymi szczupakami polującymi wzdłuż trzcinowisk.",
     "card_security_title": "Bezpieczeństwo i Wygoda",
-    "card_security_desc": "Cały teren łowiska jest ogrodzony i monitorowany 24/7. Oferujemy wygodne, trawiaste stanowiska wędkarskie oraz bezpieczny, zamknięty parking bezpośrednio na terenie zbiornika.",
+    "card_security_desc": "Dbamy o maksymalny komfort naszych gości. Teren łowiska jest całkowicie ogrodzony, oświetlony i monitorowany całodobowo. Zapewniamy wygodny dojazd bezpośrednio do stanowisk, bezpieczny parking na zamkniętym terenie łowiska oraz pomoc gospodarza w każdej sytuacji przez 24 godziny na dobę.",
     "nature_calendar": "Kalendarz Natury",
     "spring": "Wiosna",
     "spring_months": "III - V",
@@ -278,7 +288,10 @@
     "pressure": "Ciśnienie",
     "temp": "Temp.",
     "kmh": "km/h",
-    "hpa": "hPa"
+    "hpa": "hPa",
+    "idx_general": "Ogólny",
+    "idx_carp": "Karp / Amur",
+    "idx_predator": "Szczupak"
   }
 }
 
