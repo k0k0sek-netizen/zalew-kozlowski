@@ -3,10 +3,6 @@
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { 
-    Gauge, 
-    Moon, 
-    Wind, 
-    ThermometerSun, 
     Leaf, 
     Trophy, 
     ShieldCheck, 
@@ -28,137 +24,8 @@ export const AboutClient = ({ weather }: AboutClientProps) => {
 
     return (
         <>
-            {/* 1. Solunar Dashboard (Render dynamically if weather is available) */}
-            {weather && <SolunarDashboard weather={weather} />}
-
-            {/* 2. Algorithm Explanation - LIVE Index Logic (Always visible as educational reference) */}
-            <SectionReveal className="mb-24" delay={0.25}>
-                <div className="mb-12 flex items-center gap-4">
-                    <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
-                    <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                        {t("live_index_title")}
-                    </h2>
-                    <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
-                </div>
-
-                <div className="relative overflow-hidden rounded-3xl bg-neutral-900 px-6 py-12 text-white shadow-2xl md:px-12">
-                    {/* Background Effects */}
-                    <div 
-                        className="absolute inset-0 transition-all duration-1000 animate-pulse-subtle" 
-                        style={{
-                            background: `radial-gradient(circle at top right, rgba(var(--active-glow-color, 249, 115, 22), 0.2) 0%, rgba(var(--active-glow-color, 249, 115, 22), 0.03) 60%, transparent 100%)`
-                        }}
-                    />
-                    <div className="absolute bottom-0 left-0 h-full w-full bg-[url('/noise.svg')] opacity-20 mix-blend-overlay" />
-
-                    <div className="relative z-10 grid gap-12 lg:grid-cols-2 lg:items-center">
-                        <div>
-                            <h3 className="mb-6 text-3xl font-bold leading-tight md:text-4xl text-transparent bg-clip-text bg-[linear-gradient(110deg,#ffffff,45%,rgb(var(--active-glow-color,249,115,22)),55%,#ffffff)] bg-size-[200%_100%] animate-shine">
-                                {t("not_random")}
-                                <br />
-                                {t("science")}
-                            </h3>
-                            <p className="mb-8 text-lg text-neutral-300 leading-relaxed">
-                                {t("live_index_desc")}
-                            </p>
-                        </div>
-
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            {/* Factor 1 */}
-                            <div 
-                                className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-[1.02] cursor-default"
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.08)";
-                                    e.currentTarget.style.borderColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.35)";
-                                    e.currentTarget.style.boxShadow = "0 8px 20px -6px rgba(var(--active-glow-color, 249, 115, 22), 0.25)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = "";
-                                    e.currentTarget.style.borderColor = "";
-                                    e.currentTarget.style.boxShadow = "";
-                                }}
-                            >
-                                <div className="mb-3 flex items-center gap-3">
-                                    <div className="rounded-lg bg-blue-500/20 p-2 text-blue-400">
-                                        <Gauge className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-bold">{t("factor_pressure")}</span>
-                                </div>
-                                <p className="text-sm text-neutral-400">{t("factor_pressure_desc")}</p>
-                            </div>
-
-                            {/* Factor 2 */}
-                            <div 
-                                className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-[1.02] cursor-default"
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.08)";
-                                    e.currentTarget.style.borderColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.35)";
-                                    e.currentTarget.style.boxShadow = "0 8px 20px -6px rgba(var(--active-glow-color, 249, 115, 22), 0.25)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = "";
-                                    e.currentTarget.style.borderColor = "";
-                                    e.currentTarget.style.boxShadow = "";
-                                }}
-                            >
-                                <div className="mb-3 flex items-center gap-3">
-                                    <div className="rounded-lg bg-purple-500/20 p-2 text-purple-400">
-                                        <Moon className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-bold">{t("factor_moon")}</span>
-                                </div>
-                                <p className="text-sm text-neutral-400">{t("factor_moon_desc")}</p>
-                            </div>
-
-                            {/* Factor 3 */}
-                            <div 
-                                className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-[1.02] cursor-default"
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.08)";
-                                    e.currentTarget.style.borderColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.35)";
-                                    e.currentTarget.style.boxShadow = "0 8px 20px -6px rgba(var(--active-glow-color, 249, 115, 22), 0.25)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = "";
-                                    e.currentTarget.style.borderColor = "";
-                                    e.currentTarget.style.boxShadow = "";
-                                }}
-                            >
-                                <div className="mb-3 flex items-center gap-3">
-                                    <div className="rounded-lg bg-teal-500/20 p-2 text-teal-400">
-                                        <Wind className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-bold">{t("factor_wind")}</span>
-                                </div>
-                                <p className="text-sm text-neutral-400">{t("factor_wind_desc")}</p>
-                            </div>
-
-                            {/* Factor 4 */}
-                            <div 
-                                className="rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 transition-all duration-300 hover:scale-[1.02] cursor-default"
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.08)";
-                                    e.currentTarget.style.borderColor = "rgba(var(--active-glow-color, 249, 115, 22), 0.35)";
-                                    e.currentTarget.style.boxShadow = "0 8px 20px -6px rgba(var(--active-glow-color, 249, 115, 22), 0.25)";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = "";
-                                    e.currentTarget.style.borderColor = "";
-                                    e.currentTarget.style.boxShadow = "";
-                                }}
-                            >
-                                <div className="mb-3 flex items-center gap-3">
-                                    <div className="rounded-lg bg-orange-500/20 p-2 text-orange-400">
-                                        <ThermometerSun className="h-6 w-6" />
-                                    </div>
-                                    <span className="font-bold">{t("factor_season")}</span>
-                                </div>
-                                <p className="text-sm text-neutral-400">{t("factor_season_desc")}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </SectionReveal>
+            {/* 1. Solunar Dashboard (Render unconditionally - handles offline state internally) */}
+            <SolunarDashboard weather={weather} />
 
 
             {/* Bento Grid: Dlaczego Warto? */}
