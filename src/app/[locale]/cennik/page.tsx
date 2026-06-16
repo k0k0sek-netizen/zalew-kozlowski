@@ -96,7 +96,23 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
     ]);
 
     const phone = infoBlocks.find((b: any) => b.fields.id === "phone")?.fields.value || "601 389 365";
-    const mainPrice = prices.find((p: any) => p.fields.category === 'Główne');
+
+    const localizedPrices = prices.map((price: any) => {
+        if (locale === "en") {
+            return {
+                ...price,
+                fields: {
+                    ...price.fields,
+                    title: price.fields.titleEn || price.fields.title,
+                    description: price.fields.descriptionEn || price.fields.description,
+                    details: price.fields.detailsEn || price.fields.details,
+                }
+            };
+        }
+        return price;
+    });
+
+    const mainPrice = localizedPrices.find((p: any) => p.fields.category === 'Główne');
     const price1Rod = mainPrice?.fields.price1Rod ?? 15;
     const price2Rods = mainPrice?.fields.price2Rods ?? 20;
     const priceSpinning = mainPrice?.fields.priceSpinning ?? 15;
@@ -114,7 +130,7 @@ export default async function PricingPage({ params }: { params: Promise<{ locale
                 </SectionReveal>
 
                 <PricingClient 
-                    initialPrices={prices as any} 
+                    initialPrices={localizedPrices as any} 
                     phone={phone}
                     price1Rod={price1Rod}
                     price2Rods={price2Rods}

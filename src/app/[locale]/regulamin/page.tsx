@@ -92,9 +92,23 @@ export default async function RulesPage({ params }: { params: Promise<{ locale: 
 
     const phoneNumber = infoBlocks.find(b => b.fields.id === "phone")?.fields.value as string | undefined;
 
+    const localizedRegulations = regulations.map((reg: any) => {
+        if (locale === "en") {
+            return {
+                ...reg,
+                fields: {
+                    ...reg.fields,
+                    title: reg.fields.titleEn || reg.fields.title,
+                    rules: reg.fields.rulesEn || reg.fields.rules,
+                }
+            };
+        }
+        return reg;
+    });
+
     // Helper to find sections by 'type' field
-    const generalRules = regulations.find(r => r.fields.type === "General" || r.fields.title?.toLowerCase().includes("ogólne") || r.fields.title?.toLowerCase().includes("general"));
-    const safetyRules = regulations.find(r => r.fields.type === "Safety" || r.fields.title?.toLowerCase().includes("bezpieczeństwo") || r.fields.title?.toLowerCase().includes("safety"));
+    const generalRules = localizedRegulations.find(r => r.fields.type === "General" || r.fields.title?.toLowerCase().includes("ogólne") || r.fields.title?.toLowerCase().includes("general"));
+    const safetyRules = localizedRegulations.find(r => r.fields.type === "Safety" || r.fields.title?.toLowerCase().includes("bezpieczeństwo") || r.fields.title?.toLowerCase().includes("safety"));
 
     return (
         <SubpageWrapper>

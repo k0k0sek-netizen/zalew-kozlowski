@@ -89,10 +89,13 @@ export interface PriceItemSkeleton {
     contentTypeId: "priceItem";
     fields: {
         title: EntryFieldTypes.Symbol;
+        titleEn?: EntryFieldTypes.Symbol;
         description: EntryFieldTypes.Text;
+        descriptionEn?: EntryFieldTypes.Symbol;
         price: EntryFieldTypes.Symbol;
         category: EntryFieldTypes.Symbol;
         details: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+        detailsEn?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
         order: EntryFieldTypes.Integer;
         price1Rod?: EntryFieldTypes.Integer;
         price2Rods?: EntryFieldTypes.Integer;
@@ -104,8 +107,10 @@ export type RegulationEntrySkeleton = {
     contentTypeId: "regulationEntry";
     fields: {
         title: EntryFieldTypes.Text;
+        titleEn?: EntryFieldTypes.Symbol;
         type: EntryFieldTypes.Text; // "General" or "Safety"
         rules: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+        rulesEn?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
         order?: EntryFieldTypes.Integer;
     };
 };
@@ -115,8 +120,11 @@ export type InfoBlockSkeleton = {
     fields: {
         id: EntryFieldTypes.Text; // e.g., 'hours', 'no-kill'
         title: EntryFieldTypes.Text;
+        titleEn?: EntryFieldTypes.Symbol;
         value: EntryFieldTypes.Text;
+        valueEn?: EntryFieldTypes.Text;
         subtitle?: EntryFieldTypes.Text;
+        subtitleEn?: EntryFieldTypes.Symbol;
     };
 };
 
@@ -124,10 +132,13 @@ export type FishSpeciesSkeleton = {
     contentTypeId: "fishSpecies";
     fields: {
         name: EntryFieldTypes.Text;
+        nameEn?: EntryFieldTypes.Symbol;
         description: EntryFieldTypes.Text;
+        descriptionEn?: EntryFieldTypes.Text;
         image: EntryFieldTypes.AssetLink;
         stats: EntryFieldTypes.Object; // JSON object: { strength, difficulty, activity }
         tags: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
+        tagsEn?: EntryFieldTypes.Array<EntryFieldTypes.Symbol>;
     };
 };
 

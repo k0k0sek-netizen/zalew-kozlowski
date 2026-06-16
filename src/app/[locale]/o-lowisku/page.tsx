@@ -142,6 +142,21 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         getTranslations({ locale, namespace: "about" })
     ]);
 
+    const localizedFishSpecies = fishSpecies.map((fish: any) => {
+        if (locale === "en") {
+            return {
+                ...fish,
+                fields: {
+                    ...fish.fields,
+                    name: fish.fields.nameEn || fish.fields.name,
+                    description: fish.fields.descriptionEn || fish.fields.description,
+                    tags: fish.fields.tagsEn || fish.fields.tags,
+                }
+            };
+        }
+        return fish;
+    });
+
     return (
         <SubpageWrapper>
             <div className="mx-auto max-w-6xl px-4">
@@ -166,7 +181,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     </div>
 
                     <div className="grid gap-8 md:grid-cols-3">
-                        {fishSpecies.map((fish, idx) => {
+                        {localizedFishSpecies.map((fish, idx) => {
                             const image = fish.fields.image as Asset;
                             const imageUrl = image?.fields?.file?.url
                                 ? `https:${image.fields.file.url}`

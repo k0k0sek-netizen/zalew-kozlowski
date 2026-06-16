@@ -58,20 +58,33 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const noKillBlock = getBlock('no-kill') || getBlock('no kill');
 
   // Fallbacks with language check
-  const characteristicsDesc = getBlock('characteristics-description')?.fields.value || (
-    locale === "en"
-      ? "Kozłowski Reservoir is a popular private fishery covering approx. 1 hectare. The average depth is 1 - 1.5 meters, providing optimal conditions for coarse fish.\nBeautiful specimens are regularly caught here. Dominating species: Carp, Grass Carp, Pike."
-      : "Zalew Kozłowski to popularne łowisko prywatne o powierzchni ok. 1 hektara. Średnia głębokość wynosi 1 - 1.5 metra, co zapewnia optymalne warunki dla ryb spokojnego żeru.\nW zalewie regularnie łowione są piękne okazy. Dominują przede wszystkim: Karp, Amur, Szczupak."
-  );
+  const enCharDescFallback = "Kozłowski Reservoir is a popular private fishery covering approx. 1 hectare. The average depth is 1 - 1.5 meters, providing optimal conditions for coarse fish.\nBeautiful specimens are regularly caught here. Dominating species: Carp, Grass Carp, Pike.";
+  const plCharDescFallback = "Zalew Kozłowski to popularne łowisko prywatne o powierzchni ok. 1 hektara. Średnia głębokość wynosi 1 - 1.5 metra, co zapewnia optymalne warunki dla ryb spokojnego żeru.\nW zalewie regularnie łowione są piękne okazy. Dominują przede wszystkim: Karp, Amur, Szczupak.";
+
+  const characteristicsDesc = locale === "en"
+    ? (getBlock('characteristics-description')?.fields.valueEn || enCharDescFallback)
+    : (getBlock('characteristics-description')?.fields.value || plCharDescFallback);
   
-  const shorelineTitle = getBlock('characteristics-shoreline')?.fields.title || (locale === "en" ? "Shoreline" : "Linia brzegowa");
-  const shorelineValue = getBlock('characteristics-shoreline')?.fields.value || (locale === "en" ? "Wide and easy access to the water along the entire length." : "Szeroki i swobodny dostęp do wody na całej długości.");
+  const shorelineTitle = locale === "en"
+    ? (getBlock('characteristics-shoreline')?.fields.titleEn || tChar("shoreline_title"))
+    : (getBlock('characteristics-shoreline')?.fields.title || tChar("shoreline_title"));
+  const shorelineValue = locale === "en"
+    ? (getBlock('characteristics-shoreline')?.fields.valueEn || tChar("shoreline_desc"))
+    : (getBlock('characteristics-shoreline')?.fields.value || tChar("shoreline_desc"));
   
-  const spotsTitle = getBlock('characteristics-spots')?.fields.title || (locale === "en" ? "Fishing spots" : "Stanowiska");
-  const spotsValue = getBlock('characteristics-spots')?.fields.value || (locale === "en" ? "Natural, grassy and well-kept areas." : "Naturalne, trawiaste i zadbane miejsca.");
+  const spotsTitle = locale === "en"
+    ? (getBlock('characteristics-spots')?.fields.titleEn || tChar("spots_title"))
+    : (getBlock('characteristics-spots')?.fields.title || tChar("spots_title"));
+  const spotsValue = locale === "en"
+    ? (getBlock('characteristics-spots')?.fields.valueEn || tChar("spots_desc"))
+    : (getBlock('characteristics-spots')?.fields.value || tChar("spots_desc"));
   
-  const securityTitle = getBlock('characteristics-security')?.fields.title || (locale === "en" ? "Security & monitoring" : "Ochrona i monitoring");
-  const securityValue = getBlock('characteristics-security')?.fields.value || (locale === "en" ? "Safety and peace of mind during your stay." : "Bezpieczeństwo i spokój podczas wypoczynku.");
+  const securityTitle = locale === "en"
+    ? (getBlock('characteristics-security')?.fields.titleEn || tChar("security_title"))
+    : (getBlock('characteristics-security')?.fields.title || tChar("security_title"));
+  const securityValue = locale === "en"
+    ? (getBlock('characteristics-security')?.fields.valueEn || tChar("security_desc"))
+    : (getBlock('characteristics-security')?.fields.value || tChar("security_desc"));
 
   const mapUrl = getBlock('map-url')?.fields.value || "https://www.google.com/maps/search/?api=1&query=Zalew+Koz%C5%82owski+Koz%C5%82%C3%B3w";
 
@@ -162,10 +175,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
             <BentoGrid>
               <BentoCard
-                name={hoursBlock?.fields.title || tBento("hours_title")}
+                name={
+                  locale === "en"
+                    ? (hoursBlock?.fields.titleEn || tBento("hours_title"))
+                    : (hoursBlock?.fields.title || tBento("hours_title"))
+                }
                 className="md:col-span-2 bg-transparent!"
                 Icon={Clock}
-                description={hoursBlock?.fields.value || tBento("hours_desc")}
+                description={
+                  locale === "en"
+                    ? (hoursBlock?.fields.valueEn || tBento("hours_desc"))
+                    : (hoursBlock?.fields.value || tBento("hours_desc"))
+                }
                 href="/regulamin"
                 cta={tBento("hours_cta")}
                 glowColor={activeGlowColor}
@@ -183,10 +204,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 }
               />
               <BentoCard
-                name={noKillBlock?.fields.title || tBento("nokill_title")}
+                name={
+                  locale === "en"
+                    ? (noKillBlock?.fields.titleEn || tBento("nokill_title"))
+                    : (noKillBlock?.fields.title || tBento("nokill_title"))
+                }
                 className="md:col-span-1 bg-transparent!"
                 Icon={Fish}
-                description={noKillBlock?.fields.value || tBento("nokill_desc")}
+                description={
+                  locale === "en"
+                    ? (noKillBlock?.fields.valueEn || tBento("nokill_desc"))
+                    : (noKillBlock?.fields.value || tBento("nokill_desc"))
+                }
                 href="/regulamin"
                 cta={tBento("nokill_cta")}
                 glowColor={activeGlowColor}
