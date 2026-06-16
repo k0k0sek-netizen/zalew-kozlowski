@@ -198,7 +198,16 @@
     "autumn_desc": "Predator time. Pike feeds before winter.",
     "winter": "Winter",
     "winter_months": "Dec - Feb",
-    "winter_desc": "Quiet on the water. Time for fishery recovery."
+    "winter_desc": "Quiet on the water. Time for fishery recovery.",
+    "carp_tip_high": "Conditions for carp are excellent. Optimal temperature and stable pressure stimulate fish to feed intensively.",
+    "carp_tip_low": "Low water temperature or a sudden drop in pressure has weakened carp activity. Choose deeper spots and finer tackle.",
+    "carp_tip_mid": "Moderate carp activity. Look for fish near fallen trees and weeds, bait sparsely and precisely.",
+    "predator_tip_high": "Superb conditions for pike and zander. Stronger wind and cloud cover make it easier for predators to hunt by sight.",
+    "predator_tip_low": "Clear skies and hot weather discourage predators. Try fishing in the early morning or at dusk in the shade of vegetation.",
+    "predator_tip_mid": "Average conditions for pike. Use natural baits and actively search different depth zones.",
+    "general_tip_high": "Great solunar and meteorological conditions for most fish species. Ideal time for a session.",
+    "general_tip_low": "Unfavorable pressure or drastic temperature swings. Fish can bite very capriciously.",
+    "general_tip_mid": "Typical conditions on the water. Success depends on choosing the right spot and choosing the correct bait."
   },
   "gallery": {
     "title": "Community Gallery",

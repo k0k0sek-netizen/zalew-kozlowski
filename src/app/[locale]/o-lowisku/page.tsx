@@ -7,6 +7,7 @@ import { draftMode } from "next/headers";
 import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { AboutClient } from "@/components/features/AboutClient";
 import { getTranslations } from "next-intl/server";
+import { getWeatherAction } from "@/app/actions/weather";
 
 export const revalidate = 3600;
 
@@ -137,9 +138,10 @@ async function getFishSpecies(preview: boolean, locale: string) {
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const { isEnabled } = await draftMode();
-    const [fishSpecies, t] = await Promise.all([
+    const [fishSpecies, t, weatherData] = await Promise.all([
         getFishSpecies(isEnabled, locale),
-        getTranslations({ locale, namespace: "about" })
+        getTranslations({ locale, namespace: "about" }),
+        getWeatherAction().catch(() => null)
     ]);
 
     const localizedFishSpecies = fishSpecies.map((fish: any) => {
@@ -203,7 +205,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 </SectionReveal>
 
                 {/* Client Side Interactive Layout (Weather index, Bento grid, Seasonal calendar) */}
-                <AboutClient />
+                <AboutClient weather={weatherData} />
             </div>
         </SubpageWrapper>
     );

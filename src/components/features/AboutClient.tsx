@@ -16,14 +16,23 @@ import {
     Snowflake 
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { WeatherData } from "@/app/actions/weather";
+import { SolunarDashboard } from "@/components/features/SolunarDashboard";
 
-export const AboutClient = () => {
+interface AboutClientProps {
+    weather?: WeatherData | null;
+}
+
+export const AboutClient = ({ weather }: AboutClientProps) => {
     const t = useTranslations("about");
 
     return (
         <>
             {/* Algorithm Explanation - LIVE Index Logic */}
-            <SectionReveal className="mb-24" delay={0.25}>
+            {weather ? (
+                <SolunarDashboard weather={weather} />
+            ) : (
+                <SectionReveal className="mb-24" delay={0.25}>
                 <div className="mb-12 flex items-center gap-4">
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
@@ -150,6 +159,7 @@ export const AboutClient = () => {
                     </div>
                 </div>
             </SectionReveal>
+            )}
 
             {/* Bento Grid: Dlaczego Warto? */}
             <SectionReveal className="mb-24" delay={0.3}>

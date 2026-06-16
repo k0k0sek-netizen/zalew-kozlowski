@@ -198,7 +198,16 @@
     "autumn_desc": "Czas drapieżnika. Szczupak żeruje przed zimą.",
     "winter": "Zima",
     "winter_months": "XII - II",
-    "winter_desc": "Cisza na wodzie. Czas na regenerację łowiska."
+    "winter_desc": "Cisza na wodzie. Czas na regenerację łowiska.",
+    "carp_tip_high": "Warunki dla karpi są znakomite. Optymalna temperatura i stabilne ciśnienie pobudzają ryby do intensywnego żerowania.",
+    "carp_tip_low": "Niska temperatura wody lub gwałtowny spadek ciśnienia osłabiły aktywność karpi. Wybierz głębsze stanowiska i delikatniejsze zestawy.",
+    "carp_tip_mid": "Umiarkowana aktywność karpi. Szukaj ryb w okolicach zwalonych drzew i zarośli, nęć punktowo i precyzyjnie.",
+    "predator_tip_high": "Rewelacyjne warunki na szczupaka i sandacza. Silniejszy wiatr i zachmurzenie ułatwiają drapieżnikom wzrokowe polowanie.",
+    "predator_tip_low": "Czyste niebo i upał zniechęcają drapieżniki. Spróbuj łowić wczesnym świtem lub o zmierzchu w cieniu roślinności.",
+    "predator_tip_mid": "Przeciętne warunki na szczupaka. Używaj naturalnych przynęt i aktywnie obławiaj zróżnicowane strefy głębokości.",
+    "general_tip_high": "Świetne warunki solunarne i meteorologiczne dla większości gatunków ryb. Idealny czas na zasiadkę.",
+    "general_tip_low": "Niesprzyjające ciśnienie lub drastyczne skoki temperatur. Ryby mogą brać bardzo kapryśnie.",
+    "general_tip_mid": "Typowe warunki nad wodą. Sukces zależy od wyboru odpowiedniego stanowiska oraz doboru właściwej zanęty."
   },
   "gallery": {
     "title": "Galeria Społeczności",
