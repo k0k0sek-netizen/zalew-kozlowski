@@ -296,7 +296,13 @@
     "hpa": "hPa",
     "idx_general": "General",
     "idx_carp": "Carp / Grass Carp",
-    "idx_predator": "Pike"
+    "idx_predator": "Pike",
+    "chart_tab": "Chart",
+    "details_tab": "Details",
+    "chart_title": "24h Bite Forecast",
+    "details_title": "Current Conditions",
+    "forecast_label": "Forecast",
+    "score_label": "activity"
   }
 }
 

@@ -296,7 +296,13 @@
     "hpa": "hPa",
     "idx_general": "Ogólny",
     "idx_carp": "Karp / Amur",
-    "idx_predator": "Szczupak"
+    "idx_predator": "Szczupak",
+    "chart_tab": "Wykres",
+    "details_tab": "Szczegóły",
+    "chart_title": "Prognoza Brań 24h",
+    "details_title": "Bieżące Parametry",
+    "forecast_label": "Prognoza",
+    "score_label": "aktywność"
   }
 }
 

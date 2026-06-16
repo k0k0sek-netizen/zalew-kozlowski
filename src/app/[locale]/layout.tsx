@@ -15,6 +15,7 @@ import { cookies, draftMode } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { PwaRegister } from "@/components/features/PwaRegister";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -168,6 +169,7 @@ export default async function RootLayout({
           <CookieConsent />
           <DraftModeBanner />
           <Analytics />
+          <PwaRegister />
         </NextIntlClientProvider>
         {/* GA4 — lazyOnload żeby nie blokować głównego wątku podczas LCP */}
         {process.env.NEXT_PUBLIC_GA_ID && (

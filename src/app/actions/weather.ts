@@ -1,5 +1,13 @@
 "use server";
 
+export interface HourlyForecastItem {
+    time: number;
+    hourLabel: string;
+    score: number;
+    carpScore: number;
+    predatorScore: number;
+}
+
 export interface WeatherData {
     temperature: number;
     windSpeed: number;
@@ -17,6 +25,7 @@ export interface WeatherData {
     carpLabel: string;
     predatorScore: number;
     predatorLabel: string;
+    hourlyForecast: HourlyForecastItem[];
 }
 
 import { unstable_cache } from "next/cache";
@@ -73,8 +82,9 @@ async function fetchWeatherData(): Promise<WeatherData> {
 
     try {
         // Fetch current + hourly + daily weather from Open-Meteo with UNIX timestamps & 1 past day
+        // Fetch hourly for all parameters so we can calculate forecast hourly
         const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,is_day,cloud_cover,rain,showers&hourly=pressure_msl&daily=sunrise,sunset&timezone=auto&timeformat=unixtime&past_days=1`,
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,is_day,cloud_cover,rain,showers&hourly=temperature_2m,relative_humidity_2m,pressure_msl,wind_speed_10m,cloud_cover,rain,showers&daily=sunrise,sunset&timezone=auto&timeformat=unixtime&past_days=1`,
             {
                 signal: controller.signal,
                 next: { revalidate: 900 },
@@ -96,36 +106,8 @@ async function fetchWeatherData(): Promise<WeatherData> {
         const currentPressure = current.pressure_msl;
         const currentTime = current.time;
 
-        // Calculate 3-hour pressure trend (deltaPressure)
-        let deltaPressure = 0;
-        if (hourly && hourly.time && hourly.pressure_msl) {
-            let nearestIdx = 0;
-            let minDiff = Infinity;
-            for (let i = 0; i < hourly.time.length; i++) {
-                const diff = Math.abs(hourly.time[i] - currentTime);
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    nearestIdx = i;
-                }
-            }
-            const pastIdx = nearestIdx - 3;
-            if (pastIdx >= 0) {
-                deltaPressure = currentPressure - hourly.pressure_msl[pastIdx];
-            }
-        }
-
-        const temp = current.temperature_2m;
-        const wind = current.wind_speed_10m;
-        const clouds = current.cloud_cover;
-        const rain = current.rain + current.showers;
-        const humidity = current.relative_humidity_2m;
-
-        // Dawn and Dusk Calculations
         const sunriseTime = new Date(daily.sunrise[0] * 1000);
         const sunsetTime = new Date(daily.sunset[0] * 1000);
-        const isDawn = Math.abs(now.getTime() - sunriseTime.getTime()) < 3600000;
-        const isDusk = Math.abs(now.getTime() - sunsetTime.getTime()) < 3600000;
-        const solunarBonus = (isDawn || isDusk) ? 15 : 0;
 
         // Moon Phase Bonus
         let moonBonus = 0;
@@ -156,79 +138,153 @@ async function fetchWeatherData(): Promise<WeatherData> {
             predatorSeasonBonus = 20;
         }
 
-        // --- 1. CARP / AMUR INDEX ALGORITHM ---
-        let carpScore = 50; // Base
+        // Helper to calculate carp score
+        const calculateCarpScore = (temp: number, wind: number, currentPressure: number, deltaPressure: number, humidity: number, clouds: number, rain: number, solunarBonus: number) => {
+            let score = 50; // Base
 
-        // Temperature optimum: 18°C - 24°C
-        if (temp >= 18 && temp <= 24) carpScore += 20;
-        else if ((temp >= 14 && temp < 18) || (temp > 24 && temp <= 28)) carpScore += 10;
-        else if (temp >= 8 && temp < 14) carpScore -= 10;
-        else if (temp < 8) carpScore -= 25;
-        else if (temp > 28) carpScore -= 20;
+            // Temperature optimum: 18°C - 24°C
+            if (temp >= 18 && temp <= 24) score += 20;
+            else if ((temp >= 14 && temp < 18) || (temp > 24 && temp <= 28)) score += 10;
+            else if (temp >= 8 && temp < 14) score -= 10;
+            else if (temp < 8) score -= 25;
+            else if (temp > 28) score -= 20;
 
-        // Wind speed: optimum 6 - 18 km/h
-        if (wind >= 6 && wind <= 18) carpScore += 20;
-        else if (wind > 18 && wind <= 28) carpScore += 10;
-        else if (wind < 6) carpScore -= 10; // Calm/flat water is bad
-        else if (wind > 28) carpScore -= 20;
+            // Wind speed: optimum 6 - 18 km/h
+            if (wind >= 6 && wind <= 18) score += 20;
+            else if (wind > 18 && wind <= 28) score += 10;
+            else if (wind < 6) score -= 10; // Calm/flat water is bad
+            else if (wind > 28) score -= 20;
 
-        // Pressure absolute and trend
-        if (deltaPressure >= -2 && deltaPressure <= -0.5) carpScore += 15; // Slowly falling (ideal)
-        else if (Math.abs(deltaPressure) < 0.5) carpScore += 5; // Stable
-        else if (deltaPressure > 0.5 && deltaPressure <= 2) carpScore -= 5; // Rising
-        else if (deltaPressure < -2) carpScore -= 15; // Rapid drop (stormy)
-        else if (deltaPressure > 2) carpScore -= 15; // Rapid rise
+            // Pressure trend
+            if (deltaPressure >= -2 && deltaPressure <= -0.5) score += 15; // Slowly falling (ideal)
+            else if (Math.abs(deltaPressure) < 0.5) score += 5; // Stable
+            else if (deltaPressure > 0.5 && deltaPressure <= 2) score -= 5; // Rising
+            else if (deltaPressure < -2) score -= 15; // Rapid drop (stormy)
+            else if (deltaPressure > 2) score -= 15; // Rapid rise
 
-        if (currentPressure > 1020) carpScore -= 10; // Very high pressure
-        else if (currentPressure < 995) carpScore -= 15; // Very low pressure
+            if (currentPressure > 1020) score -= 10; // Very high pressure
+            else if (currentPressure < 995) score -= 15; // Very low pressure
 
-        // Humidity
-        if (humidity > 80) carpScore += 10;
+            // Humidity
+            if (humidity > 80) score += 10;
 
-        // Clouds & rain
-        if (clouds > 60) carpScore += 8;
-        if (rain > 0 && rain < 2) carpScore += 10;
-        else if (rain >= 5) carpScore -= 20;
+            // Clouds & rain
+            if (clouds > 60) score += 8;
+            if (rain > 0 && rain < 2) score += 10;
+            else if (rain >= 5) score -= 20;
 
-        carpScore += solunarBonus + moonBonus + carpSeasonBonus;
-        carpScore = Math.max(1, Math.min(100, carpScore));
+            score += solunarBonus + moonBonus + carpSeasonBonus;
+            return Math.max(1, Math.min(100, score));
+        };
 
-        // --- 2. PREDATOR (PIKE) INDEX ALGORITHM ---
-        let predatorScore = 50;
+        // Helper to calculate predator score
+        const calculatePredatorScore = (temp: number, wind: number, currentPressure: number, deltaPressure: number, clouds: number, rain: number, solunarBonus: number) => {
+            let score = 50;
 
-        // Temperature optimum: 11°C - 17°C
-        if (temp >= 11 && temp <= 17) predatorScore += 20;
-        else if ((temp >= 7 && temp < 11) || (temp > 17 && temp <= 21)) predatorScore += 10;
-        else if (temp >= 21 && temp <= 25) predatorScore -= 10;
-        else if (temp > 25) predatorScore -= 25;
-        else if (temp < 7) predatorScore -= 15;
+            // Temperature optimum: 11°C - 17°C
+            if (temp >= 11 && temp <= 17) score += 20;
+            else if ((temp >= 7 && temp < 11) || (temp > 17 && temp <= 21)) score += 10;
+            else if (temp >= 21 && temp <= 25) score -= 10;
+            else if (temp > 25) score -= 25;
+            else if (temp < 7) score -= 15;
 
-        // Wind: medium-strong ("pike chop" wave action)
-        if (wind >= 12 && wind <= 25) predatorScore += 20;
-        else if (wind > 25 && wind <= 35) predatorScore += 10;
-        else if (wind < 8) predatorScore -= 10;
-        else if (wind > 35) predatorScore -= 20;
+            // Wind: medium-strong ("pike chop" wave action)
+            if (wind >= 12 && wind <= 25) score += 20;
+            else if (wind > 25 && wind <= 35) score += 10;
+            else if (wind < 8) score -= 10;
+            else if (wind > 35) score -= 20;
 
-        // Pressure absolute and trend
-        if (deltaPressure < -0.5) predatorScore += 15; // Falling pressure triggers feeding
-        else if (Math.abs(deltaPressure) <= 0.5) predatorScore += 5;
-        else if (deltaPressure > 0.5) predatorScore -= 10;
+            // Pressure trend
+            if (deltaPressure < -0.5) score += 15; // Falling pressure triggers feeding
+            else if (Math.abs(deltaPressure) <= 0.5) score += 5;
+            else if (deltaPressure > 0.5) score -= 10;
 
-        if (currentPressure < 1000) predatorScore += 10; // Low pressure overcast
-        else if (currentPressure > 1020) predatorScore -= 15; // Clear sky high pressure
+            if (currentPressure < 1000) score += 10; // Low pressure overcast
+            else if (currentPressure > 1020) score -= 15; // Clear sky high pressure
 
-        // Clouds & rain: Pike love cloudy days (ambush hunting)
-        if (clouds > 70) predatorScore += 20;
-        else if (clouds < 30) predatorScore -= 10;
+            // Clouds & rain: Pike love cloudy days (ambush hunting)
+            if (clouds > 70) score += 20;
+            else if (clouds < 30) score -= 10;
 
-        if (rain > 0 && rain < 3) predatorScore += 10;
-        else if (rain >= 5) predatorScore -= 15;
+            if (rain > 0 && rain < 3) score += 10;
+            else if (rain >= 5) score -= 15;
 
-        predatorScore += solunarBonus + (moonBonus * 0.8) + predatorSeasonBonus;
-        predatorScore = Math.max(1, Math.min(100, predatorScore));
+            score += solunarBonus + (moonBonus * 0.8) + predatorSeasonBonus;
+            return Math.max(1, Math.min(100, score));
+        };
 
-        // --- 3. GENERAL SCORE ---
+        // Find nearest index to current time in hourly arrays
+        let currentIdx = 0;
+        if (hourly && hourly.time) {
+            let minDiff = Infinity;
+            for (let i = 0; i < hourly.time.length; i++) {
+                const diff = Math.abs(hourly.time[i] - currentTime);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    currentIdx = i;
+                }
+            }
+        }
+
+        // Calculate current 3-hour pressure trend
+        let currentDeltaPressure = 0;
+        if (currentIdx >= 3) {
+            currentDeltaPressure = currentPressure - hourly.pressure_msl[currentIdx - 3];
+        }
+
+        const temp = current.temperature_2m;
+        const wind = current.wind_speed_10m;
+        const clouds = current.cloud_cover;
+        const rain = current.rain + current.showers;
+        const humidity = current.relative_humidity_2m;
+
+        // Current solunar bonus
+        const isDawn = Math.abs(now.getTime() - sunriseTime.getTime()) < 3600000;
+        const isDusk = Math.abs(now.getTime() - sunsetTime.getTime()) < 3600000;
+        const solunarBonus = (isDawn || isDusk) ? 15 : 0;
+
+        const carpScore = calculateCarpScore(temp, wind, currentPressure, currentDeltaPressure, humidity, clouds, rain, solunarBonus);
+        const predatorScore = calculatePredatorScore(temp, wind, currentPressure, currentDeltaPressure, clouds, rain, solunarBonus);
         const score = Math.round((carpScore + predatorScore) / 2);
+
+        // Generate 24h Hourly Forecast starting from current index
+        const hourlyForecast: HourlyForecastItem[] = [];
+        const forecastLength = Math.min(24, hourly.time.length - currentIdx);
+
+        for (let j = 0; j < forecastLength; j++) {
+            const idx = currentIdx + j;
+            const hTimeVal = hourly.time[idx];
+            const hTime = new Date(hTimeVal * 1000);
+            
+            const hTemp = hourly.temperature_2m[idx];
+            const hWind = hourly.wind_speed_10m[idx];
+            const hPressure = hourly.pressure_msl[idx];
+            const hHumidity = hourly.relative_humidity_2m[idx];
+            const hClouds = hourly.cloud_cover[idx];
+            const hRain = hourly.rain[idx] + hourly.showers[idx];
+
+            // Calculate pressure trend for this hour (difference from 3 hours ago)
+            const prevIdx = idx - 3;
+            const hPrevPressure = prevIdx >= 0 ? hourly.pressure_msl[prevIdx] : hPressure;
+            const hDeltaPressure = hPressure - hPrevPressure;
+
+            // Hourly solunar bonus
+            const hIsDawn = Math.abs(hTime.getTime() - sunriseTime.getTime()) < 3600000;
+            const hIsDusk = Math.abs(hTime.getTime() - sunsetTime.getTime()) < 3600000;
+            const hSolunarBonus = (hIsDawn || hIsDusk) ? 15 : 0;
+
+            const hCarp = calculateCarpScore(hTemp, hWind, hPressure, hDeltaPressure, hHumidity, hClouds, hRain, hSolunarBonus);
+            const hPredator = calculatePredatorScore(hTemp, hWind, hPressure, hDeltaPressure, hClouds, hRain, hSolunarBonus);
+            const hScore = Math.round((hCarp + hPredator) / 2);
+
+            hourlyForecast.push({
+                time: hTimeVal,
+                hourLabel: hTime.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" }),
+                score: hScore,
+                carpScore: hCarp,
+                predatorScore: hPredator
+            });
+        }
 
         // Helper to map scores to Polish label strings matching translations
         const getLabel = (s: number) => {
@@ -254,7 +310,8 @@ async function fetchWeatherData(): Promise<WeatherData> {
             carpScore,
             carpLabel: getLabel(carpScore),
             predatorScore,
-            predatorLabel: getLabel(predatorScore)
+            predatorLabel: getLabel(predatorScore),
+            hourlyForecast
         };
 
         // Cache the successful result in memory as dynamic fallback
@@ -270,7 +327,24 @@ async function fetchWeatherData(): Promise<WeatherData> {
             return lastSuccessfulWeather;
         }
 
-        // Last resort fallback (mock data)
+        // Last resort fallback (mock data with mock hourly forecast)
+        const mockHourlyForecast: HourlyForecastItem[] = [];
+        const baseTimeVal = Math.floor(Date.now() / 1000);
+        for (let j = 0; j < 24; j++) {
+            const hTimeVal = baseTimeVal + (j * 3600);
+            const hTime = new Date(hTimeVal * 1000);
+            // Simulated sine wave for mock scores
+            const cycle = Math.sin((j / 24) * Math.PI * 2);
+            const mockScore = Math.round(60 + (cycle * 20));
+            mockHourlyForecast.push({
+                time: hTimeVal,
+                hourLabel: hTime.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Warsaw" }),
+                score: mockScore,
+                carpScore: Math.round(mockScore + (cycle * 5)),
+                predatorScore: Math.round(mockScore - (cycle * 5))
+            });
+        }
+
         return {
             temperature: 18,
             pressure: 1012,
@@ -287,7 +361,8 @@ async function fetchWeatherData(): Promise<WeatherData> {
             carpScore: 75,
             carpLabel: "Dobre Warunki",
             predatorScore: 68,
-            predatorLabel: "Dobre Warunki"
+            predatorLabel: "Dobre Warunki",
+            hourlyForecast: mockHourlyForecast
         };
     } finally {
         clearTimeout(timeoutId);
