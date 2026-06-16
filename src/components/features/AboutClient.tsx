@@ -28,11 +28,11 @@ export const AboutClient = ({ weather }: AboutClientProps) => {
 
     return (
         <>
-            {/* Algorithm Explanation - LIVE Index Logic */}
-            {weather ? (
-                <SolunarDashboard weather={weather} />
-            ) : (
-                <SectionReveal className="mb-24" delay={0.25}>
+            {/* 1. Solunar Dashboard (Render dynamically if weather is available) */}
+            {weather && <SolunarDashboard weather={weather} />}
+
+            {/* 2. Algorithm Explanation - LIVE Index Logic (Always visible as educational reference) */}
+            <SectionReveal className="mb-24" delay={0.25}>
                 <div className="mb-12 flex items-center gap-4">
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                     <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
@@ -159,7 +159,7 @@ export const AboutClient = ({ weather }: AboutClientProps) => {
                     </div>
                 </div>
             </SectionReveal>
-            )}
+
 
             {/* Bento Grid: Dlaczego Warto? */}
             <SectionReveal className="mb-24" delay={0.3}>
