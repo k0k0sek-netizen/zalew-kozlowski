@@ -104,7 +104,7 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                 <div className="grid gap-8 grid-cols-1 md:grid-cols-12 items-stretch">
                     {/* Karp (Featured Horizontal) */}
                     {karp && (
-                        <div className="md:col-span-12 lg:col-span-8">
+                        <div className="md:col-span-12">
                             <FishCard
                                 name={karp.name}
                                 description={karp.description}

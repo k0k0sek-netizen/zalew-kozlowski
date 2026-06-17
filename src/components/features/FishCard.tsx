@@ -82,7 +82,7 @@ export const FishCard = ({
             <div className={cn(
                 "relative overflow-hidden z-10",
                 (layout === "horizontal" || layout === "horizontal-reverse")
-                    ? "h-48 md:h-auto md:w-[40%] lg:w-[45%] shrink-0"
+                    ? "h-48 md:h-auto md:w-[45%] lg:w-[45%] shrink-0"
                     : "h-48 w-full"
             )}>
                 <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-0" />
