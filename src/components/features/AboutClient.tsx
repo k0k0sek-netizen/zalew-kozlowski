@@ -17,43 +17,6 @@ import { SolunarDashboard } from "@/components/features/SolunarDashboard";
 import { FishCard } from "@/components/features/FishCard";
 import { cn } from "@/lib/utils";
 
-interface QuoteCardProps {
-    text: string;
-    author: string;
-    className?: string;
-}
-
-const QuoteCard = ({ text, author, className }: QuoteCardProps) => {
-    return (
-        <SpotlightCard
-            className={cn(
-                "relative overflow-hidden rounded-2xl bg-white/40 dark:bg-white/5 border border-earth-brown/10 dark:border-white/10 p-8 flex flex-col justify-between min-h-[260px] transition-all duration-300 group hover:border-accent/30 h-full",
-                className
-            )}
-            style={{
-                borderColor: "rgba(var(--active-glow-color, 249, 115, 22), 0.1)"
-            } as any}
-        >
-            {/* Background elements */}
-            <div className="absolute -right-4 -top-8 text-[120px] font-serif font-black text-pine-green/5 dark:text-white/5 select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">
-                ”
-            </div>
-            
-            <div className="relative z-10 flex-1 flex flex-col justify-between h-full">
-                <blockquote className="text-base italic text-pine-green-dark dark:text-neutral-200 leading-relaxed font-medium mb-6">
-                    &ldquo;{text}&rdquo;
-                </blockquote>
-                
-                <div className="flex items-center gap-3">
-                    <span className="h-0.5 w-6 bg-[rgb(var(--active-glow-color,249,115,22))]" />
-                    <cite className="not-italic text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                        {author}
-                    </cite>
-                </div>
-            </div>
-        </SpotlightCard>
-    );
-};
 
 interface AboutClientProps {
     weather?: WeatherData | null;
@@ -102,9 +65,9 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                 </div>
 
                 <div className="grid gap-8 grid-cols-1 md:grid-cols-12 items-stretch">
-                    {/* Karp (Featured Horizontal) */}
+                    {/* Karp (Vertical) */}
                     {karp && (
-                        <div className="md:col-span-12">
+                        <div className="col-span-12 md:col-span-12 lg:col-span-4">
                             <FishCard
                                 name={karp.name}
                                 description={karp.description}
@@ -115,14 +78,14 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                                 favBait={karp.favBait}
                                 lakeRecord={karp.lakeRecord}
                                 priority={karp.priority}
-                                layout="horizontal"
+                                layout="vertical"
                             />
                         </div>
                     )}
 
                     {/* Amur (Vertical) */}
                     {amur && (
-                        <div className="md:col-span-6 lg:col-span-4">
+                        <div className="col-span-12 md:col-span-6 lg:col-span-4">
                             <FishCard
                                 name={amur.name}
                                 description={amur.description}
@@ -138,17 +101,9 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                         </div>
                     )}
 
-                    {/* Quote 1 */}
-                    <div className="md:col-span-6 lg:col-span-4">
-                        <QuoteCard 
-                            text={t("quote_1_text")}
-                            author={t("quote_1_author")}
-                        />
-                    </div>
-
                     {/* Karaś (Vertical) */}
                     {karas && (
-                        <div className="md:col-span-6 lg:col-span-4">
+                        <div className="col-span-12 md:col-span-6 lg:col-span-4">
                             <FishCard
                                 name={karas.name}
                                 description={karas.description}
@@ -164,17 +119,9 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                         </div>
                     )}
 
-                    {/* Quote 2 */}
-                    <div className="md:col-span-6 lg:col-span-4">
-                        <QuoteCard 
-                            text={t("quote_2_text")}
-                            author={t("quote_2_author")}
-                        />
-                    </div>
-
-                    {/* Szczupak (Featured Horizontal-Reverse) */}
+                    {/* Szczupak (Vertical) */}
                     {szczupak && (
-                        <div className="md:col-span-12 lg:col-span-8">
+                        <div className="col-span-12 md:col-span-6 lg:col-span-6">
                             <FishCard
                                 name={szczupak.name}
                                 description={szczupak.description}
@@ -185,14 +132,14 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                                 favBait={szczupak.favBait}
                                 lakeRecord={szczupak.lakeRecord}
                                 priority={szczupak.priority}
-                                layout="horizontal-reverse"
+                                layout="vertical"
                             />
                         </div>
                     )}
 
-                    {/* Render extra fish if any exist */}
+                    {/* Render extra fish (e.g. Lin) as col-span-6 to pair with Szczupak */}
                     {extraFish.map((fish) => (
-                        <div key={fish.id} className="md:col-span-6 lg:col-span-4">
+                        <div key={fish.id} className="col-span-12 md:col-span-6 lg:col-span-6">
                             <FishCard
                                 name={fish.name}
                                 description={fish.description}

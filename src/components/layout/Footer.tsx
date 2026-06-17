@@ -57,10 +57,10 @@ export const Footer = async () => {
                                     />
                                 </div>
                                 <div className="flex flex-col select-none text-pine-green-dark dark:text-white transition-colors duration-300">
-                                    <span className="font-display font-bold text-[13px] leading-tight tracking-wide group-hover:text-sunset-orange dark:group-hover:text-sunset-orange transition-colors duration-300">
+                                    <span className="font-display font-bold text-[13px] leading-tight tracking-wide group-hover:text-accent transition-colors duration-300">
                                         {tCommon("logo_text_1")}
                                     </span>
-                                    <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-sunset-orange -mt-0.5">
+                                    <span className="font-display font-extrabold text-[16px] leading-tight tracking-tight text-accent -mt-0.5">
                                         {tCommon("logo_text_2")}
                                     </span>
                                 </div>
@@ -69,13 +69,12 @@ export const Footer = async () => {
                                 {t("description")}
                             </p>
                             
-                            {/* Social Icons */}
                             <div className="flex items-center gap-3 pt-2">
                                 <a 
                                     href="https://www.facebook.com/profile.php?id=100057065099351" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center h-10 w-10 rounded-full border border-pine-green/20 dark:border-white/10 text-pine-green-dark dark:text-stone-300 hover:border-sunset-orange hover:text-sunset-orange hover:bg-sunset-orange/5 transition-all duration-300 hover:-translate-y-1"
+                                    className="flex items-center justify-center h-10 w-10 rounded-full border border-pine-green/20 dark:border-white/10 text-pine-green-dark dark:text-stone-300 hover-border-accent hover-text-accent hover-bg-accent-light transition-all duration-300 hover:-translate-y-1"
                                     aria-label={t("facebook_aria")}
                                 >
                                     <Facebook className="h-4 w-4" />
@@ -84,7 +83,7 @@ export const Footer = async () => {
                                     href="https://www.instagram.com/" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    className="flex items-center justify-center h-10 w-10 rounded-full border border-pine-green/20 dark:border-white/10 text-pine-green-dark dark:text-stone-300 hover:border-sunset-orange hover:text-sunset-orange hover:bg-sunset-orange/5 transition-all duration-300 hover:-translate-y-1"
+                                    className="flex items-center justify-center h-10 w-10 rounded-full border border-pine-green/20 dark:border-white/10 text-pine-green-dark dark:text-stone-300 hover-border-accent hover-text-accent hover-bg-accent-light transition-all duration-300 hover:-translate-y-1"
                                     aria-label={t("instagram_aria")}
                                 >
                                     <Instagram className="h-4 w-4" />
@@ -103,8 +102,8 @@ export const Footer = async () => {
                                     { href: "/aktualnosci", label: tNav("news") }
                                 ].map((link) => (
                                     <li key={link.href}>
-                                        <Link href={link.href} className="group flex items-center gap-2 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange dark:hover:text-sunset-orange transition-all duration-300">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-sunset-orange transform scale-0 origin-left transition-transform duration-300 group-hover:scale-100" />
+                                        <Link href={link.href} className="group flex items-center gap-2 text-pine-green-dark/80 dark:text-stone-300/80 hover-text-accent transition-all duration-300">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-accent transform scale-0 origin-left transition-transform duration-300 group-hover:scale-100" />
                                             <span className="transition-transform duration-300 group-hover:translate-x-0.5">{link.label}</span>
                                         </Link>
                                     </li>
@@ -122,8 +121,8 @@ export const Footer = async () => {
                                     { href: "/polityka-prywatnosci", label: tNav("privacy") }
                                 ].map((link) => (
                                     <li key={link.href}>
-                                        <Link href={link.href} className="group flex items-center gap-2 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange dark:hover:text-sunset-orange transition-all duration-300">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-sunset-orange transform scale-0 origin-left transition-transform duration-300 group-hover:scale-100" />
+                                        <Link href={link.href} className="group flex items-center gap-2 text-pine-green-dark/80 dark:text-stone-300/80 hover-text-accent transition-all duration-300">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-accent transform scale-0 origin-left transition-transform duration-300 group-hover:scale-100" />
                                             <span className="transition-transform duration-300 group-hover:translate-x-0.5">{link.label}</span>
                                         </Link>
                                     </li>
@@ -140,21 +139,21 @@ export const Footer = async () => {
                                         href={mapUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="group flex items-start gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange transition-all duration-300 w-fit"
+                                        className="group flex items-start gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover-text-accent transition-all duration-300 w-fit"
                                     >
-                                        <MapPin className="h-4.5 w-4.5 text-sunset-orange shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-115 group-hover:-translate-y-1" />
+                                        <MapPin className="h-4.5 w-4.5 text-accent shrink-0 mt-0.5 transition-transform duration-300 group-hover:scale-115 group-hover:-translate-y-1" />
                                         <span>{address}</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <TrackablePhoneLink phone={phone} className="group flex items-center gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange transition-all duration-300 w-fit">
-                                        <Phone className="h-4.5 w-4.5 text-sunset-orange shrink-0 transition-transform duration-300 group-hover:scale-115 group-hover:rotate-12" />
+                                    <TrackablePhoneLink phone={phone} className="group flex items-center gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover-text-accent transition-all duration-300 w-fit">
+                                        <Phone className="h-4.5 w-4.5 text-accent shrink-0 transition-transform duration-300 group-hover:scale-115 group-hover:rotate-12" />
                                         <span className="font-semibold">{phone}</span>
                                     </TrackablePhoneLink>
                                 </li>
                                 <li>
-                                    <TrackableEmailLink email={email} className="group flex items-center gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover:text-sunset-orange transition-all duration-300 w-fit">
-                                        <Mail className="h-4.5 w-4.5 text-sunset-orange shrink-0 transition-transform duration-300 group-hover:scale-115 group-hover:translate-x-1 group-hover:-translate-y-0.5 group-hover:rotate-[-6deg]" />
+                                    <TrackableEmailLink email={email} className="group flex items-center gap-2.5 text-pine-green-dark/80 dark:text-stone-300/80 hover-text-accent transition-all duration-300 w-fit">
+                                        <Mail className="h-4.5 w-4.5 text-accent shrink-0 transition-transform duration-300 group-hover:scale-115 group-hover:translate-x-1 group-hover:-translate-y-0.5 group-hover:rotate-[-6deg]" />
                                         <span>{email}</span>
                                     </TrackableEmailLink>
                                 </li>
@@ -191,7 +190,7 @@ export const Footer = async () => {
                                 href="https://wektorkodu.pl"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-bold text-pine-green-dark dark:text-white hover:text-sunset-orange transition-colors"
+                                className="font-bold text-pine-green-dark dark:text-white hover-text-accent transition-colors"
                             >
                                 WektorKodu.pl
                             </a>

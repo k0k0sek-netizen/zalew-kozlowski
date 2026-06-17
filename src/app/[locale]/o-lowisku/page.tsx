@@ -375,7 +375,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="mx-auto max-w-6xl px-4">
                 {/* Header */}
                 <SectionReveal className="mb-12 text-center">
-                    <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] animate-shine md:text-5xl">
+                    <h1 className="mb-4 text-4xl font-bold heading-accent-gradient bg-size-[200%_100%] animate-shine md:text-5xl">
                         {t("title")}
                     </h1>
                     <p className="mx-auto max-w-2xl text-lg text-earth-brown dark:text-neutral-300">

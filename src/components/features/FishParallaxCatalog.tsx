@@ -53,7 +53,7 @@ export const FishParallaxCatalog = () => {
         <div className="w-full py-24 bg-transparent relative z-10">
             <div className="mx-auto max-w-7xl px-4">
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine drop-shadow-sm">
+                    <h2 className="text-4xl md:text-5xl font-display font-bold heading-accent-gradient bg-size-[200%_100%] md:animate-shine drop-shadow-sm">
                         Gatunki Ryb
                     </h2>
                     <p className="mt-4 text-earth-brown dark:text-neutral-400 font-sans text-lg">

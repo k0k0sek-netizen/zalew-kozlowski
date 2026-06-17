@@ -73,8 +73,8 @@ export const FishCard = ({
             noBg
             className={cn(
                 "group rounded-2xl bg-white/70 backdrop-blur-md shadow-xl dark:bg-white/5 scroll-reveal-card overflow-hidden",
-                layout === "horizontal" && "flex flex-col md:flex-row h-full",
-                layout === "horizontal-reverse" && "flex flex-col md:flex-row-reverse h-full",
+                layout === "horizontal" && "flex flex-col md:flex-row h-full md:h-[380px]",
+                layout === "horizontal-reverse" && "flex flex-col md:flex-row-reverse h-full md:h-[380px]",
                 layout === "vertical" && "flex flex-col h-full"
             )}
         >
@@ -82,7 +82,7 @@ export const FishCard = ({
             <div className={cn(
                 "relative overflow-hidden z-10",
                 (layout === "horizontal" || layout === "horizontal-reverse")
-                    ? "h-48 md:h-auto md:w-[45%] lg:w-[45%] shrink-0"
+                    ? "h-56 md:h-full md:w-[50%] lg:w-[54%] shrink-0"
                     : "h-48 w-full"
             )}>
                 <div className="absolute inset-0 bg-neutral-200 dark:bg-neutral-800 animate-pulse z-0" />
@@ -111,14 +111,20 @@ export const FishCard = ({
             </div>
 
             {/* Content Area */}
-            <div className="p-6 relative z-10 flex-1 flex flex-col justify-between">
+            <div className={cn(
+                "p-6 relative z-10 flex-1 flex flex-col justify-between",
+                (layout === "horizontal" || layout === "horizontal-reverse") && "md:p-4 lg:p-5"
+            )}>
                 <div>
                     {(layout === "horizontal" || layout === "horizontal-reverse") && (
-                        <h3 className="hidden md:block text-2xl font-black text-pine-green-dark dark:text-white uppercase tracking-tight mb-3">
+                        <h3 className="hidden md:block text-2xl font-black text-pine-green-dark dark:text-white uppercase tracking-tight mb-2">
                             {name}
                         </h3>
                     )}
-                    <div className="mb-6 flex flex-wrap gap-2">
+                    <div className={cn(
+                        "mb-6 flex flex-wrap gap-2",
+                        (layout === "horizontal" || layout === "horizontal-reverse") ? "md:mb-3" : "mb-6"
+                    )}>
                         {tags.map(tag => (
                             <span key={tag} className="px-2.5 py-1 text-[10px] uppercase font-bold bg-pine-green/10 text-pine-green-dark rounded-md dark:bg-white/10 dark:text-neutral-200">
                                 {tag}
@@ -127,15 +133,18 @@ export const FishCard = ({
                     </div>
 
                     <p className={cn(
-                        "mb-6 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed",
-                        layout === "vertical" && "min-h-[60px]"
+                        "text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed",
+                        layout === "vertical" ? "min-h-[60px] mb-6" : "mb-4"
                     )}>
                         {description}
                     </p>
 
                     {/* Biology Details */}
                     {(whereToFind || favBait || lakeRecord) && (
-                        <div className="mb-6 space-y-3.5 border-t border-neutral-100 dark:border-white/5 pt-5 text-xs text-neutral-600 dark:text-neutral-400">
+                        <div className={cn(
+                            "space-y-3 border-t border-neutral-100 dark:border-white/5 text-xs text-neutral-600 dark:text-neutral-400",
+                            (layout === "horizontal" || layout === "horizontal-reverse") ? "mb-4 pt-3 md:space-y-2" : "mb-6 pt-5"
+                        )}>
                             {whereToFind && (
                                 <div className="flex gap-2.5 items-start">
                                     <MapPin className="h-4 w-4 shrink-0 text-accent mt-0.5" />
@@ -174,7 +183,10 @@ export const FishCard = ({
                 </div>
 
                 {/* Gamified Stats */}
-                <div className="space-y-3">
+                <div className={cn(
+                    "space-y-3",
+                    (layout === "horizontal" || layout === "horizontal-reverse") && "md:space-y-1.5"
+                )}>
                     <StatBar label={t("stat_strength")} value={stats.strength} color="bg-gradient-to-r from-red-500 to-rose-500" />
                     <StatBar label={t("stat_cunning")} value={stats.difficulty} color="bg-gradient-to-r from-purple-500 to-indigo-500" />
                     <StatBar label={t("stat_activity")} value={stats.activity} color="bg-gradient-to-r from-green-500 to-emerald-500" />

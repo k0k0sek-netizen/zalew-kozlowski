@@ -165,7 +165,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <section id="info-section" className="relative px-4 py-24">
           <SectionReveal className="mx-auto max-w-7xl">
             <div className="mb-12 text-center">
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-5xl">
+              <h2 className="text-3xl font-bold heading-accent-gradient bg-size-[200%_100%] md:animate-shine md:text-5xl">
                 {tBento("title")}
               </h2>
               <p className="mt-4 text-earth-brown dark:text-neutral-400">
@@ -263,7 +263,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <SectionReveal className="mx-auto max-w-7xl grid gap-12 md:grid-cols-2 items-stretch" delay={0.2}>
             <SpotlightCard className="p-8 md:p-10 rounded-2xl flex flex-col justify-between h-full">
               <div className="space-y-6">
-                <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-[linear-gradient(110deg,#1a4d3a,45%,#4ade80,55%,#1a4d3a)] dark:bg-[linear-gradient(110deg,#9ca3af,45%,#ffffff,55%,#9ca3af)] bg-size-[200%_100%] md:animate-shine md:text-4xl">
+                <h2 className="text-3xl font-bold heading-accent-gradient bg-size-[200%_100%] md:animate-shine md:text-4xl">
                   {tChar("title")}
                 </h2>
                 <div className="text-earth-brown dark:text-neutral-300 space-y-4">
@@ -274,7 +274,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       return (
                         <p key={index} className="text-lg leading-relaxed">
                           {parts[0]}
-                          <strong className="text-pine-green dark:text-sunset-orange font-bold">{strongText}</strong>
+                          <strong className="text-accent font-bold">{strongText}</strong>
                           {parts[1]}
                         </p>
                       );
@@ -288,8 +288,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
                   {/* Glassmorphic Features Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                    <div className="group/feat flex flex-col p-4 rounded-xl border border-pine-green/10 dark:border-white/5 bg-white/20 dark:bg-white/5 transition-all duration-300 hover:border-sunset-orange/30 hover:-translate-y-1">
-                      <div className="rounded-lg bg-pine-green/10 dark:bg-white/10 p-2 w-fit text-pine-green dark:text-sunset-orange transition-all duration-300 group-hover/feat:bg-sunset-orange/10 group-hover/feat:scale-110 group-hover/feat:rotate-6">
+                    <div className="group/feat flex flex-col p-4 rounded-xl border bg-white/20 dark:bg-white/5 feature-card hover:-translate-y-1">
+                      <div className="rounded-lg p-2 w-fit icon-container-accent">
                         <Waves className="h-5 w-5" />
                       </div>
                       <h3 className="text-sm font-bold text-pine-green-dark dark:text-white mt-3 mb-1">
@@ -300,8 +300,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       </p>
                     </div>
 
-                    <div className="group/feat flex flex-col p-4 rounded-xl border border-pine-green/10 dark:border-white/5 bg-white/20 dark:bg-white/5 transition-all duration-300 hover:border-sunset-orange/30 hover:-translate-y-1">
-                      <div className="rounded-lg bg-pine-green/10 dark:bg-white/10 p-2 w-fit text-pine-green dark:text-sunset-orange transition-all duration-300 group-hover/feat:bg-sunset-orange/10 group-hover/feat:scale-110 group-hover/feat:rotate-6">
+                    <div className="group/feat flex flex-col p-4 rounded-xl border bg-white/20 dark:bg-white/5 feature-card hover:-translate-y-1">
+                      <div className="rounded-lg p-2 w-fit icon-container-accent">
                         <Trees className="h-5 w-5" />
                       </div>
                       <h3 className="text-sm font-bold text-pine-green-dark dark:text-white mt-3 mb-1">
@@ -312,8 +312,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                       </p>
                     </div>
 
-                    <div className="group/feat flex flex-col p-4 rounded-xl border border-pine-green/10 dark:border-white/5 bg-white/20 dark:bg-white/5 transition-all duration-300 hover:border-sunset-orange/30 hover:-translate-y-1">
-                      <div className="rounded-lg bg-pine-green/10 dark:bg-white/10 p-2 w-fit text-pine-green dark:text-sunset-orange transition-all duration-300 group-hover/feat:bg-sunset-orange/10 group-hover/feat:scale-110 group-hover/feat:rotate-6">
+                    <div className="group/feat flex flex-col p-4 rounded-xl border bg-white/20 dark:bg-white/5 feature-card hover:-translate-y-1">
+                      <div className="rounded-lg p-2 w-fit icon-container-accent">
                         <ShieldCheck className="h-5 w-5" />
                       </div>
                       <h3 className="text-sm font-bold text-pine-green-dark dark:text-white mt-3 mb-1">
@@ -327,15 +327,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                 </div>
               </div>
 
-              {/* Animated CTA Underline Link */}
               <div className="pt-6 mt-6 border-t border-earth-brown/10 dark:border-white/10">
                 <TransitionLink
                   href="/o-lowisku"
-                  className="group/link inline-flex items-center gap-2 text-sunset-orange font-bold text-lg relative pb-1"
+                  className="group/link inline-flex items-center gap-2 link-accent font-bold text-lg relative pb-1"
                 >
                   {tChar("cta_more")}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1.5" />
-                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-sunset-orange transform scale-x-0 origin-left transition-transform duration-300 group-hover/link:scale-x-100" />
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] link-underline-accent transform scale-x-0 origin-left transition-transform duration-300 group-hover/link:scale-x-100" />
                 </TransitionLink>
               </div>
             </SpotlightCard>
@@ -358,7 +357,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
               </div>
 
               {/* Content text overlay (Floating Glassmorphic Card) */}
-              <div className="absolute bottom-6 left-6 right-6 z-20 p-5 rounded-xl border border-white/10 bg-white/10 dark:bg-black/20 backdrop-blur-md text-white transition-all duration-300 group-hover/image-card:border-sunset-orange/30 group-hover/image-card:-translate-y-1">
+              <div className="absolute bottom-6 left-6 right-6 z-20 p-5 rounded-xl border bg-white/10 dark:bg-black/20 backdrop-blur-md text-white transition-all duration-300 image-card-overlay group-hover/image-card:-translate-y-1">
                 <p className="font-bold text-2xl tracking-tight shadow-black/20 drop-shadow-md">
                   {tChar("card_title")}
                 </p>
