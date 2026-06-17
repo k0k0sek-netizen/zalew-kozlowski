@@ -35,6 +35,34 @@ interface GlossaryTooltipProps {
 const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const tooltipRef = useRef<HTMLSpanElement>(null);
+    const [coords, setCoords] = useState<{ left: string; arrowLeft: string }>({
+        left: "50%",
+        arrowLeft: "50%",
+    });
+
+    const updatePosition = () => {
+        if (!tooltipRef.current) return;
+        const rect = tooltipRef.current.getBoundingClientRect();
+        const screenWidth = window.innerWidth;
+        const tooltipWidth = 256; // w-64 is 256px
+        const triggerCenter = rect.left + rect.width / 2;
+
+        let leftOffset = 0;
+        if (triggerCenter - tooltipWidth / 2 < 16) {
+            leftOffset = 16 - (triggerCenter - tooltipWidth / 2);
+        } else if (triggerCenter + tooltipWidth / 2 > screenWidth - 16) {
+            leftOffset = (screenWidth - 16) - (triggerCenter + tooltipWidth / 2);
+        }
+
+        leftOffset = Math.round(leftOffset);
+        const arrowCenter = Math.round(128 - leftOffset);
+        const clampedArrowCenter = Math.max(16, Math.min(240, arrowCenter));
+
+        setCoords({
+            left: `calc(50% + ${leftOffset}px)`,
+            arrowLeft: `${clampedArrowCenter}px`,
+        });
+    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent | TouchEvent) => {
@@ -60,10 +88,14 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
         <span 
             ref={tooltipRef}
             className="relative inline-block cursor-help group/tooltip select-none"
-            onMouseEnter={() => setIsOpen(true)}
+            onMouseEnter={() => {
+                updatePosition();
+                setIsOpen(true);
+            }}
             onMouseLeave={() => setIsOpen(false)}
             onClick={(e) => {
                 e.stopPropagation();
+                updatePosition();
                 setIsOpen(!isOpen);
             }}
         >
@@ -78,7 +110,8 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/10 bg-neutral-950/90 p-3 text-xs text-neutral-300 shadow-xl backdrop-blur-md pointer-events-none text-left font-sans normal-case"
+                        className="absolute bottom-full z-50 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/10 bg-neutral-950 p-3 text-xs text-neutral-300 shadow-xl pointer-events-none text-left font-sans normal-case"
+                        style={{ left: coords.left }}
                     >
                         <span className="block font-bold text-sunset-orange mb-1 uppercase tracking-wider text-[10px]">
                             {capitalizedTerm}
@@ -87,7 +120,10 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
                             {definition}
                         </span>
                         {/* Tooltip Arrow */}
-                        <span className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-white/10 bg-neutral-950/90 pointer-events-none" />
+                        <span 
+                            className="absolute top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-white/10 bg-neutral-950 pointer-events-none" 
+                            style={{ left: coords.arrowLeft }}
+                        />
                     </motion.span>
                 )}
             </AnimatePresence>
@@ -411,137 +447,134 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                 </div>
 
                                 <div className="relative bg-black/35 rounded-2xl p-4 border border-white/5 backdrop-blur-xs flex-1 flex items-center justify-center min-h-[200px]">
-                                    <svg
-                                        viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-                                        className="w-full h-auto pointer-events-none"
-                                    >
-                                        <defs>
-                                            <linearGradient id={`combinedAreaGradient-${activeMode}`} x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor={`rgb(${glowColor})`} stopOpacity="0.4" />
-                                                <stop offset="100%" stopColor={`rgb(${glowColor})`} stopOpacity="0.0" />
-                                            </linearGradient>
-                                            <linearGradient id={`combinedLineGradient-${activeMode}`} x1="0" y1="0" x2="1" y2="0">
-                                                <stop offset="0%" stopColor={`rgb(${glowColor})`} stopOpacity="0.7" />
-                                                <stop offset="50%" stopColor={`rgb(${glowColor})`} stopOpacity="1.0" />
-                                                <stop offset="100%" stopColor={`rgb(${glowColor})`} stopOpacity="0.7" />
-                                            </linearGradient>
-                                        </defs>
+                                    <div className="relative w-full">
+                                        <svg
+                                            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+                                            className="w-full h-auto pointer-events-none"
+                                        >
+                                            <defs>
+                                                <linearGradient id={`combinedAreaGradient-${activeMode}`} x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor={`rgb(${glowColor})`} stopOpacity="0.4" />
+                                                    <stop offset="100%" stopColor={`rgb(${glowColor})`} stopOpacity="0.0" />
+                                                </linearGradient>
+                                                <linearGradient id={`combinedLineGradient-${activeMode}`} x1="0" y1="0" x2="1" y2="0">
+                                                    <stop offset="0%" stopColor={`rgb(${glowColor})`} stopOpacity="0.7" />
+                                                    <stop offset="50%" stopColor={`rgb(${glowColor})`} stopOpacity="1.0" />
+                                                    <stop offset="100%" stopColor={`rgb(${glowColor})`} stopOpacity="0.7" />
+                                                </linearGradient>
+                                            </defs>
 
-                                        {/* Y-Axis lines & labels */}
-                                        <g opacity="0.12" stroke="white" strokeWidth="0.5">
-                                            <line x1={paddingX} y1={paddingY} x2={svgWidth - paddingX} y2={paddingY} />
-                                            <line x1={paddingX} y1={paddingY + chartH / 2} x2={svgWidth - paddingX} y2={paddingY + chartH / 2} />
-                                            <line x1={paddingX} y1={svgHeight - paddingY} x2={svgWidth - paddingX} y2={svgHeight - paddingY} />
-                                        </g>
-
-                                        <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" textAnchor="end">
-                                            <text x={paddingX - 8} y={paddingY + 3}>100%</text>
-                                            <text x={paddingX - 8} y={paddingY + chartH / 2 + 3}>50%</text>
-                                            <text x={paddingX - 8} y={svgHeight - paddingY + 3}>0%</text>
-                                        </g>
-
-                                        {/* Chart curves */}
-                                        {points.length > 0 && (
-                                            <>
-                                                <path d={areaPathD} fill={`url(#combinedAreaGradient-${activeMode})`} />
-                                                <path d={linePathD} fill="none" stroke={`url(#combinedLineGradient-${activeMode})`} strokeWidth="3" strokeLinecap="round" />
-                                                <path d={linePathD} fill="none" stroke={`rgb(${glowColor})`} strokeWidth="7" strokeLinecap="round" strokeOpacity="0.15" />
-                                            </>
-                                        )}
-
-                                        {/* Tooltip & Guides */}
-                                        {hoveredIdx !== null && points[hoveredIdx] && (
-                                            <g>
-                                                <line
-                                                    x1={points[hoveredIdx].x}
-                                                    y1={paddingY}
-                                                    x2={points[hoveredIdx].x}
-                                                    y2={svgHeight - paddingY}
-                                                    stroke="rgba(255, 255, 255, 0.25)"
-                                                    strokeWidth="1"
-                                                    strokeDasharray="4,4"
-                                                />
-                                                <circle
-                                                    cx={points[hoveredIdx].x}
-                                                    cy={points[hoveredIdx].y}
-                                                    r="5.5"
-                                                    fill={`rgb(${glowColor})`}
-                                                    stroke="white"
-                                                    strokeWidth="2"
-                                                    style={{ filter: `drop-shadow(0 0 4px rgba(${glowColor}, 0.5))` }}
-                                                />
-                                                <rect
-                                                    x={Math.max(paddingX, Math.min(svgWidth - paddingX - 70, points[hoveredIdx].x - 35))}
-                                                    y={Math.max(5, points[hoveredIdx].y - 40)}
-                                                    width="70"
-                                                    height="32"
-                                                    rx="6"
-                                                    fill="rgba(8, 18, 12, 0.98)"
-                                                    stroke={`rgba(${glowColor}, 0.6)`}
-                                                    strokeWidth="1.5"
-                                                />
-                                                <text
-                                                    x={Math.max(paddingX + 35, Math.min(svgWidth - paddingX - 35, points[hoveredIdx].x))}
-                                                    y={Math.max(5, points[hoveredIdx].y - 40) + 12}
-                                                    fill="rgba(255,255,255,0.7)"
-                                                    fontSize="9"
-                                                    fontWeight="bold"
-                                                    textAnchor="middle"
-                                                    fontFamily="var(--font-mono)"
-                                                >
-                                                    {points[hoveredIdx].hour}
-                                                </text>
-                                                <text
-                                                    x={Math.max(paddingX + 35, Math.min(svgWidth - paddingX - 35, points[hoveredIdx].x))}
-                                                    y={Math.max(5, points[hoveredIdx].y - 40) + 26}
-                                                    fill={`rgb(${glowColor})`}
-                                                    fontSize="12"
-                                                    fontWeight="black"
-                                                    textAnchor="middle"
-                                                    fontFamily="var(--font-mono)"
-                                                >
-                                                    {points[hoveredIdx].score}%
-                                                </text>
+                                            {/* Y-Axis lines & labels */}
+                                            <g opacity="0.12" stroke="white" strokeWidth="0.5">
+                                                <line x1={paddingX} y1={paddingY} x2={svgWidth - paddingX} y2={paddingY} />
+                                                <line x1={paddingX} y1={paddingY + chartH / 2} x2={svgWidth - paddingX} y2={paddingY + chartH / 2} />
+                                                <line x1={paddingX} y1={svgHeight - paddingY} x2={svgWidth - paddingX} y2={svgHeight - paddingY} />
                                             </g>
-                                        )}
 
-                                        {/* Bottom X-Axis labels */}
-                                        {points.length > 0 && (
-                                            <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" opacity="0.8">
-                                                <text x={paddingX} y={svgHeight - 10} textAnchor="start">
-                                                    {t("forecast_label")}: {points[0].hour}
-                                                </text>
-                                                {points[Math.floor(points.length / 2)] && (
-                                                    <text x={svgWidth / 2} y={svgHeight - 10} textAnchor="middle">
-                                                        {points[Math.floor(points.length / 2)].hour}
+                                            <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" textAnchor="end">
+                                                <text x={paddingX - 8} y={paddingY + 3}>100%</text>
+                                                <text x={paddingX - 8} y={paddingY + chartH / 2 + 3}>50%</text>
+                                                <text x={paddingX - 8} y={svgHeight - paddingY + 3}>0%</text>
+                                            </g>
+
+                                            {/* Chart curves */}
+                                            {points.length > 0 && (
+                                                <>
+                                                    <path d={areaPathD} fill={`url(#combinedAreaGradient-${activeMode})`} />
+                                                    <path d={linePathD} fill="none" stroke={`url(#combinedLineGradient-${activeMode})`} strokeWidth="3" strokeLinecap="round" />
+                                                    <path d={linePathD} fill="none" stroke={`rgb(${glowColor})`} strokeWidth="7" strokeLinecap="round" strokeOpacity="0.15" />
+                                                </>
+                                            )}
+
+                                            {/* Guides & Active Dots inside SVG */}
+                                            {hoveredIdx !== null && points[hoveredIdx] && (
+                                                <g>
+                                                    <line
+                                                        x1={points[hoveredIdx].x}
+                                                        y1={paddingY}
+                                                        x2={points[hoveredIdx].x}
+                                                        y2={svgHeight - paddingY}
+                                                        stroke="rgba(255, 255, 255, 0.25)"
+                                                        strokeWidth="1"
+                                                        strokeDasharray="4,4"
+                                                    />
+                                                    <circle
+                                                        cx={points[hoveredIdx].x}
+                                                        cy={points[hoveredIdx].y}
+                                                        r="5.5"
+                                                        fill={`rgb(${glowColor})`}
+                                                        stroke="white"
+                                                        strokeWidth="2"
+                                                        style={{ filter: `drop-shadow(0 0 4px rgba(${glowColor}, 0.5))` }}
+                                                    />
+                                                </g>
+                                            )}
+
+                                            {/* Bottom X-Axis labels */}
+                                            {points.length > 0 && (
+                                                <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" opacity="0.8">
+                                                    <text x={paddingX} y={svgHeight - 10} textAnchor="start">
+                                                        {t("forecast_label")}: {points[0].hour}
                                                     </text>
-                                                )}
-                                                <text x={svgWidth - paddingX} y={svgHeight - 10} textAnchor="end">
-                                                    +{points.length}h
-                                                </text>
-                                            </g>
-                                        )}
+                                                    {points[Math.floor(points.length / 2)] && (
+                                                        <text x={svgWidth / 2} y={svgHeight - 10} textAnchor="middle">
+                                                            {points[Math.floor(points.length / 2)].hour}
+                                                        </text>
+                                                    )}
+                                                    <text x={svgWidth - paddingX} y={svgHeight - 10} textAnchor="end">
+                                                        +{points.length}h
+                                                    </text>
+                                                </g>
+                                            )}
 
-                                        {/* Hover regions */}
-                                        {points.map((p, idx) => {
-                                            const barWidth = chartW / points.length;
-                                            return (
-                                                <rect
-                                                    key={idx}
-                                                    x={p.x - barWidth / 2}
-                                                    y={paddingY}
-                                                    width={barWidth}
-                                                    height={chartH}
-                                                    fill="transparent"
-                                                    className="cursor-crosshair pointer-events-auto"
-                                                    onMouseEnter={() => setHoveredIdx(idx)}
-                                                    onMouseLeave={() => setHoveredIdx(null)}
-                                                    onTouchStart={() => setHoveredIdx(idx)}
-                                                    onTouchEnd={() => setHoveredIdx(null)}
+                                            {/* Hover regions */}
+                                            {points.map((p, idx) => {
+                                                const barWidth = chartW / points.length;
+                                                return (
+                                                    <rect
+                                                        key={idx}
+                                                        x={p.x - barWidth / 2}
+                                                        y={paddingY}
+                                                        width={barWidth}
+                                                        height={chartH}
+                                                        fill="transparent"
+                                                        className="cursor-crosshair pointer-events-auto"
+                                                        onMouseEnter={() => setHoveredIdx(idx)}
+                                                        onMouseLeave={() => setHoveredIdx(null)}
+                                                        onTouchStart={() => setHoveredIdx(idx)}
+                                                        onTouchEnd={() => setHoveredIdx(null)}
+                                                    />
+                                                );
+                                            })}
+                                        </svg>
+
+                                        {/* HTML Tooltip */}
+                                        {hoveredIdx !== null && points[hoveredIdx] && (
+                                            <div
+                                                className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full mb-3 flex flex-col items-center transition-all duration-75"
+                                                style={{
+                                                    left: `${(points[hoveredIdx].x / svgWidth) * 100}%`,
+                                                    top: `${(points[hoveredIdx].y / svgHeight) * 100}%`,
+                                                }}
+                                            >
+                                                <div className="rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 shadow-2xl text-center min-w-[80px]">
+                                                    <p className="text-[10px] font-bold text-neutral-400 font-mono">
+                                                        {points[hoveredIdx].hour}
+                                                    </p>
+                                                    <p 
+                                                        className="text-sm font-black font-mono mt-0.5"
+                                                        style={{ color: `rgb(${glowColor})` }}
+                                                    >
+                                                        {points[hoveredIdx].score}%
+                                                    </p>
+                                                </div>
+                                                {/* Tooltip arrow */}
+                                                <div 
+                                                    className="w-2.5 h-2.5 rotate-45 border-r border-b border-white/10 bg-neutral-950 -mt-[5px]" 
                                                 />
-                                            );
-                                        })}
-                                    </svg>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </>
                         )}
