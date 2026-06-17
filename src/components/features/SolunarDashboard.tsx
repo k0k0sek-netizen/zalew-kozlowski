@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { SPRING_TOKENS } from "@/lib/motion";
@@ -26,10 +26,130 @@ interface SolunarDashboardProps {
 
 type ModeType = "general" | "carp" | "predator";
 
+interface GlossaryTooltipProps {
+    term: string;
+    definition: string;
+    children: React.ReactNode;
+}
+
+const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const tooltipRef = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+            if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+            document.addEventListener("touchstart", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("touchstart", handleClickOutside);
+        };
+    }, [isOpen]);
+
+    const capitalizedTerm = term.charAt(0).toUpperCase() + term.slice(1);
+
+    return (
+        <span 
+            ref={tooltipRef}
+            className="relative inline-block cursor-help group/tooltip select-none"
+            onMouseEnter={() => setIsOpen(true)}
+            onMouseLeave={() => setIsOpen(false)}
+            onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(!isOpen);
+            }}
+        >
+            <span className="underline decoration-dotted decoration-sunset-orange/60 hover:decoration-sunset-orange underline-offset-4 font-semibold text-white/95 transition-colors">
+                {children}
+            </span>
+            
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.span
+                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute bottom-full left-1/2 z-50 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/10 bg-neutral-950/90 p-3 text-xs text-neutral-300 shadow-xl backdrop-blur-md pointer-events-none text-left font-sans normal-case"
+                    >
+                        <span className="block font-bold text-sunset-orange mb-1 uppercase tracking-wider text-[10px]">
+                            {capitalizedTerm}
+                        </span>
+                        <span className="block leading-relaxed font-medium">
+                            {definition}
+                        </span>
+                        {/* Tooltip Arrow */}
+                        <span className="absolute top-full left-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-white/10 bg-neutral-950/90 pointer-events-none" />
+                    </motion.span>
+                )}
+            </AnimatePresence>
+        </span>
+    );
+};
+
 export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
     const t = useTranslations("weather");
     const tAbout = useTranslations("about");
     const [activeMode, setActiveMode] = useState<ModeType>("general");
+
+    const renderWithGlossary = (text: string) => {
+        const terms = [
+            {
+                key: "temp",
+                termPl: "optimum termiczne",
+                termEn: "thermal optimum",
+            },
+            {
+                key: "pressure",
+                termPl: "pęcherz pławny",
+                termEn: "swim bladder",
+            },
+            {
+                key: "humidity",
+                termPl: "szał żerowania",
+                termEn: "feeding frenzy",
+            },
+            {
+                key: "moon",
+                termPl: "siły grawitacyjne",
+                termEn: "gravitational forces",
+            }
+        ];
+
+        for (const item of terms) {
+            const term = text.toLowerCase().includes(item.termPl.toLowerCase()) 
+                ? item.termPl 
+                : (text.toLowerCase().includes(item.termEn.toLowerCase()) ? item.termEn : null);
+                
+            if (term) {
+                const definition = tAbout(`glossary_${item.key}_desc`);
+                const index = text.toLowerCase().indexOf(term.toLowerCase());
+                const before = text.substring(0, index);
+                const match = text.substring(index, index + term.length);
+                const after = text.substring(index + term.length);
+                
+                return (
+                    <>
+                        {before}
+                        <GlossaryTooltip term={match} definition={definition}>
+                            {match}
+                        </GlossaryTooltip>
+                        {after}
+                    </>
+                );
+            }
+        }
+        
+        return text;
+    };
     const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
     const isOffline = !weather;
@@ -235,12 +355,12 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                             <div className="flex items-center gap-4 mb-4">
                                 <div className="flex items-baseline gap-1">
                                     <span 
-                                        className="text-6xl font-black tracking-tight drop-shadow-md transition-colors duration-500"
+                                        className="text-6xl font-black tracking-tight drop-shadow-md transition-colors duration-500 font-mono"
                                         style={{ color: isOffline ? "rgb(156,163,175)" : `rgb(${glowColor})` }}
                                     >
                                         {isOffline ? "N/A" : activeScore}
                                     </span>
-                                    {!isOffline && <span className="text-xl text-white/50 font-bold">/100</span>}
+                                    {!isOffline && <span className="text-xl text-white/50 font-bold font-mono">/100</span>}
                                 </div>
                                 <div>
                                     <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
@@ -314,7 +434,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                             <line x1={paddingX} y1={svgHeight - paddingY} x2={svgWidth - paddingX} y2={svgHeight - paddingY} />
                                         </g>
 
-                                        <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-outfit)" textAnchor="end">
+                                        <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" textAnchor="end">
                                             <text x={paddingX - 8} y={paddingY + 3}>100%</text>
                                             <text x={paddingX - 8} y={paddingY + chartH / 2 + 3}>50%</text>
                                             <text x={paddingX - 8} y={svgHeight - paddingY + 3}>0%</text>
@@ -367,7 +487,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                                     fontSize="9"
                                                     fontWeight="bold"
                                                     textAnchor="middle"
-                                                    fontFamily="var(--font-outfit)"
+                                                    fontFamily="var(--font-mono)"
                                                 >
                                                     {points[hoveredIdx].hour}
                                                 </text>
@@ -378,7 +498,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                                     fontSize="12"
                                                     fontWeight="black"
                                                     textAnchor="middle"
-                                                    fontFamily="var(--font-syne)"
+                                                    fontFamily="var(--font-mono)"
                                                 >
                                                     {points[hoveredIdx].score}%
                                                 </text>
@@ -387,7 +507,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
 
                                         {/* Bottom X-Axis labels */}
                                         {points.length > 0 && (
-                                            <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-outfit)" opacity="0.8">
+                                            <g fill="rgba(255,255,255,0.4)" fontSize="8" fontWeight="bold" fontFamily="var(--font-mono)" opacity="0.8">
                                                 <text x={paddingX} y={svgHeight - 10} textAnchor="start">
                                                     {t("forecast_label")}: {points[0].hour}
                                                 </text>
@@ -435,7 +555,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                         return (
                             <SpotlightCard
                                 key={factor.id}
-                                className="rounded-2xl p-6 bg-white/3 dark:bg-white/5 border relative overflow-hidden group transition-all duration-300 hover:scale-[1.02]"
+                                className="rounded-2xl p-6 bg-white/3 dark:bg-white/5 border relative overflow-visible group transition-all duration-300 hover:scale-[1.02]"
                                 style={{ borderColor: `rgba(${glowColor}, 0.15)` }}
                             >
                                 <div className="relative z-10 flex flex-col justify-between h-full space-y-4">
@@ -453,7 +573,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                         {/* Live Value Indicator */}
                                         <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 backdrop-blur-md">
                                             <span 
-                                                className="text-xs font-black"
+                                                className="text-xs font-black font-mono"
                                                 style={{ color: factor.liveValue ? `rgb(${glowColor})` : "rgba(255,255,255,0.3)" }}
                                             >
                                                 {factor.liveValue || "N/A"}
@@ -463,7 +583,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
 
                                     {/* Scientific explanation */}
                                     <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed font-medium">
-                                        {factor.desc}
+                                        {renderWithGlossary(factor.desc)}
                                     </p>
                                 </div>
                             </SpotlightCard>

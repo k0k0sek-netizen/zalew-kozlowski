@@ -6,6 +6,7 @@ import contentfulLoader from "@/lib/contentful-loader";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import { MapPin, Sparkles, Trophy } from "lucide-react";
 
 interface FishStatProps {
     label: string;
@@ -45,10 +46,13 @@ interface FishCardProps {
         activity: number;
     };
     tags: string[];
+    whereToFind?: string;
+    favBait?: string;
+    lakeRecord?: string;
     priority?: boolean;
 }
 
-export const FishCard = ({ name, description, imageSrc, stats, tags, priority }: FishCardProps) => {
+export const FishCard = ({ name, description, imageSrc, stats, tags, whereToFind, favBait, lakeRecord, priority }: FishCardProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const t = useTranslations("about");
 
@@ -94,6 +98,45 @@ export const FishCard = ({ name, description, imageSrc, stats, tags, priority }:
                 <p className="mb-6 text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed min-h-[60px]">
                     {description}
                 </p>
+
+                {/* Biology Details */}
+                {(whereToFind || favBait || lakeRecord) && (
+                    <div className="mb-6 space-y-3.5 border-t border-neutral-100 dark:border-white/5 pt-5 text-xs text-neutral-600 dark:text-neutral-400">
+                        {whereToFind && (
+                            <div className="flex gap-2.5 items-start">
+                                <MapPin className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                                <div>
+                                    <span className="font-bold text-pine-green dark:text-neutral-300 block mb-0.5 uppercase tracking-wide text-[10px]">
+                                        {t("where_to_find")}
+                                    </span>
+                                    <span className="leading-relaxed">{whereToFind}</span>
+                                </div>
+                            </div>
+                        )}
+                        {favBait && (
+                            <div className="flex gap-2.5 items-start">
+                                <Sparkles className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                                <div>
+                                    <span className="font-bold text-pine-green dark:text-neutral-300 block mb-0.5 uppercase tracking-wide text-[10px]">
+                                        {t("fav_bait")}
+                                    </span>
+                                    <span className="leading-relaxed">{favBait}</span>
+                                </div>
+                            </div>
+                        )}
+                        {lakeRecord && (
+                            <div className="flex gap-2.5 items-start">
+                                <Trophy className="h-4 w-4 shrink-0 text-accent mt-0.5" />
+                                <div>
+                                    <span className="font-bold text-pine-green dark:text-neutral-300 block mb-0.5 uppercase tracking-wide text-[10px]">
+                                        {t("lake_record")}
+                                    </span>
+                                    <span className="leading-relaxed font-mono">{lakeRecord}</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Gamified Stats */}
                 <div className="space-y-3">

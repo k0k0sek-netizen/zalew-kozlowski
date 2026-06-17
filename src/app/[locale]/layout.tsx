@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Outfit, Syne, Space_Grotesk } from "next/font/google";
 import "../globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -25,6 +25,12 @@ const outfit = Outfit({
 
 const syne = Syne({
   variable: "--font-syne",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
   subsets: ["latin"],
   display: "swap",
 });
@@ -115,7 +121,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className={isDarkTheme ? "dark" : ""} data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${syne.variable} antialiased bg-background text-foreground selection:bg-sunset-orange selection:text-white`}
+        className={`${outfit.variable} ${syne.variable} ${spaceGrotesk.variable} antialiased bg-background text-foreground selection:bg-sunset-orange selection:text-white`}
         style={{ "--active-glow-color": activeGlowColor } as React.CSSProperties}
         suppressHydrationWarning
       >

@@ -29,6 +29,9 @@ interface AboutClientProps {
             activity: number;
         };
         tags: string[];
+        whereToFind?: string;
+        favBait?: string;
+        lakeRecord?: string;
         priority: boolean;
     }>;
 }
@@ -60,6 +63,9 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                             imageSrc={fish.imageSrc}
                             stats={fish.stats}
                             tags={fish.tags}
+                            whereToFind={fish.whereToFind}
+                            favBait={fish.favBait}
+                            lakeRecord={fish.lakeRecord}
                             priority={fish.priority}
                         />
                     ))}

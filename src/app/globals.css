@@ -55,6 +55,7 @@
 
   --font-sans: var(--font-outfit);
   --font-display: var(--font-syne);
+  --font-mono: var(--font-space);
 
   --animate-shine: shine 3s linear infinite;
   --animate-shake: phone-shake 0.6s ease-in-out infinite;

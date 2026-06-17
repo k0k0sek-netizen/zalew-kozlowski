@@ -228,7 +228,14 @@
     "offline_advice": "Offline mode. The algorithm displays average solunar factors. Connect to the internet to load live forecast data.",
     "offline_label": "OFFLINE",
     "offline_chart_title": "Forecast chart unavailable",
-    "offline_chart_desc": "No active server connection. Reload the page while online to load the 24-hour interactive forecast chart."
+    "offline_chart_desc": "No active server connection. Reload the page while online to load the 24-hour interactive forecast chart.",
+    "where_to_find": "Where to find",
+    "fav_bait": "Favorite bait",
+    "lake_record": "Lake record",
+    "glossary_temp_desc": "The water temperature range where a fish species' metabolism and feeding activity are most efficient.",
+    "glossary_pressure_desc": "An internal gas-filled organ that controls a fish's buoyancy. Pressure drops stress this organ, hindering feeding.",
+    "glossary_humidity_desc": "A period of intense feeding activity triggered by pre-storm conditions or humidity spikes.",
+    "glossary_moon_desc": "Gravitational pull from the Moon and Sun that influences water dynamics and animal activity cycles."
   },
   "gallery": {
     "title": "Community Gallery",

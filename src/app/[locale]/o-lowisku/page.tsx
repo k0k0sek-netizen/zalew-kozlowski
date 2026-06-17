@@ -56,7 +56,13 @@ const getFallbackFishSpecies = (locale: string) => [
                 "Złoty",
                 "Aktywny",
                 "Spławik"
-            ]
+            ],
+            whereToFind: "Płytkie zatoczki, strefa przybrzeżna z roślinnością wodną.",
+            whereToFindEn: "Shallow bays, near-shore zone with aquatic vegetation.",
+            favBait: "Czerwone robaki, kukurydza z miodem, ciasto chlebowe.",
+            favBaitEn: "Red worms, honey sweetcorn, bread paste.",
+            lakeRecord: "1.8 kg (Stanowisko nr 4)",
+            lakeRecordEn: "1.8 kg (Peg No. 4)"
         }
     },
     {
@@ -86,7 +92,13 @@ const getFallbackFishSpecies = (locale: string) => [
                 "Siłacz",
                 "Szybki",
                 "Apetyt"
-            ]
+            ],
+            whereToFind: "Ciepłe, nasłonecznione partii wody, trzcinowiska.",
+            whereToFindEn: "Warm, sunny water areas, reed beds.",
+            favBait: "Świeża kukurydza, kulki proteinowe o smaku owocowym, śliwki.",
+            favBaitEn: "Fresh sweetcorn, fruit-flavored boilies, plums.",
+            lakeRecord: "14.2 kg (Stanowisko nr 1)",
+            lakeRecordEn: "14.2 kg (Peg No. 1)"
         }
     },
     {
@@ -95,7 +107,7 @@ const getFallbackFishSpecies = (locale: string) => [
             name: locale === "en" ? "Mirror Carp" : "Karp Królewski",
             description: locale === "en"
                 ? "Intelligent and strong. Our carps (up to 15kg) know anglers' tricks. Require patience and precise baiting."
-                : "Inteligentny i silny. Nasze karpie (do 15kg) znają sztuczki wędkarzy. Wymagają cierpliwości i precyzyjnego nęcenia.",
+                : "Inteligentny i silny. Nasze karpie (do 15kg) znają sztuczki wędkarzy. Wymają cierpliwości i precyzyjnego nęcenia.",
             image: {
                 fields: {
                     file: {
@@ -116,7 +128,13 @@ const getFallbackFishSpecies = (locale: string) => [
                 "Król Wód",
                 "Waleczny",
                 "Sprytny"
-            ]
+            ],
+            whereToFind: "Głębokie dołki, okolice zwalonych drzew i strefy przydenne.",
+            whereToFindEn: "Deep holes, near fallen trees and bottom zones.",
+            favBait: "Kulki proteinowe (krab/muszla), pellet chlebowy, orzech tygrysi.",
+            favBaitEn: "Boilies (crab/mussel), halibut pellet, tiger nut.",
+            lakeRecord: "16.5 kg (Stanowisko nr 6)",
+            lakeRecordEn: "16.5 kg (Peg No. 6)"
         }
     },
     {
@@ -146,7 +164,13 @@ const getFallbackFishSpecies = (locale: string) => [
                 "Drapieżnik",
                 "Szybki",
                 "Zębaty"
-            ]
+            ],
+            whereToFind: "Strefy przybrzeżne, pasy trzcin, podwodne łąki.",
+            whereToFindEn: "Near-shore zones, reed lines, submerged weed beds.",
+            favBait: "Woblery imitujące płocie, gumowe rippery, blachy wahadłowe.",
+            favBaitEn: "Roach-imitating crankbaits, soft plastic swimbaits, spoons.",
+            lakeRecord: "9.8 kg (Stanowisko nr 3)",
+            lakeRecordEn: "9.8 kg (Peg No. 3)"
         }
     }
 ];
@@ -183,10 +207,21 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     name: fish.fields.nameEn || fish.fields.name,
                     description: fish.fields.descriptionEn || fish.fields.description,
                     tags: fish.fields.tagsEn || fish.fields.tags,
+                    whereToFind: fish.fields.whereToFindEn || fish.fields.whereToFind,
+                    favBait: fish.fields.favBaitEn || fish.fields.favBait,
+                    lakeRecord: fish.fields.lakeRecordEn || fish.fields.lakeRecord,
                 }
             };
         }
-        return fish;
+        return {
+            ...fish,
+            fields: {
+                ...fish.fields,
+                whereToFind: fish.fields.whereToFind,
+                favBait: fish.fields.favBait,
+                lakeRecord: fish.fields.lakeRecord,
+            }
+        };
     });
 
     const fishData = localizedFishSpecies.map((fish: any, idx: number) => {
@@ -203,6 +238,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             imageSrc: imageUrl,
             stats: fish.fields.stats as { strength: number; difficulty: number; activity: number; },
             tags: fish.fields.tags || [],
+            whereToFind: fish.fields.whereToFind,
+            favBait: fish.fields.favBait,
+            lakeRecord: fish.fields.lakeRecord,
             priority: idx < 4
         };
     });
@@ -227,6 +265,15 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 difficulty: 8
             },
             tags: locale === "en" ? ["Predator", "Fast", "Sharp Teeth"] : ["Drapieżnik", "Szybki", "Zębaty"],
+            whereToFind: locale === "en" 
+                ? "Near-shore zones, reed lines, submerged weed beds." 
+                : "Strefy przybrzeżne, pasy trzcin, podwodne łąki.",
+            favBait: locale === "en"
+                ? "Roach-imitating crankbaits, soft plastic swimbaits, spoons."
+                : "Woblery imitujące płocie, gumowe rippery, blachy wahadłowe.",
+            lakeRecord: locale === "en"
+                ? "9.8 kg (Peg No. 3)"
+                : "9.8 kg (Stanowisko nr 3)",
             priority: true
         });
     }

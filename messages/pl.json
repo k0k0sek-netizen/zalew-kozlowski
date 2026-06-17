@@ -228,7 +228,14 @@
     "offline_advice": "Tryb offline. Algorytm prezentuje uśrednione czynniki solunarne. Połącz się z siecią, aby pobrać prognozę na żywo.",
     "offline_label": "OFFLINE",
     "offline_chart_title": "Prognoza wykresu niedostępna",
-    "offline_chart_desc": "Brak aktywnego połączenia z serwerem. Uruchom stronę ponownie online, aby załadować interaktywny wykres prognozy 24h."
+    "offline_chart_desc": "Brak aktywnego połączenia z serwerem. Uruchom stronę ponownie online, aby załadować interaktywny wykres prognozy 24h.",
+    "where_to_find": "Gdzie szukać",
+    "fav_bait": "Ulubiony pokarm",
+    "lake_record": "Rekord łowiska",
+    "glossary_temp_desc": "Temperatura wody optymalna dla metabolizmu i żerowania danego gatunku ryb (np. 18-24°C dla karpia).",
+    "glossary_pressure_desc": "Narząd hydrostatyczny regulujący pływalność. Skoki ciśnienia wywołują u ryb dyskomfort i hamują żerowanie.",
+    "glossary_humidity_desc": "Okres bardzo intensywnego pobierania pokarmu przed nagłym załamaniem pogody lub burzą.",
+    "glossary_moon_desc": "Przyciąganie grawitacyjne Księżyca i Słońca regulujące cykle dobowe i przypływy aktywności organizmów."
   },
   "gallery": {
     "title": "Galeria Społeczności",

@@ -81,7 +81,7 @@ export const FisheryStatsBar = () => {
                         </div>
 
                         <div className="mt-3">
-                            <span className="text-xs sm:text-sm font-black tracking-tight text-pine-green-dark dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-[linear-gradient(110deg,#ffffff,45%,#4ade80,55%,#ffffff)] dark:group-hover:bg-[linear-gradient(110deg,#ffffff,45%,#4ade80,55%,#ffffff)] bg-size-[200%_100%] group-hover:animate-shine transition-all duration-300">
+                            <span className="text-xs sm:text-sm font-black tracking-tight text-pine-green-dark dark:text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-[linear-gradient(110deg,#ffffff,45%,#4ade80,55%,#ffffff)] dark:group-hover:bg-[linear-gradient(110deg,#ffffff,45%,#4ade80,55%,#ffffff)] bg-size-[200%_100%] group-hover:animate-shine transition-all duration-300 font-mono">
                                 {stat.value}
                             </span>
                         </div>
