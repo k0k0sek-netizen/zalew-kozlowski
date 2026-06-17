@@ -14,18 +14,57 @@ import {
 import { useTranslations } from "next-intl";
 import { WeatherData } from "@/app/actions/weather";
 import { SolunarDashboard } from "@/components/features/SolunarDashboard";
+import { FishCard } from "@/components/features/FishCard";
 
 interface AboutClientProps {
     weather?: WeatherData | null;
+    fishSpecies: Array<{
+        id: string;
+        name: string;
+        description: string;
+        imageSrc: string;
+        stats: {
+            strength: number;
+            difficulty: number;
+            activity: number;
+        };
+        tags: string[];
+        priority: boolean;
+    }>;
 }
 
-export const AboutClient = ({ weather }: AboutClientProps) => {
+export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
     const t = useTranslations("about");
 
     return (
         <>
             {/* 1. Solunar Dashboard (Render unconditionally - handles offline state internally) */}
             <SolunarDashboard weather={weather} />
+
+            {/* 2. Gamified Fish Section ("Poznaj Przeciwnika") */}
+            <SectionReveal className="mb-24" delay={0.2}>
+                <div className="mb-12 flex items-center gap-4">
+                    <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
+                    <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
+                        {t("fish_title")}
+                    </h2>
+                    <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
+                </div>
+
+                <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                    {fishSpecies.map((fish) => (
+                        <FishCard
+                            key={fish.id}
+                            name={fish.name}
+                            description={fish.description}
+                            imageSrc={fish.imageSrc}
+                            stats={fish.stats}
+                            tags={fish.tags}
+                            priority={fish.priority}
+                        />
+                    ))}
+                </div>
+            </SectionReveal>
 
 
             {/* Bento Grid: Dlaczego Warto? */}

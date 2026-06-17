@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import contentfulLoader from "@/lib/contentful-loader";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface FishStatProps {
     label: string;
@@ -21,14 +22,15 @@ const StatBar = ({ label, value, color }: FishStatProps) => {
     }, [value]);
 
     return (
-        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
-            <span className="w-20 text-right opacity-70 dark:text-gray-300">{label}</span>
-            <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-200 dark:bg-white/10">
+        <div className="flex items-center gap-2 text-[10px] sm:text-xs font-black uppercase tracking-wider">
+            <span className="w-20 sm:w-22 text-right opacity-70 dark:text-gray-300">{label}</span>
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-neutral-200 dark:bg-white/10 relative">
                 <div
-                    className={`h-full ${color} transition-all duration-1000 ease-out`}
+                    className={`h-full ${color} transition-all duration-1000 ease-out rounded-full`}
                     style={{ width: `${width * 10}%` }}
                 />
             </div>
+            <span className="w-8 text-left font-mono text-[10px] sm:text-xs opacity-80 dark:text-gray-400">{value}/10</span>
         </div>
     );
 };
@@ -48,6 +50,7 @@ interface FishCardProps {
 
 export const FishCard = ({ name, description, imageSrc, stats, tags, priority }: FishCardProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
+    const t = useTranslations("about");
 
     return (
         <TiltCard
@@ -94,9 +97,9 @@ export const FishCard = ({ name, description, imageSrc, stats, tags, priority }:
 
                 {/* Gamified Stats */}
                 <div className="space-y-3">
-                    <StatBar label="SIŁA" value={stats.strength} color="bg-red-500" />
-                    <StatBar label="SPRYT" value={stats.difficulty} color="bg-purple-500" />
-                    <StatBar label="AKTYWNOŚĆ" value={stats.activity} color="bg-green-500" />
+                    <StatBar label={t("stat_strength")} value={stats.strength} color="bg-gradient-to-r from-red-500 to-rose-500" />
+                    <StatBar label={t("stat_cunning")} value={stats.difficulty} color="bg-gradient-to-r from-purple-500 to-indigo-500" />
+                    <StatBar label={t("stat_activity")} value={stats.activity} color="bg-gradient-to-r from-green-500 to-emerald-500" />
                 </div>
             </div>
         </TiltCard>

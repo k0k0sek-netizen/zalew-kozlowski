@@ -1,4 +1,3 @@
-import { FishCard } from "@/components/features/FishCard";
 import { SectionReveal } from "@/components/ui/section-reveal";
 import { Metadata } from "next";
 import { createContentfulClient, FishSpeciesSkeleton } from "@/lib/contentful";
@@ -8,6 +7,7 @@ import { SubpageWrapper } from "@/components/layout/SubpageWrapper";
 import { AboutClient } from "@/components/features/AboutClient";
 import { getTranslations } from "next-intl/server";
 import { getWeatherAction } from "@/app/actions/weather";
+import { FisheryStatsBar } from "@/components/features/FisheryStatsBar";
 
 export const revalidate = 3600;
 
@@ -118,6 +118,36 @@ const getFallbackFishSpecies = (locale: string) => [
                 "Sprytny"
             ]
         }
+    },
+    {
+        sys: { id: "fallback-fish-szczupak" },
+        fields: {
+            name: locale === "en" ? "Northern Pike" : "Szczupak Pospolity",
+            description: locale === "en"
+                ? "The king of ambush hunting. A clever predator hiding in the reeds, known for explosive strikes. Requires nerves of steel and precise lure action."
+                : "Król polowania z zasadzki. Sprytny drapieżnik kryjący się w trzcinach, znany z gwałtownych ataków. Wymaga stalowych nerwów i precyzyjnego prowadzenia przynęty.",
+            image: {
+                fields: {
+                    file: {
+                        url: "//images.unsplash.com/photo-1604848698030-c434ba08ece1?q=80&w=600"
+                    }
+                }
+            },
+            stats: {
+                activity: 7,
+                strength: 8,
+                difficulty: 8
+            },
+            tags: locale === "en" ? [
+                "Predator",
+                "Fast",
+                "Sharp Teeth"
+            ] : [
+                "Drapieżnik",
+                "Szybki",
+                "Zębaty"
+            ]
+        }
     }
 ];
 
@@ -159,6 +189,23 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         return fish;
     });
 
+    const fishData = localizedFishSpecies.map((fish: any, idx: number) => {
+        const image = fish.fields.image as Asset;
+        const imageUrl = image?.fields?.file?.url
+            ? `https:${image.fields.file.url}`
+            : "/ryby/karp.jpg"; // Fallback
+
+        return {
+            id: fish.sys.id,
+            name: fish.fields.name,
+            description: fish.fields.description,
+            imageSrc: imageUrl,
+            stats: fish.fields.stats as { strength: number; difficulty: number; activity: number; },
+            tags: fish.fields.tags || [],
+            priority: idx < 4
+        };
+    });
+
     return (
         <SubpageWrapper>
             <div className="mx-auto max-w-6xl px-4">
@@ -172,40 +219,11 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                     </p>
                 </SectionReveal>
 
-                {/* Gamified Fish Section */}
-                <SectionReveal className="mb-24" delay={0.2}>
-                    <div className="mb-12 flex items-center gap-4">
-                        <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
-                        <h2 className="text-2xl font-black uppercase tracking-widest text-pine-green dark:text-neutral-400">
-                            {t("fish_title")}
-                        </h2>
-                        <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
-                    </div>
+                {/* 2. Lake Vital Stats Bar */}
+                <FisheryStatsBar />
 
-                    <div className="grid gap-8 md:grid-cols-3">
-                        {localizedFishSpecies.map((fish, idx) => {
-                            const image = fish.fields.image as Asset;
-                            const imageUrl = image?.fields?.file?.url
-                                ? `https:${image.fields.file.url}`
-                                : "/ryby/karp.jpg"; // Fallback
-
-                            return (
-                                <FishCard
-                                    key={fish.sys.id}
-                                    name={fish.fields.name}
-                                    description={fish.fields.description}
-                                    imageSrc={imageUrl}
-                                    stats={fish.fields.stats as any}
-                                    tags={fish.fields.tags || []}
-                                    priority={idx < 3}
-                                />
-                            );
-                        })}
-                    </div>
-                </SectionReveal>
-
-                {/* Client Side Interactive Layout (Weather index, Bento grid, Seasonal calendar) */}
-                <AboutClient weather={weatherData} />
+                {/* 3. Client Side Interactive Layout (Dashboard, Fish Cards, Bento, Calendar) */}
+                <AboutClient weather={weatherData} fishSpecies={fishData} />
             </div>
         </SubpageWrapper>
     );
