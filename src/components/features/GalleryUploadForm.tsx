@@ -60,7 +60,7 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                 setIsSuccess(true);
                 setFileName("");
             }
-            return result;
+            return result as { success: boolean; error?: string; id?: string };
         },
         { success: false, error: undefined } as { success: boolean; error?: string; id?: string }
     );
@@ -245,6 +245,11 @@ export const GalleryUploadForm = ({ onOptimisticAdd }: GalleryUploadFormProps) =
                         />
                     </div>
                 </div>
+
+                {/* Copyright Disclaimer Footnote */}
+                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-normal text-center px-1">
+                    {t("disclaimer")}
+                </p>
 
                 {/* Status Message (client/server errors) */}
                 {activeError && (

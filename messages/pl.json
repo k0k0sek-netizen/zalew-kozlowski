@@ -254,7 +254,8 @@
     "select_file": "Wybierz plik graficzny przed wysłaniem",
     "invalid_type": "Dozwolone są wyłącznie pliki w formacie JPEG, PNG, WEBP oraz AVIF",
     "file_too_large": "Plik jest za duży (max 5MB)",
-    "anonymous": "Anonim"
+    "anonymous": "Anonim",
+    "disclaimer": "Wysyłając zdjęcie, oświadczasz, że jesteś jego autorem, wyrażasz zgodę na jego bezpłatną publikację w galerii oraz udzielasz łowisku licencji na jego wykorzystanie."
   },
   "news": {
     "title": "Aktualności",

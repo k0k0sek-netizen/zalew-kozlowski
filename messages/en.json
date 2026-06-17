@@ -254,7 +254,8 @@
     "select_file": "Select an image file before sending",
     "invalid_type": "Only JPEG, PNG, WEBP, and AVIF image formats are allowed",
     "file_too_large": "The file is too large (max 5MB)",
-    "anonymous": "Anonymous"
+    "anonymous": "Anonymous",
+    "disclaimer": "By submitting a photo, you declare that you are its author, consent to its free publication in the gallery, and grant the fishery a license to use it."
   },
   "news": {
     "title": "News",
