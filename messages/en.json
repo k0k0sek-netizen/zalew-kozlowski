@@ -235,7 +235,11 @@
     "glossary_temp_desc": "The water temperature range where a fish species' metabolism and feeding activity are most efficient.",
     "glossary_pressure_desc": "An internal gas-filled organ that controls a fish's buoyancy. Pressure drops stress this organ, hindering feeding.",
     "glossary_humidity_desc": "A period of intense feeding activity triggered by pre-storm conditions or humidity spikes.",
-    "glossary_moon_desc": "Gravitational pull from the Moon and Sun that influences water dynamics and animal activity cycles."
+    "glossary_moon_desc": "Gravitational pull from the Moon and Sun that influences water dynamics and animal activity cycles.",
+    "quote_1_text": "Fighting a grass carp from Kozłów is pure madness. It runs like a torpedo and doesn't give up until it's in the landing net!",
+    "quote_1_author": "Krzysztof from Dębica",
+    "quote_2_text": "Autumn pike at Kozłów can really surprise you. The bites are aggressive, and the fish are incredibly strong.",
+    "quote_2_author": "Tomasz from Rzeszów"
   },
   "gallery": {
     "title": "Community Gallery",

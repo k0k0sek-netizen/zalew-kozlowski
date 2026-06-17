@@ -15,6 +15,45 @@ import { useTranslations } from "next-intl";
 import { WeatherData } from "@/app/actions/weather";
 import { SolunarDashboard } from "@/components/features/SolunarDashboard";
 import { FishCard } from "@/components/features/FishCard";
+import { cn } from "@/lib/utils";
+
+interface QuoteCardProps {
+    text: string;
+    author: string;
+    className?: string;
+}
+
+const QuoteCard = ({ text, author, className }: QuoteCardProps) => {
+    return (
+        <SpotlightCard
+            className={cn(
+                "relative overflow-hidden rounded-2xl bg-white/40 dark:bg-white/5 border border-earth-brown/10 dark:border-white/10 p-8 flex flex-col justify-between min-h-[260px] transition-all duration-300 group hover:border-accent/30 h-full",
+                className
+            )}
+            style={{
+                borderColor: "rgba(var(--active-glow-color, 249, 115, 22), 0.1)"
+            } as any}
+        >
+            {/* Background elements */}
+            <div className="absolute -right-4 -top-8 text-[120px] font-serif font-black text-pine-green/5 dark:text-white/5 select-none pointer-events-none group-hover:scale-110 transition-transform duration-500">
+                ”
+            </div>
+            
+            <div className="relative z-10 flex-1 flex flex-col justify-between h-full">
+                <blockquote className="text-base italic text-pine-green-dark dark:text-neutral-200 leading-relaxed font-medium mb-6">
+                    &ldquo;{text}&rdquo;
+                </blockquote>
+                
+                <div className="flex items-center gap-3">
+                    <span className="h-0.5 w-6 bg-[rgb(var(--active-glow-color,249,115,22))]" />
+                    <cite className="not-italic text-xs font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                        {author}
+                    </cite>
+                </div>
+            </div>
+        </SpotlightCard>
+    );
+};
 
 interface AboutClientProps {
     weather?: WeatherData | null;
@@ -39,6 +78,14 @@ interface AboutClientProps {
 export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
     const t = useTranslations("about");
 
+    const karp = fishSpecies.find(f => f.name.toLowerCase().includes("karp") || f.name.toLowerCase().includes("mirror"));
+    const amur = fishSpecies.find(f => f.name.toLowerCase().includes("amur") || f.name.toLowerCase().includes("grass"));
+    const karas = fishSpecies.find(f => f.name.toLowerCase().includes("karaś") || f.name.toLowerCase().includes("crucian"));
+    const szczupak = fishSpecies.find(f => f.name.toLowerCase().includes("szczupak") || f.name.toLowerCase().includes("pike"));
+
+    const specialIds = [karp?.id, amur?.id, karas?.id, szczupak?.id].filter(Boolean);
+    const extraFish = fishSpecies.filter(f => !specialIds.includes(f.id));
+
     return (
         <>
             {/* 1. Solunar Dashboard (Render unconditionally - handles offline state internally) */}
@@ -54,20 +101,111 @@ export const AboutClient = ({ weather, fishSpecies }: AboutClientProps) => {
                     <div className="h-px flex-1 bg-neutral-300 dark:bg-white/10" />
                 </div>
 
-                <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                    {fishSpecies.map((fish) => (
-                        <FishCard
-                            key={fish.id}
-                            name={fish.name}
-                            description={fish.description}
-                            imageSrc={fish.imageSrc}
-                            stats={fish.stats}
-                            tags={fish.tags}
-                            whereToFind={fish.whereToFind}
-                            favBait={fish.favBait}
-                            lakeRecord={fish.lakeRecord}
-                            priority={fish.priority}
+                <div className="grid gap-8 grid-cols-1 md:grid-cols-12 items-stretch">
+                    {/* Karp (Featured Horizontal) */}
+                    {karp && (
+                        <div className="md:col-span-12 lg:col-span-8">
+                            <FishCard
+                                name={karp.name}
+                                description={karp.description}
+                                imageSrc={karp.imageSrc}
+                                stats={karp.stats}
+                                tags={karp.tags}
+                                whereToFind={karp.whereToFind}
+                                favBait={karp.favBait}
+                                lakeRecord={karp.lakeRecord}
+                                priority={karp.priority}
+                                layout="horizontal"
+                            />
+                        </div>
+                    )}
+
+                    {/* Amur (Vertical) */}
+                    {amur && (
+                        <div className="md:col-span-6 lg:col-span-4">
+                            <FishCard
+                                name={amur.name}
+                                description={amur.description}
+                                imageSrc={amur.imageSrc}
+                                stats={amur.stats}
+                                tags={amur.tags}
+                                whereToFind={amur.whereToFind}
+                                favBait={amur.favBait}
+                                lakeRecord={amur.lakeRecord}
+                                priority={amur.priority}
+                                layout="vertical"
+                            />
+                        </div>
+                    )}
+
+                    {/* Quote 1 */}
+                    <div className="md:col-span-6 lg:col-span-4">
+                        <QuoteCard 
+                            text={t("quote_1_text")}
+                            author={t("quote_1_author")}
                         />
+                    </div>
+
+                    {/* Karaś (Vertical) */}
+                    {karas && (
+                        <div className="md:col-span-6 lg:col-span-4">
+                            <FishCard
+                                name={karas.name}
+                                description={karas.description}
+                                imageSrc={karas.imageSrc}
+                                stats={karas.stats}
+                                tags={karas.tags}
+                                whereToFind={karas.whereToFind}
+                                favBait={karas.favBait}
+                                lakeRecord={karas.lakeRecord}
+                                priority={karas.priority}
+                                layout="vertical"
+                            />
+                        </div>
+                    )}
+
+                    {/* Quote 2 */}
+                    <div className="md:col-span-6 lg:col-span-4">
+                        <QuoteCard 
+                            text={t("quote_2_text")}
+                            author={t("quote_2_author")}
+                        />
+                    </div>
+
+                    {/* Szczupak (Featured Horizontal-Reverse) */}
+                    {szczupak && (
+                        <div className="md:col-span-12 lg:col-span-8">
+                            <FishCard
+                                name={szczupak.name}
+                                description={szczupak.description}
+                                imageSrc={szczupak.imageSrc}
+                                stats={szczupak.stats}
+                                tags={szczupak.tags}
+                                whereToFind={szczupak.whereToFind}
+                                favBait={szczupak.favBait}
+                                lakeRecord={szczupak.lakeRecord}
+                                priority={szczupak.priority}
+                                layout="horizontal-reverse"
+                            />
+                        </div>
+                    )}
+
+                    {/* Render extra fish if any exist */}
+                    {extraFish.map((fish) => (
+                        <div key={fish.id} className="md:col-span-6 lg:col-span-4">
+                            <FishCard
+                                name={fish.name}
+                                description={fish.description}
+                                imageSrc={fish.imageSrc}
+                                stats={fish.stats}
+                                tags={fish.tags}
+                                whereToFind={fish.whereToFind}
+                                favBait={fish.favBait}
+                                lakeRecord={fish.lakeRecord}
+                                priority={fish.priority}
+                                layout="vertical"
+                            />
+                        </div>
                     ))}
                 </div>
             </SectionReveal>

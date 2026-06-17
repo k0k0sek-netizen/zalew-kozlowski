@@ -235,7 +235,11 @@
     "glossary_temp_desc": "Temperatura wody optymalna dla metabolizmu i żerowania danego gatunku ryb (np. 18-24°C dla karpia).",
     "glossary_pressure_desc": "Narząd hydrostatyczny regulujący pływalność. Skoki ciśnienia wywołują u ryb dyskomfort i hamują żerowanie.",
     "glossary_humidity_desc": "Okres bardzo intensywnego pobierania pokarmu przed nagłym załamaniem pogody lub burzą.",
-    "glossary_moon_desc": "Przyciąganie grawitacyjne Księżyca i Słońca regulujące cykle dobowe i przypływy aktywności organizmów."
+    "glossary_moon_desc": "Przyciąganie grawitacyjne Księżyca i Słońca regulujące cykle dobowe i przypływy aktywności organizmów.",
+    "quote_1_text": "Walka z amurem z Kozłowa to czyste szaleństwo. Startuje jak torpeda i nie odpuszcza aż pod sam podbierak!",
+    "quote_1_author": "Krzysztof z Dębicy",
+    "quote_2_text": "Jesienny szczupak na Kozłowie potrafi zaskoczyć. Brania są gwałtowne, a ryby niesamowicie silne.",
+    "quote_2_author": "Tomasz z Rzeszowa"
   },
   "gallery": {
     "title": "Galeria Społeczności",
