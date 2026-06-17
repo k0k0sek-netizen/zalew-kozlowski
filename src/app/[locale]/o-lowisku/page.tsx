@@ -224,12 +224,32 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         };
     });
 
+    const fallbacks = getFallbackFishSpecies(locale);
+
     const fishData = localizedFishSpecies.map((fish: any, idx: number) => {
         const image = fish.fields.image as Asset;
         const rawUrl = image?.fields?.file?.url as string | undefined;
         const imageUrl = rawUrl
             ? (rawUrl.startsWith("//") ? `https:${rawUrl}` : rawUrl)
             : "/ryby/karp.jpg"; // Fallback
+
+        // Match the Contentful fish against fallback list to merge biological details if missing in CMS
+        const nameLower = fish.fields.name.toLowerCase();
+        const fallback = fallbacks.find((f: any) => {
+            const fallbackName = f.fields.name.toLowerCase();
+            if (nameLower.includes("karp") && fallbackName.includes("karp") && !nameLower.includes("amur") && !nameLower.includes("grass")) return true;
+            if (nameLower.includes("carp") && fallbackName.includes("carp") && !nameLower.includes("amur") && !nameLower.includes("grass")) return true;
+            if (nameLower.includes("amur") || nameLower.includes("grass")) {
+                return fallbackName.includes("amur") || fallbackName.includes("grass");
+            }
+            if (nameLower.includes("karaś") || nameLower.includes("crucian")) {
+                return fallbackName.includes("karaś") || fallbackName.includes("crucian");
+            }
+            if (nameLower.includes("szczupak") || nameLower.includes("pike")) {
+                return fallbackName.includes("szczupak") || fallbackName.includes("pike");
+            }
+            return fallbackName === nameLower;
+        })?.fields;
 
         return {
             id: fish.sys.id,
@@ -238,9 +258,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             imageSrc: imageUrl,
             stats: fish.fields.stats as { strength: number; difficulty: number; activity: number; },
             tags: fish.fields.tags || [],
-            whereToFind: fish.fields.whereToFind,
-            favBait: fish.fields.favBait,
-            lakeRecord: fish.fields.lakeRecord,
+            whereToFind: fish.fields.whereToFind || fallback?.whereToFind,
+            favBait: fish.fields.favBait || fallback?.favBait,
+            lakeRecord: fish.fields.lakeRecord || fallback?.lakeRecord,
             priority: idx < 4
         };
     });

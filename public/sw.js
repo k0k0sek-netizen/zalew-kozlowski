@@ -45,10 +45,11 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // Skip chrome-extensions, internal APIs, and Contentful previews
+  // Skip chrome-extensions, internal APIs, Vercel insights, and Contentful previews
   if (
     request.url.startsWith('chrome-extension://') ||
     url.pathname.includes('/api/') ||
+    url.pathname.includes('/_vercel/') ||
     url.searchParams.has('preview') ||
     url.searchParams.has('secret')
   ) {
@@ -106,12 +107,18 @@ self.addEventListener('fetch', (event) => {
             });
           }
           return networkResponse;
-        }).catch(() => {
-          // Ignore fetch errors for background updates
         });
 
-        // Return cached response immediately if available, otherwise wait for network fetch
-        return cachedResponse || fetchPromise;
+        if (cachedResponse) {
+          // Stale-while-revalidate: return cache immediately, update cache in background
+          fetchPromise.catch(() => {
+            // Ignore background fetch errors
+          });
+          return cachedResponse;
+        }
+
+        // Cache miss: wait for network response directly
+        return fetchPromise;
       })
     );
   }
