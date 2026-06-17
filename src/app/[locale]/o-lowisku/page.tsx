@@ -129,7 +129,7 @@ const getFallbackFishSpecies = (locale: string) => [
             image: {
                 fields: {
                     file: {
-                        url: "//images.unsplash.com/photo-1604848698030-c434ba08ece1?q=80&w=600"
+                        url: "/ryby/szczupak.png"
                     }
                 }
             },
@@ -191,8 +191,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 
     const fishData = localizedFishSpecies.map((fish: any, idx: number) => {
         const image = fish.fields.image as Asset;
-        const imageUrl = image?.fields?.file?.url
-            ? `https:${image.fields.file.url}`
+        const rawUrl = image?.fields?.file?.url as string | undefined;
+        const imageUrl = rawUrl
+            ? (rawUrl.startsWith("//") ? `https:${rawUrl}` : rawUrl)
             : "/ryby/karp.jpg"; // Fallback
 
         return {
@@ -205,6 +206,30 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             priority: idx < 4
         };
     });
+
+    // Ensure Northern Pike (Szczupak) is always rendered as the 4th card if missing from Contentful
+    const hasPike = fishData.some(fish => 
+        fish.name.toLowerCase().includes("szczupak") || 
+        fish.name.toLowerCase().includes("pike")
+    );
+
+    if (!hasPike) {
+        fishData.push({
+            id: "fallback-fish-szczupak",
+            name: locale === "en" ? "Northern Pike" : "Szczupak Pospolity",
+            description: locale === "en"
+                ? "The king of ambush hunting. A clever predator hiding in the reeds, known for explosive strikes. Requires nerves of steel and precise lure action."
+                : "Król polowania z zasadzki. Sprytny drapieżnik kryjący się w trzcinach, znany z gwałtownych ataków. Wymaga stalowych nerwów i precyzyjnego prowadzenia przynęty.",
+            imageSrc: "/ryby/szczupak.png",
+            stats: {
+                activity: 7,
+                strength: 8,
+                difficulty: 8
+            },
+            tags: locale === "en" ? ["Predator", "Fast", "Sharp Teeth"] : ["Drapieżnik", "Szybki", "Zębaty"],
+            priority: true
+        });
+    }
 
     return (
         <SubpageWrapper>
