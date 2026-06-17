@@ -172,6 +172,42 @@ const getFallbackFishSpecies = (locale: string) => [
             lakeRecord: "9.8 kg (Stanowisko nr 3)",
             lakeRecordEn: "9.8 kg (Peg No. 3)"
         }
+    },
+    {
+        sys: { id: "fallback-fish-lin" },
+        fields: {
+            name: locale === "en" ? "Tench" : "Lin Pospolity",
+            description: locale === "en"
+                ? "A beautiful, olive-green fish with reddish eyes. Extremely strong for its size, cautious and requiring clever tactics."
+                : "Przepiękna, oliwkowozielona ryba o czerwonawych oczach. Niezwykle silna jak na swoje rozmiary, ostrożna i wymagająca sprytu.",
+            image: {
+                fields: {
+                    file: {
+                        url: "/ryby/lin.png"
+                    }
+                }
+            },
+            stats: {
+                activity: 5,
+                strength: 7,
+                difficulty: 8
+            },
+            tags: locale === "en" ? [
+                "Doctor Fish",
+                "Strong",
+                "Cautious"
+            ] : [
+                "Doktor",
+                "Silny",
+                "Ostrożny"
+            ],
+            whereToFind: "Gęste trzcinowiska, strefy mulistego dna ze sporą ilością roślinności.",
+            whereToFindEn: "Dense reed beds, muddy bottom zones with heavy vegetation.",
+            favBait: "Czerwone robaki, kukurydza marcepanowa, pęczek pinek.",
+            favBaitEn: "Red worms, marzipan-flavored sweetcorn, a bunch of maggots.",
+            lakeRecord: "3.2 kg (Stanowisko nr 2)",
+            lakeRecordEn: "3.2 kg (Peg No. 2)"
+        }
     }
 ];
 
@@ -248,6 +284,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             if (nameLower.includes("szczupak") || nameLower.includes("pike")) {
                 return fallbackName.includes("szczupak") || fallbackName.includes("pike");
             }
+            if (nameLower.includes("lin") || nameLower.includes("tench")) {
+                return fallbackName.includes("lin") || fallbackName.includes("tench");
+            }
             return fallbackName === nameLower;
         })?.fields;
 
@@ -295,6 +334,39 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 ? "9.8 kg (Peg No. 3)"
                 : "9.8 kg (Stanowisko nr 3)",
             priority: true
+        });
+    }
+
+    // Ensure Tench (Lin) is always rendered if missing from Contentful
+    const hasLin = fishData.some(fish => 
+        fish.name.toLowerCase().includes("lin") || 
+        fish.name.toLowerCase().includes("tench")
+    );
+
+    if (!hasLin) {
+        fishData.push({
+            id: "fallback-fish-lin",
+            name: locale === "en" ? "Tench" : "Lin Pospolity",
+            description: locale === "en"
+                ? "A beautiful, olive-green fish with reddish eyes. Extremely strong for its size, cautious and requiring clever tactics."
+                : "Przepiękna, oliwkowozielona ryba o czerwonawych oczach. Niezwykle silna jak na swoje rozmiary, ostrożna i wymagająca sprytu.",
+            imageSrc: "/ryby/lin.png",
+            stats: {
+                activity: 5,
+                strength: 7,
+                difficulty: 8
+            },
+            tags: locale === "en" ? ["Doctor Fish", "Strong", "Cautious"] : ["Doktor", "Silny", "Ostrożny"],
+            whereToFind: locale === "en" 
+                ? "Dense reed beds, muddy bottom zones with heavy vegetation." 
+                : "Gęste trzcinowiska, strefy mulistego dna ze sporą ilością roślinności.",
+            favBait: locale === "en"
+                ? "Red worms, marzipan-flavored sweetcorn, a bunch of maggots."
+                : "Czerwone robaki, kukurydza marcepanowa, pęczek pinek.",
+            lakeRecord: locale === "en"
+                ? "3.2 kg (Peg No. 2)"
+                : "3.2 kg (Stanowisko nr 2)",
+            priority: false
         });
     }
 
