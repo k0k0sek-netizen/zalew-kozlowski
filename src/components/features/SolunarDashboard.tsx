@@ -43,15 +43,25 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
     const updatePosition = () => {
         if (!tooltipRef.current) return;
         const rect = tooltipRef.current.getBoundingClientRect();
-        const screenWidth = window.innerWidth;
+        
+        // Find the dashboard container bounding rect
+        const dashboardElement = tooltipRef.current.closest(".dashboard-container") || document.querySelector(".dashboard-container");
+        const dashRect = dashboardElement 
+            ? dashboardElement.getBoundingClientRect() 
+            : { left: 0, width: window.innerWidth };
+        
         const tooltipWidth = 256; // w-64 is 256px
         const triggerCenter = rect.left + rect.width / 2;
 
+        // Boundaries of the container (with a small 8px safety padding)
+        const minLeft = dashRect.left + 8;
+        const maxRight = dashRect.left + dashRect.width - 8;
+
         let leftOffset = 0;
-        if (triggerCenter - tooltipWidth / 2 < 16) {
-            leftOffset = 16 - (triggerCenter - tooltipWidth / 2);
-        } else if (triggerCenter + tooltipWidth / 2 > screenWidth - 16) {
-            leftOffset = (screenWidth - 16) - (triggerCenter + tooltipWidth / 2);
+        if (triggerCenter - tooltipWidth / 2 < minLeft) {
+            leftOffset = minLeft - (triggerCenter - tooltipWidth / 2);
+        } else if (triggerCenter + tooltipWidth / 2 > maxRight) {
+            leftOffset = maxRight - (triggerCenter + tooltipWidth / 2);
         }
 
         leftOffset = Math.round(leftOffset);
@@ -110,7 +120,7 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute bottom-full z-50 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/10 bg-neutral-950 p-3 text-xs text-neutral-300 shadow-xl pointer-events-none text-left font-sans normal-case"
+                        className="absolute bottom-full z-50 mb-2 w-64 -translate-x-1/2 rounded-xl border border-white/10 bg-black p-3 text-xs text-neutral-300 shadow-xl pointer-events-none text-left font-sans normal-case"
                         style={{ left: coords.left }}
                     >
                         <span className="block font-bold text-sunset-orange mb-1 uppercase tracking-wider text-[10px]">
@@ -121,7 +131,7 @@ const GlossaryTooltip = ({ term, definition, children }: GlossaryTooltipProps) =
                         </span>
                         {/* Tooltip Arrow */}
                         <span 
-                            className="absolute top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-white/10 bg-neutral-950 pointer-events-none" 
+                            className="absolute top-full h-2 w-2 -translate-x-1/2 -translate-y-1 rotate-45 border-r border-b border-white/10 bg-black pointer-events-none" 
                             style={{ left: coords.arrowLeft }}
                         />
                     </motion.span>
@@ -339,7 +349,7 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
             </div>
 
             {/* Main Unified Dashboard Container */}
-            <div className="relative overflow-hidden rounded-3xl bg-neutral-900 px-6 py-8 text-white shadow-2xl md:p-10 border border-white/5">
+            <div className="dashboard-container relative overflow-hidden rounded-3xl bg-neutral-900 px-6 py-8 text-white shadow-2xl md:p-10 border border-white/5">
                 {/* Dynamic Background Glow */}
                 <div 
                     className="absolute inset-0 transition-all duration-1000 animate-pulse-subtle pointer-events-none" 
@@ -551,13 +561,14 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                         {/* HTML Tooltip */}
                                         {hoveredIdx !== null && points[hoveredIdx] && (
                                             <div
-                                                className="absolute z-30 pointer-events-none -translate-x-1/2 -translate-y-full mb-3 flex flex-col items-center transition-all duration-75"
+                                                className="absolute z-30 pointer-events-none mb-3 flex flex-col items-center transition-all duration-75"
                                                 style={{
                                                     left: `${(points[hoveredIdx].x / svgWidth) * 100}%`,
                                                     top: `${(points[hoveredIdx].y / svgHeight) * 100}%`,
+                                                    transform: `translate(-${(points[hoveredIdx].x / svgWidth) * 100}%, -100%)`,
                                                 }}
                                             >
-                                                <div className="rounded-xl border border-white/10 bg-neutral-950 px-3 py-2 shadow-2xl text-center min-w-[80px]">
+                                                <div className="rounded-xl border border-white/10 bg-black px-3 py-2 shadow-2xl text-center min-w-[80px]">
                                                     <p className="text-[10px] font-bold text-neutral-400 font-mono">
                                                         {points[hoveredIdx].hour}
                                                     </p>
@@ -570,7 +581,8 @@ export const SolunarDashboard = ({ weather }: SolunarDashboardProps) => {
                                                 </div>
                                                 {/* Tooltip arrow */}
                                                 <div 
-                                                    className="w-2.5 h-2.5 rotate-45 border-r border-b border-white/10 bg-neutral-950 -mt-[5px]" 
+                                                    className="w-2.5 h-2.5 rotate-45 border-r border-b border-white/10 bg-black -mt-[5px] -translate-x-1/2" 
+                                                    style={{ left: `${Math.max(15, Math.min(85, (points[hoveredIdx].x / svgWidth) * 100))}%` }}
                                                 />
                                             </div>
                                         )}
